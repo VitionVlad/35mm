@@ -173,13 +173,13 @@ fn main() {
         y: 55f32, 
         z: scn.objects[pu].physic_object.pos.z - 47.5f32 
       };
-      eng.lights[0].color = Vec3 { x: 1.0, y: 0.9, z: 0.5 };
+      eng.lights[0].color = Vec3 { x: 1.0, y: 0.9, z: 0.8 };
       eng.lights[0].light_type = engine::light::LightType::Directional;
       eng.lights[0].direction = Vec3 { x: 1.0f32, y: -1.0f32, z: 1.0f32 };
       eng.lights[0].pos = eng.lights[0].camera.physic_object.pos;
       eng.lights[0].rot.x = 0.7f32;
       eng.lights[0].rot.y = 2.355f32;
-      eng.lights[0].camera.fov = 15f32;
+      eng.lights[0].camera.fov = 20f32;
 
       scn.exec(&mut eng);
 
