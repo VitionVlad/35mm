@@ -59,7 +59,7 @@ fn main() {
     let mut eng = Engine::new();
     //let mut wkfc = 2.0f32;
     eng.render.set_title("ARSD");
-    eng.render.set_new_resolution(1280, 720);
+    eng.render.set_new_resolution(800, 600);
 
     let vert = fs::read("shaders/vert").unwrap();
     let frag = fs::read("shaders/frag").unwrap();
@@ -121,22 +121,22 @@ fn main() {
       }
 
       if eng.control.get_key_state(40){
-        scn.objects[pu].physic_object.acceleration.x += -SPEED;
+        scn.objects[pu].physic_object.acceleration.x += -SPEED*eng.times_to_calculate_physics as f32;
         //scn.objects[pu].physic_object.rot.y = PI/2.0;
         pivotr = PI/2.0;
       }
       else if eng.control.get_key_state(44){
-        scn.objects[pu].physic_object.acceleration.x += SPEED;
+        scn.objects[pu].physic_object.acceleration.x += SPEED*eng.times_to_calculate_physics as f32;
         //scn.objects[pu].physic_object.rot.y = (PI/2.0)*3.0;
         pivotr = (PI/2.0)*3.0;
       }
       else if eng.control.get_key_state(25){
-        scn.objects[pu].physic_object.acceleration.z += SPEED;
+        scn.objects[pu].physic_object.acceleration.z += SPEED*eng.times_to_calculate_physics as f32;
         //scn.objects[pu].physic_object.rot.y = PI;
         pivotr = PI;
       }
       else if eng.control.get_key_state(22){
-        scn.objects[pu].physic_object.acceleration.z += -SPEED;
+        scn.objects[pu].physic_object.acceleration.z += -SPEED*eng.times_to_calculate_physics as f32;
         //scn.objects[pu].physic_object.rot.y = 0.0;
         pivotr = 0.0;
       }
