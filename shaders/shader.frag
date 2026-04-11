@@ -181,7 +181,7 @@ void main() {
 
   op = mix(vec4(smi.lightcol[0].xyz, 1.0), op, 1.0-max(min(dst, 1.0), 0.0));
 
-  op.rg *= max(min(mi.addinfo.w, 1.0), 0.0);
+  op.rg *= max(min(mi.addinfo.w, 1.0), 0.25);
 
   //op = mix(op, vec4(0.5, 0.5. 1.0, 1.0), max(min(mi.addinfo.w, 0.5), 0.0));
 
