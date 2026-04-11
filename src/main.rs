@@ -184,7 +184,7 @@ fn main() {
         let p1 = scn.objects[pu].physic_object.pos;
         let p2 = scn.objects[cvec[i].index].physic_object.pos;
         let d = distance(p1, p2);
-        if d <= 5.0 && d > 0.1 {
+        if d <= 5.0 && d > 0.5 {
           if p2.x > p1.x{
             scn.objects[cvec[i].index].physic_object.acceleration.x -= 2.0*SPEED*eng.times_to_calculate_physics as f32;
           }else{
@@ -195,7 +195,7 @@ fn main() {
           }else{
             scn.objects[cvec[i].index].physic_object.acceleration.z += 2.0*SPEED*eng.times_to_calculate_physics as f32;
           }
-        }else if d <= 0.1 {
+        }else if d <= 0.5 {
           cvec[i].consumed = true;
           scn.objects[cvec[i].index].draw = false;
           scn.objects[cvec[i].index].draw_shadow = false;
