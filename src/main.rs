@@ -29,17 +29,41 @@ fn main() {
     let dfrag = fs::read("shaders/fdeffered").unwrap();
     let shadow = fs::read("shaders/shadow").unwrap();
     let textf = fs::read("shaders/ftext").unwrap();
+    let imgf = fs::read("shaders/fimg").unwrap();
 
     let matt = Material::new(&eng, vert.clone(), textf, vec![], [engine::render::render::CullMode::CullModeNone, engine::render::render::CullMode::CullModeNone]);
+    let mati = Material::new(&eng, vert.clone(), imgf, vec![], [engine::render::render::CullMode::CullModeNone, engine::render::render::CullMode::CullModeNone]);
     let mat = Material::new(&eng, vert.clone(), frag, vec![], [engine::render::render::CullMode::CullModeNone, engine::render::render::CullMode::CullModeNone]);
     let matgeneral = Material::new(&eng, dvert.clone(), dfrag, shadow.clone(), [engine::render::render::CullMode::CullModeBackBit, engine::render::render::CullMode::CullModeFrontBit]);
-    let black = Image::new_color(&eng, [0, 0, 0, u8::MAX]);
+    let black = Image::new_color(&eng, [11, 23, 40, u8::MAX]);
+    let bti1 = Image::new_from_files(&eng, vec!["assets/ui/cam.png".to_string()]);
+    let bti2 = Image::new_from_files(&eng, vec!["assets/ui/bwf.png".to_string()]);
+    let bti3 = Image::new_from_files(&eng, vec!["assets/ui/bwc.png".to_string()]);
+    let bti4 = Image::new_from_files(&eng, vec!["assets/ui/pas.png".to_string()]);
 
     let mut viewport = UIplane::new(&mut eng, mat, black);
     viewport.object.physic_object.pos.z = 1.0;
     viewport.signal = false;
 
+    let mut bluepan = UIplane::new(&mut eng, mati, black);
+    bluepan.object.physic_object.pos.z = 0.2;
+    bluepan.signal = false;
+
+    let mut cambtn = UIplane::new(&mut eng, mati, bti1);
+    cambtn.object.physic_object.pos.z = 0.1;
+    cambtn.signal = true;
+    let mut bwbtn = UIplane::new(&mut eng, mati, bti2);
+    bwbtn.object.physic_object.pos.z = 0.1;
+    bwbtn.signal = true;
+    let mut colbtn = UIplane::new(&mut eng, mati, bti3);
+    colbtn.object.physic_object.pos.z = 0.1;
+    colbtn.signal = true;
+    let mut psbtn = UIplane::new(&mut eng, mati, bti4);
+    psbtn.object.physic_object.pos.z = 0.1;
+    psbtn.signal = true;
+
     let mut fpscnt = UItext::new_from_file(&mut eng, matt, "assets/textlat.png", "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%");
+    let mut phcnt = UItext::new_from_file(&mut eng, matt, "assets/textlat.png", "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%");
 
     let mut scn = Scene::load_from_gltf(&mut eng, "assets/test1.glb", matgeneral);
 
@@ -102,8 +126,6 @@ fn main() {
       }
     }
 
-    println!("{}", cvec.len());
-
     scn.objects[pu].physic_object.gravity = true;
     scn.objects[pu].physic_object.is_static = false;
     scn.objects[pu].physic_object.solid = true;
@@ -112,6 +134,7 @@ fn main() {
     let mut bwfilm = 0u32;
     let mut clfilm = 0u32;
     let mut cme = false;
+    let mut selp = 0u8;
 
     while eng.work(){
       if tm > 0{
@@ -211,8 +234,8 @@ fn main() {
             pkbf = 0.0;
             match cvec[i].ctype {
                 0 => {cme = true},
-                1 => {bwfilm += 12},
-                2 => {clfilm += 12},
+                1 => {bwfilm += 8},
+                2 => {clfilm += 8},
                 _ => {}
             }
           }
@@ -231,6 +254,115 @@ fn main() {
       fpscnt.size.y = 20f32;
       let fps = eng.fps;
       fpscnt.exec(&mut eng, &format!("fps: {}", fps));
+
+      match selp {
+          0 => {
+            phcnt.draw = false;
+            phcnt.exec(&mut eng, " ");
+
+            bwbtn.object.draw = false;
+            bwbtn.exec(&mut eng);
+
+            colbtn.object.draw = false;
+            colbtn.exec(&mut eng);
+
+            bluepan.object.draw = false;
+            bluepan.exec(&mut eng);
+
+            if cme {
+              cambtn.object.physic_object.scale.x = 80.0;
+              cambtn.object.physic_object.scale.y = 80.0; 
+              cambtn.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0 - cambtn.object.physic_object.scale.x;
+              cambtn.object.physic_object.pos.y = eng.render.resolution_y as f32 - cambtn.object.physic_object.scale.y;
+              cambtn.object.draw = true;
+              if cambtn.exec(&mut eng) && tm <= 0 && eng.control.mousebtn[2]{
+                selp = 1;
+                tm = 50;
+              }
+            }else{
+              cambtn.object.draw = false;
+              cambtn.exec(&mut eng);
+            }
+          },
+          1 => {
+            let tx = &format!("{}", bwfilm);
+            phcnt.draw = true;
+            phcnt.size.x = 15f32;
+            phcnt.size.y = 30f32;
+            phcnt.pos.z = 0.1;
+            phcnt.pos.x = eng.render.resolution_x as f32  / 2.0 - ((tx.len() as f32 * phcnt.size.x)/2.0);
+            phcnt.pos.y = bwbtn.object.physic_object.pos.y - phcnt.size.y;
+            phcnt.exec(&mut eng, tx);
+
+            bluepan.object.draw = true;
+            bluepan.object.physic_object.scale.y = phcnt.size.y;
+            bluepan.object.physic_object.scale.x = bwbtn.object.physic_object.scale.x*2.0;
+            bluepan.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0 - bluepan.object.physic_object.scale.x/2.0;
+            bluepan.object.physic_object.pos.y = phcnt.pos.y;
+            bluepan.object.mesh.ubo[50] = 0.0;
+            bluepan.exec(&mut eng);
+
+            bwbtn.object.physic_object.scale.x = 80.0;
+            bwbtn.object.physic_object.scale.y = 80.0;
+            bwbtn.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0 - bwbtn.object.physic_object.scale.x;
+            bwbtn.object.physic_object.pos.y = eng.render.resolution_y as f32 - bwbtn.object.physic_object.scale.y;
+            bwbtn.object.draw = true;
+            if bwbtn.exec(&mut eng) && tm <= 0 && eng.control.mousebtn[2]{
+              selp = 2;
+              tm = 50;
+            }
+                
+            colbtn.object.draw = false;
+            colbtn.exec(&mut eng);
+                
+            cambtn.object.draw = false;
+            cambtn.exec(&mut eng);
+          },
+          2 => {
+            let tx = &format!("{}", clfilm);
+            phcnt.draw = true;
+            phcnt.size.x = 15f32;
+            phcnt.size.y = 30f32;
+            phcnt.pos.z = 0.1;
+            phcnt.pos.x = eng.render.resolution_x as f32  / 2.0 - ((tx.len() as f32 * phcnt.size.x)/2.0);
+            phcnt.pos.y = colbtn.object.physic_object.pos.y - phcnt.size.y;
+            phcnt.exec(&mut eng, tx);
+
+            bluepan.object.draw = true;
+            bluepan.object.physic_object.scale.y = phcnt.size.y;
+            bluepan.object.physic_object.scale.x = colbtn.object.physic_object.scale.x*2.0;
+            bluepan.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0 - bluepan.object.physic_object.scale.x/2.0;
+            bluepan.object.physic_object.pos.y = phcnt.pos.y;
+            bluepan.object.mesh.ubo[50] = 0.0;
+            bluepan.exec(&mut eng);
+
+            bwbtn.object.draw = false;
+            bwbtn.exec(&mut eng);
+                
+            colbtn.object.physic_object.scale.x = 80.0;
+            colbtn.object.physic_object.scale.y = 80.0;
+            colbtn.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0 - colbtn.object.physic_object.scale.x;
+            colbtn.object.physic_object.pos.y = eng.render.resolution_y as f32 -  colbtn.object.physic_object.scale.y ;
+            colbtn.object.draw = true;
+            if colbtn.exec(&mut eng) && tm <= 0 && eng.control.mousebtn[2]{
+              selp = 0;
+              tm = 50;
+            }
+                
+            cambtn.object.draw = false;
+            cambtn.exec(&mut eng);
+          },
+          _ => {}
+      }
+
+      psbtn.object.physic_object.scale.x = 80.0;
+      psbtn.object.physic_object.scale.y = 80.0;
+      psbtn.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0;
+      psbtn.object.physic_object.pos.y = eng.render.resolution_y as f32 - psbtn.object.physic_object.scale.y;
+      if !cme{
+        psbtn.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0 - psbtn.object.physic_object.scale.x/2.0;
+      }
+      psbtn.exec(&mut eng);
     }
     eng.end();
 }

@@ -39,8 +39,8 @@ layout(binding = 8) uniform sampler attachmentSampler;
 
 void main() {
     if(mi.addinfo.z > 0.0){
-        outColor = vec4(1.0 - texture(sampler2DArray(texTexture, imageSampler), vec3(uv.x/mi.addinfo.x + (1.0/mi.addinfo.x)*mi.addinfo.y, -uv.y, 0)).rgb, 1.0);
+        outColor = vec4(pow(1.0 - texture(sampler2DArray(texTexture, imageSampler), vec3(uv.x/mi.addinfo.x + (1.0/mi.addinfo.x)*mi.addinfo.y, -uv.y, 0)).rgb, vec3(2.2)), 1.0);
     }else{
-        outColor = vec4(texture(sampler2DArray(texTexture, imageSampler), vec3(uv.x/mi.addinfo.x + (1.0/mi.addinfo.x)*mi.addinfo.y, -uv.y, 0)).rgb, 1.0);
+        outColor = vec4(pow(texture(sampler2DArray(texTexture, imageSampler), vec3(uv.x/mi.addinfo.x + (1.0/mi.addinfo.x)*mi.addinfo.y, -uv.y, 0)).rgb, vec3(2.2)), 1.0);
     }
 }
