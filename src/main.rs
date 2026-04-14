@@ -3,7 +3,7 @@ use std::{f32::consts::PI, fs::{self}};
 
 use engine::{engine::Engine, image::Image, material::Material, ui::UIplane};
 
-use crate::engine::{math::vec3::Vec3, scene::Scene, ui::UItext};
+use crate::engine::{math::{vec2::Vec2, vec3::Vec3}, scene::Scene, ui::UItext};
 mod engine;
 
 struct Colectable{
@@ -21,7 +21,7 @@ fn main() {
     let mut eng = Engine::new();
     //let mut wkfc = 2.0f32;
     eng.render.set_title("35mm");
-    eng.render.set_new_resolution(800, 600);
+    eng.render.set_new_resolution(1280, 720);
 
     let vert = fs::read("shaders/vert").unwrap();
     let frag = fs::read("shaders/frag").unwrap();
@@ -71,6 +71,7 @@ fn main() {
     eng.cameras[0].physic_object.solid = false;
 
     let mut cvec = vec![];
+    let mut destructables = vec![];
 
     //let mut relpos = Vec2::new();
 
@@ -122,6 +123,8 @@ fn main() {
             ctype: 2,
             consumed: false,
           });
+        }else if bt[0] == b'c' && bt[1] == b'm' && bt[2] == b'r'{
+          destructables.push(i);
         }
       }
     }
@@ -136,6 +139,17 @@ fn main() {
     let mut cme = false;
     let mut selp = 0u8;
 
+    let locls = 1;
+
+    let mut aproxpoint = [
+      Vec2{ x: 0.0, y: 0.0},
+      Vec2{ x: 0.0, y: 0.0},
+      Vec2{ x: 0.0, y: 0.0},
+      Vec2{ x: 0.0, y: 0.0},
+    ];
+
+    let mut lsp = (Vec2{x: 0.0, y: 0.0}, false);
+
     while eng.work(){
       if tm > 0{
         tm -= eng.times_to_calculate_physics as i32;
@@ -148,6 +162,12 @@ fn main() {
 
       if pkbf < 1f32{
         pkbf += SPEED*5.0*eng.times_to_calculate_physics as f32;
+      }
+      if pkbf > 1f32{
+        pkbf -= SPEED*5.0*eng.times_to_calculate_physics as f32;
+      }
+      if (1.0 - SPEED*5.0*eng.times_to_calculate_physics as f32) < pkbf && (1.0 + SPEED*5.0*eng.times_to_calculate_physics as f32) > pkbf{
+        pkbf = 1.0;
       }
 
       if eng.control.get_key_state(40){
@@ -203,7 +223,6 @@ fn main() {
         y: 55f32, 
         z: scn.objects[pu].physic_object.pos.z - 47.5f32 
       };
-      eng.lights[0].color = Vec3 { x: 1.0, y: 0.9, z: 0.8 };
       eng.lights[0].light_type = engine::light::LightType::Directional;
       eng.lights[0].direction = Vec3 { x: 1.0f32, y: -1.0f32, z: 1.0f32 };
       eng.lights[0].pos = eng.lights[0].camera.physic_object.pos;
@@ -249,14 +268,16 @@ fn main() {
       viewport.exec(&mut eng);
 
       fpscnt.pos.x = 0.0;
-      fpscnt.pos.y = eng.render.resolution_y as f32 - 20f32;
-      fpscnt.size.x = 10f32;
-      fpscnt.size.y = 20f32;
+      fpscnt.pos.y = 0.0;
+      fpscnt.size.x = 15f32;
+      fpscnt.size.y = 30f32;
       let fps = eng.fps;
-      fpscnt.exec(&mut eng, &format!("fps: {}", fps));
+      fpscnt.exec(&mut eng, &format!("fps:{}", fps));
 
       match selp {
           0 => {
+            eng.used_light_count = locls;
+            eng.lights[0].color = Vec3 { x: 0.8, y: 0.9, z: 1.0 };
             phcnt.draw = false;
             phcnt.exec(&mut eng, " ");
 
@@ -285,6 +306,38 @@ fn main() {
             }
           },
           1 => {
+            eng.used_light_count = locls+1;
+            eng.lights[0].color = Vec3 { x: 0.08, y: 0.09, z: 0.1 };
+
+            eng.lights[1].rot.y = -scn.objects[pu].physic_object.rot.y;
+            eng.lights[1].pos.x = scn.objects[pu].physic_object.pos.x - scn.objects[pu].physic_object.rot.y.sin()*0.3;
+            eng.lights[1].pos.y = scn.objects[pu].physic_object.pos.y;
+            eng.lights[1].pos.z = scn.objects[pu].physic_object.pos.z - scn.objects[pu].physic_object.rot.y.cos()*0.3;
+            eng.lights[1].light_type = engine::light::LightType::Spot;
+            eng.lights[1].color = Vec3 { x: 5.0, y: 5.0, z: 5.0 };
+
+            //let maxdst = 8;
+
+            for i in 0..aproxpoint.len(){
+              aproxpoint[i].x = scn.objects[pu].physic_object.pos.x - scn.objects[pu].physic_object.rot.y.sin()*(i+1) as f32;
+              aproxpoint[i].y = scn.objects[pu].physic_object.pos.z - scn.objects[pu].physic_object.rot.y.cos()*(i+1) as f32;
+            }
+
+            if eng.control.get_key_state(48) && tm <= 0 && bwfilm > 0{
+              for i in 0..destructables.len(){
+                for j in 0..aproxpoint.len(){
+                  if distance(Vec3 { x: aproxpoint[j].x, y: scn.objects[destructables[i]].physic_object.pos.y, z: aproxpoint[j].y }, scn.objects[destructables[i]].physic_object.pos) <= 4.0{
+                    scn.objects[destructables[i]].physic_object.pos.y = -1000.0;
+                    scn.objects[destructables[i]].draw = false;
+                    break;
+                  }
+                }
+              }
+              pkbf = 2.0;
+              bwfilm -= 1;
+              tm = 50;
+            }
+
             let tx = &format!("{}", bwfilm);
             phcnt.draw = true;
             phcnt.size.x = 15f32;
@@ -319,6 +372,8 @@ fn main() {
             cambtn.exec(&mut eng);
           },
           2 => {
+            eng.used_light_count = locls;
+            eng.lights[0].color = Vec3 { x: 1.0, y: 0.9, z: 1.8 };
             let tx = &format!("{}", clfilm);
             phcnt.draw = true;
             phcnt.size.x = 15f32;
@@ -327,6 +382,20 @@ fn main() {
             phcnt.pos.x = eng.render.resolution_x as f32  / 2.0 - ((tx.len() as f32 * phcnt.size.x)/2.0);
             phcnt.pos.y = colbtn.object.physic_object.pos.y - phcnt.size.y;
             phcnt.exec(&mut eng, tx);
+
+            if eng.control.get_key_state(48) && tm <= 0 && bwfilm > 0{
+              lsp.0.x = scn.objects[pu].physic_object.pos.x;
+              lsp.0.y = scn.objects[pu].physic_object.pos.z;
+              lsp.1 = true;
+              pkbf = 2.0;
+              clfilm -= 1;
+              tm = 50;
+            }else if eng.control.get_key_state(26) && tm <= 0{
+              scn.objects[pu].physic_object.pos.x = lsp.0.x;
+              scn.objects[pu].physic_object.pos.z = lsp.0.y;
+              pkbf = 2.0;
+              tm = 50;
+            }
 
             bluepan.object.draw = true;
             bluepan.object.physic_object.scale.y = phcnt.size.y;
