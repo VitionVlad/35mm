@@ -89,6 +89,8 @@ fn main() {
 
     let mut pkbf = 1f32;
 
+    let mut tramin = 0usize;
+
     for i in 0..scn.objects.len(){
       scn.objects[i].draw_distance = 1000f32;
       if scn.objects[i].name == "Pivot"{
@@ -125,6 +127,8 @@ fn main() {
           });
         }else if bt[0] == b'c' && bt[1] == b'm' && bt[2] == b'r'{
           destructables.push(i);
+        }else if bt[0] == b't' && bt[1] == b'r' && bt[2] == b'a' && bt[2] == b'm'{
+          tramin = i;
         }
       }
     }
@@ -278,8 +282,6 @@ fn main() {
           0 => {
             eng.used_light_count = locls;
             eng.lights[0].color = Vec3 { x: 0.8, y: 0.9, z: 1.0 };
-            phcnt.draw = false;
-            phcnt.exec(&mut eng, " ");
 
             bwbtn.object.draw = false;
             bwbtn.exec(&mut eng);
@@ -287,8 +289,37 @@ fn main() {
             colbtn.object.draw = false;
             colbtn.exec(&mut eng);
 
-            bluepan.object.draw = false;
-            bluepan.exec(&mut eng);
+            if distance( scn.objects[pu].physic_object.pos,  scn.objects[tramin].physic_object.pos) < 7.5{
+              let tx = &format!("E");
+              phcnt.draw = true;
+              phcnt.size.x = 15f32;
+              phcnt.size.y = 30f32;
+              phcnt.pos.z = 0.1;
+              phcnt.pos.x = eng.render.resolution_x as f32  / 2.0 - ((tx.len() as f32 * phcnt.size.x)/2.0);
+              phcnt.pos.y = bwbtn.object.physic_object.pos.y - phcnt.size.y*2.0;
+              phcnt.exec(&mut eng, tx);
+              
+              bluepan.object.draw = true;
+              bluepan.object.physic_object.scale.y = phcnt.size.y;
+              bluepan.object.physic_object.scale.x = bwbtn.object.physic_object.scale.x*2.0;
+              bluepan.object.physic_object.pos.x = eng.render.resolution_x as f32  / 2.0 - bluepan.object.physic_object.scale.x/2.0;
+              bluepan.object.physic_object.pos.y = phcnt.pos.y;
+              bluepan.object.mesh.ubo[50] = 0.0;
+              bluepan.exec(&mut eng);
+
+              if  eng.control.get_key_state(26) && tm <= 0{
+                //scn.objects[pu].physic_object.pos.x = lsp.0.x;
+                //scn.objects[pu].physic_object.pos.z = lsp.0.y;
+                //pkbf = 2.0;
+                lsp.1 = false;
+                tm = 50;
+              }
+            }else{
+              phcnt.draw = false;
+              phcnt.exec(&mut eng, " ");
+              bluepan.object.draw = false;
+              bluepan.exec(&mut eng);
+            }
 
             if cme {
               cambtn.object.physic_object.scale.x = 80.0;
@@ -316,7 +347,6 @@ fn main() {
             eng.lights[1].light_type = engine::light::LightType::Spot;
             eng.lights[1].color = Vec3 { x: 5.0, y: 5.0, z: 5.0 };
 
-            //let maxdst = 8;
 
             for i in 0..aproxpoint.len(){
               aproxpoint[i].x = scn.objects[pu].physic_object.pos.x - scn.objects[pu].physic_object.rot.y.sin()*(i+1) as f32;
@@ -326,7 +356,7 @@ fn main() {
             if eng.control.get_key_state(48) && tm <= 0 && bwfilm > 0{
               for i in 0..destructables.len(){
                 for j in 0..aproxpoint.len(){
-                  if distance(Vec3 { x: aproxpoint[j].x, y: scn.objects[destructables[i]].physic_object.pos.y, z: aproxpoint[j].y }, scn.objects[destructables[i]].physic_object.pos) <= 4.0{
+                  if distance(Vec3 { x: aproxpoint[j].x, y: scn.objects[destructables[i]].physic_object.pos.y, z: aproxpoint[j].y }, scn.objects[destructables[i]].physic_object.pos) <= (2.0+j as f32){
                     scn.objects[destructables[i]].physic_object.pos.y = -1000.0;
                     scn.objects[destructables[i]].draw = false;
                     break;
