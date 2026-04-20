@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use std::ops::Mul;
 
 use crate::engine::math::vec2::Vec2;
