@@ -5,3 +5,4 @@ sh:
 	glslc shaders/deffered.frag -o shaders/fdeffered
 	glslc shaders/deffered.vert -o shaders/vdeffered
 	glslc shaders/text.frag -o shaders/ftext
+	glslc shaders/image.frag -o shaders/fimg
