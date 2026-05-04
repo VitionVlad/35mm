@@ -281,9 +281,9 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
             state.bwbtn.object.physic_object.scale.x = 80.0;
             state.bwbtn.object.physic_object.scale.y = 80.0;
             state.bwbtn.object.physic_object.pos.x =
-                eng.render.resolution_x as f32 / 2.0 - state.bwbtn.object.physic_object.scale.x;
+            eng.render.resolution_x as f32 / 2.0 - state.bwbtn.object.physic_object.scale.x;
             state.bwbtn.object.physic_object.pos.y =
-                eng.render.resolution_y as f32 - state.bwbtn.object.physic_object.scale.y;
+            eng.render.resolution_y as f32 - state.bwbtn.object.physic_object.scale.y;
             state.bwbtn.object.draw = true;
             if state.bwbtn.exec(eng) && state.tm <= 0 && eng.control.mousebtn[2] {
                 state.selp = 2;
