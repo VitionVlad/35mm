@@ -1,18 +1,13 @@
 use std::fs;
 
 use crate::{
-    app_state::{AppState, Colectable},
+    app_state::*,
     engine::{
-        engine::Engine,
-        image::Image,
-        material::Material,
-        math::vec2::Vec2,
-        scene::Scene,
-        ui::{UIplane, UItext},
+        engine::Engine, image::Image, material::Material, math::vec3::Vec3, math::vec2::Vec2, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
     },
 };
 
-pub fn create_app() -> (Engine, AppState) {
+pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
     let mut eng = Engine::new();
     eng.render.set_title("35mm");
     eng.render.set_new_resolution(1280, 720);
@@ -114,8 +109,14 @@ pub fn create_app() -> (Engine, AppState) {
     let mut cvec = vec![];
     let mut destructables = vec![];
     let mut stops = vec![];
+    let mut btns = vec![];
+    let mut doors = vec![];
+    let mut ltsc = vec![]; 
     let mut pu = 0usize;
     let mut tramin = 0usize;
+
+    let mut ekey = 0usize;
+    let mut gkey = 0usize;
 
     for i in 0..scn.objects.len() {
         scn.objects[i].draw_distance = 1000_f32;
@@ -132,6 +133,9 @@ pub fn create_app() -> (Engine, AppState) {
                     ctype: 0,
                     consumed: false,
                 });
+                if show_dbg_info{
+                    println!("Camera collectible found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                }
             } else if bt[0] == b'b' && bt[1] == b'w' && bt[2] == b'f' {
                 scn.objects[i].physic_object.gravity = false;
                 scn.objects[i].physic_object.is_static = false;
@@ -141,6 +145,9 @@ pub fn create_app() -> (Engine, AppState) {
                     ctype: 1,
                     consumed: false,
                 });
+                if show_dbg_info{
+                    println!("B&W film collectible found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                }
             } else if bt[0] == b'c' && bt[1] == b'l' && bt[2] == b'f' {
                 scn.objects[i].physic_object.gravity = false;
                 scn.objects[i].physic_object.is_static = false;
@@ -150,8 +157,26 @@ pub fn create_app() -> (Engine, AppState) {
                     ctype: 2,
                     consumed: false,
                 });
-            } else if bt[0] == b'c' && bt[1] == b'm' && bt[2] == b'r' {
-                destructables.push(i);
+                if show_dbg_info{
+                    println!("Color film collectible found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                }
+            } else if bt[0] == b'c' && bt[1] == b'm' && bt[2] == b'r'{
+                if bt[3] == b'e'{
+                    ekey = i;
+                    if show_dbg_info{
+                        println!("destructable ekey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                    }
+                } else if bt[3] == b'g'{
+                    gkey = i;
+                    if show_dbg_info{
+                        println!("destructable gkey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                    }
+                }else{
+                    destructables.push(i);
+                    if show_dbg_info{
+                        println!("destructable found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                    }
+                }
             } else if bt[0] == b't' && bt[1] == b'r' && bt[2] == b'a' && bt[3] == b'm' {
                 scn.objects[i].physic_object.gravity = false;
                 scn.objects[i].physic_object.is_static = false;
@@ -161,6 +186,67 @@ pub fn create_app() -> (Engine, AppState) {
                 scn.objects[i].physic_object.solid = false;
             } else if bt[0] == b'o' && bt[1] == b'p' {
                 stops.push(i);
+            }else if bt[0] == b'b' && bt[1] == b't' && bt[2] == b'n' {
+                btns.push(Ingbutton {
+                    index: i,
+                    axis: match bt[3] {
+                        b'x' => 0,
+                        b'y' => 1,
+                        b'z' => 2,
+                        _ => 0,
+                    },
+                    pressed: false,
+                    scene_index: (bt[5]-b'0') as u32,
+                    in_scene_index: (bt[4]-b'0') as u32,
+                });
+                if show_dbg_info{
+                    println!("button found at index {}, pos ({}, {}, {}), scene_index: {}, in_scene_index: {}", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z, btns.last().unwrap().scene_index, btns.last().unwrap().in_scene_index);
+                }
+            }else if bt[0] == b'd' {
+                doors.push(Door {
+                    index: i,
+                    axis: match bt[1] {
+                        b'x' => 0,
+                        b'y' => 1,
+                        b'z' => 2,
+                        _ => 0,
+                    },
+                    movement: match bt[2] {
+                        b'-' => -1.0 * (bt[3]-b'0') as f32,
+                        _ =>(bt[3]-b'0') as f32,
+                    },
+                });
+                if show_dbg_info{
+                    println!("door found at index {}, pos ({}, {}, {}), axis: {}, movement: {}", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z, doors.last().unwrap().axis, doors.last().unwrap().movement);
+                }
+            }else if bt[0] == b's' && bt[1] == b't' && bt[2] == b'l' {
+                btns.push(Ingbutton {
+                    index: i,
+                    axis: match bt[3] {
+                        b'x' => 4,
+                        b'y' => 5,
+                        b'z' => 6,
+                        _ => 4,
+                    },
+                    pressed: false,
+                    scene_index: (bt[5]-b'0') as u32,
+                    in_scene_index: (bt[4]-b'0') as u32,
+                });
+                if show_dbg_info{
+                    println!("switch found at index {}, pos ({}, {}, {}), scene_index: {}, in_scene_index: {}", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z, btns.last().unwrap().scene_index, btns.last().unwrap().in_scene_index);
+                }
+            }else if bt[0] == b'l' && bt[1] == b't'{
+                scn.objects[i].draw = false;
+                ltsc.push(Scenelightsource {
+                    pos: Vec3 {
+                        x: scn.objects[i].physic_object.pos.x,
+                        y: scn.objects[i].physic_object.pos.y,
+                        z: scn.objects[i].physic_object.pos.z,
+                    },
+                });
+                if show_dbg_info{
+                    println!("light source found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
+                }
             }
         }
     }
@@ -172,6 +258,50 @@ pub fn create_app() -> (Engine, AppState) {
 
     fpscnt.pos.x = 0.0;
     fpscnt.pos.y = 0.0;
+
+    let mut sfx = vec![];
+
+    sfx.push(Speaker::new(&mut eng, "assets/audio/walking.mp3"));
+    sfx[0].loopsound = true;
+    sfx[0].play = false;
+    sfx[0].pos_dependency = false;
+    sfx[0].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/shutter.mp3"));
+    sfx[1].loopsound = false;
+    sfx[1].play = false;
+    sfx[1].pos_dependency = false;
+    sfx[1].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/buzz.mp3"));
+    sfx[2].loopsound = true;
+    sfx[2].play = false;
+    sfx[2].pos_dependency = false;
+    sfx[2].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/switch.mp3"));
+    sfx[3].loopsound = false;
+    sfx[3].play = false;
+    sfx[3].pos_dependency = false;
+    sfx[3].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/tension.mp3"));
+    sfx[4].loopsound = false;
+    sfx[4].play = false;
+    sfx[4].pos_dependency = false;
+    sfx[4].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/tram.mp3"));
+    sfx[5].loopsound = true;
+    sfx[5].play = false;
+    sfx[5].pos_dependency = false;
+    sfx[5].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/pickup.mp3"));
+    sfx[6].loopsound = false;
+    sfx[6].play = false;
+    sfx[6].pos_dependency = false;
+    sfx[6].use_pan = false;
+
+    for i in 0..sfx.len() {
+        sfx[i].volume = 1.0;
+    }
+
+    eng.audio.vol = 1.0;
 
     let state = AppState {
         viewport,
@@ -185,6 +315,11 @@ pub fn create_app() -> (Engine, AppState) {
         scn,
         cvec,
         destructables,
+        ekey: ekey,
+        gkey: gkey,
+        btns: btns,
+        scenelightsources: ltsc,
+        doors: doors,
         stops,
         cstop: 0_u32,
         intram: false,
@@ -205,6 +340,7 @@ pub fn create_app() -> (Engine, AppState) {
             Vec2 { x: 0.0, y: 0.0 },
         ],
         lsp: (Vec2 { x: 0.0, y: 0.0 }, false),
+        sfx: sfx,
     };
 
     (eng, state)
