@@ -163,11 +163,13 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
             } else if bt[0] == b'c' && bt[1] == b'm' && bt[2] == b'r'{
                 if bt[3] == b'e'{
                     ekey = i;
+                    destructables.push(i);
                     if show_dbg_info{
                         println!("destructable ekey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
                     }
                 } else if bt[3] == b'g'{
                     gkey = i;
+                    destructables.push(i);
                     if show_dbg_info{
                         println!("destructable gkey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
                     }
@@ -214,6 +216,11 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
                     movement: match bt[2] {
                         b'-' => -1.0 * (bt[3]-b'0') as f32,
                         _ =>(bt[3]-b'0') as f32,
+                    },
+                    initial_pos: Vec3 {
+                        x: scn.objects[i].physic_object.pos.x,
+                        y: scn.objects[i].physic_object.pos.y,
+                        z: scn.objects[i].physic_object.pos.z,
                     },
                 });
                 if show_dbg_info{
@@ -341,6 +348,10 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
         ],
         lsp: (Vec2 { x: 0.0, y: 0.0 }, false),
         sfx: sfx,
+        dbg: show_dbg_info,
+        switch_states: [false; 6],
+        switched_1_4: false,
+        switched_5_6: false,
     };
 
     (eng, state)

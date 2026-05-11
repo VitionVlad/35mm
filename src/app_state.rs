@@ -29,6 +29,7 @@ pub struct Door{
     pub index: usize,
     pub axis: u8,
     pub movement: f32,
+    pub initial_pos: Vec3,
 }
 
 pub struct AppState {
@@ -64,6 +65,10 @@ pub struct AppState {
     pub aproxpoint: [Vec2; 4],
     pub lsp: (Vec2, bool),
     pub sfx: Vec<Speaker>,
+    pub dbg: bool,
+    pub switch_states: [bool; 6], // indices 0-5 for switches 1-6
+    pub switched_1_4: bool,
+    pub switched_5_6: bool,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

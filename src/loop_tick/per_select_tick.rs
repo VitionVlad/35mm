@@ -22,8 +22,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             if distance(
                 state.scn.objects[state.pu].physic_object.pos,
                 state.scn.objects[state.tramin].physic_object.pos,
-            ) < 7.5
-            {
+            ) < 7.5 && !state.intram && state.cstop < state.stops.len() as u32 && ((state.cstop == 1 && state.switched_1_4 && state.switched_5_6) || state.cstop != 1) {
                 let tx = &format!("E");
                 state.phcnt.draw = true;
                 state.phcnt.size.x = 15_f32;
@@ -46,6 +45,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 if eng.control.get_key_state(26) && state.tm <= 0 && !state.intram {
                     state.lsp.1 = false;
                     state.tm = 50;
+                    if state.dbg {
+                        println!("current cstop: {}, next stop: {}", state.cstop, state.cstop + 1);
+                    }
                     state.cstop += 1;
                     state.intram = true;
                 }
@@ -117,6 +119,11 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                         {
                             state.scn.objects[state.destructables[i]].physic_object.pos.y = -1000.0;
                             state.scn.objects[state.destructables[i]].draw = false;
+                            if i == state.ekey {
+                                state.ekey = usize::MAX;
+                            } else if i == state.gkey {
+                                state.gkey = usize::MAX;
+                            }
                             break;
                         }
                     }
