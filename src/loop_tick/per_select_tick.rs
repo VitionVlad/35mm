@@ -117,13 +117,19 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                             state.scn.objects[state.destructables[i]].physic_object.pos,
                         ) <= (2.0 + j as f32)
                         {
+                            if state.destructables[i] == state.ekey {
+                                state.ekey = usize::MAX;
+                                if state.dbg {
+                                    println!("ekey collected");
+                                }
+                            } else if state.destructables[i] == state.gkey {
+                                state.gkey = usize::MAX;
+                                if state.dbg {
+                                    println!("gkey collected");
+                                }
+                            }
                             state.scn.objects[state.destructables[i]].physic_object.pos.y = -1000.0;
                             state.scn.objects[state.destructables[i]].draw = false;
-                            if i == state.ekey {
-                                state.ekey = usize::MAX;
-                            } else if i == state.gkey {
-                                state.gkey = usize::MAX;
-                            }
                             break;
                         }
                     }

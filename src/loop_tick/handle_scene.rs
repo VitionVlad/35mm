@@ -14,7 +14,7 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
             let button_pos = state.scn.objects[button.index].physic_object.pos;
             let dist = distance(player_pos, button_pos);
             if button.axis < 4 {
-                if dist <= 1.0 {
+                if dist <= 1.0 && ((state.ekey == usize::MAX && button.scene_index == 3) || button.scene_index != 3){
                     // show blue panel with "E"
                     let tx = "E";
                     state.phcnt.draw = true;
@@ -79,7 +79,8 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
                                     state.switched_5_6 = false;
                                 }
                             },
-                            3 =>{},
+                            3 =>{
+                            },
                             _ => (),
                         }
                         state.tm = 50;
