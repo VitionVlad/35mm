@@ -117,6 +117,7 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
 
     let mut ekey = 0usize;
     let mut gkey = 0usize;
+    let mut fdi = 0usize;
 
     for i in 0..scn.objects.len() {
         scn.objects[i].draw_distance = 1000_f32;
@@ -184,6 +185,8 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
                 scn.objects[i].physic_object.is_static = false;
                 scn.objects[i].physic_object.solid = false;
                 tramin = i;
+            } else if bt[0] == b'f' && bt[1] == b'i' && bt[2] == b'n' && bt[3] == b'a' && bt[4] == b'l' {
+                fdi = i;
             } else if bt[0] == b'n' && bt[1] == b's' {
                 scn.objects[i].physic_object.solid = false;
             } else if bt[0] == b'o' && bt[1] == b'p' {
@@ -310,6 +313,8 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
 
     eng.audio.vol = 1.0;
 
+    let initial_pivot_pos = scn.objects[pu].physic_object.pos;
+
     let state = AppState {
         viewport,
         bluepan,
@@ -352,6 +357,9 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
         switch_states: [false; 6],
         switched_1_4: false,
         switched_5_6: false,
+        sc3state: 0,
+        finaldooridx: fdi,
+        initial_pivot_pos,
     };
 
     (eng, state)

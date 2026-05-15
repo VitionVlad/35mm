@@ -5,6 +5,71 @@ use crate::{
     engine::engine::Engine,
 };
 
+fn reset_final_door_game(state: &mut AppState) {
+    state.cstop = 0;
+    state.tm = 0;
+    state.intram = false;
+    state.sc3state = 0;
+    state.switched_1_4 = false;
+    state.switched_5_6 = false;
+    state.switch_states = [false; 6];
+    state.selp = 0;
+    state.cme = false;
+    state.bwfilm = 0;
+    state.clfilm = 0;
+    state.locls = 1;
+
+    for button in state.btns.iter_mut() {
+        button.pressed = false;
+    }
+
+    let player_pos = &mut state.scn.objects[state.pu].physic_object.pos;
+    player_pos.x = state.initial_pivot_pos.x;
+    player_pos.y = state.initial_pivot_pos.y;
+    player_pos.z = state.initial_pivot_pos.z;
+
+    if state.dbg {
+        println!("final door activated: resetting game state and player position");
+    }
+}
+
+fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
+    if state.sc3state <= 1 || state.gkey != usize::MAX {
+        return;
+    }
+
+    let player_pos = state.scn.objects[state.pu].physic_object.pos;
+    let door_pos = state.scn.objects[state.finaldooridx].physic_object.pos;
+    let dist = distance(player_pos, door_pos);
+
+    if dist <= 1.0 {
+        let tx = "E";
+        state.phcnt.draw = true;
+        state.phcnt.size.x = 15.0;
+        state.phcnt.size.y = 30.0;
+        state.phcnt.pos.z = 0.1;
+        state.phcnt.pos.x = eng.render.resolution_x as f32 / 2.0 - (tx.len() as f32 * state.phcnt.size.x) / 2.0;
+        state.phcnt.pos.y = state.bwbtn.object.physic_object.pos.y - state.phcnt.size.y * 2.0;
+        state.phcnt.exec(eng, tx);
+        state.bluepan.object.draw = true;
+        state.bluepan.object.physic_object.scale.y = state.phcnt.size.y;
+        state.bluepan.object.physic_object.scale.x = state.bwbtn.object.physic_object.scale.x * 2.0;
+        state.bluepan.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0 - state.bluepan.object.physic_object.scale.x / 2.0;
+        state.bluepan.object.physic_object.pos.y = state.phcnt.pos.y;
+        state.bluepan.object.mesh.ubo[50] = 0.0;
+        state.bluepan.exec(eng);
+
+        if eng.control.get_key_state(26) && state.tm <= 0 {
+            state.sfx[3].move_sound_cursor(0.0);
+            state.sfx[3].play = true;
+            reset_final_door_game(state);
+        }
+    } else {
+        state.phcnt.draw = false;
+        state.bluepan.object.draw = false;
+    }
+}
+
 pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
     if state.selp == 0 {
         let mut button_status: Vec<(u32, u32, bool)> = state.btns.iter().map(|b| (b.in_scene_index, b.scene_index, b.pressed)).collect();
@@ -80,6 +145,25 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
                                 }
                             },
                             3 =>{
+                                button.pressed = !button.pressed;
+                                button_status[i] = (button.in_scene_index, button.scene_index, button.pressed);
+
+                                if state.dbg {
+                                    println!("scene 3 button, idx = {}, in_scene_index = {}, pressed = {}", button.index, button.in_scene_index, button.pressed);
+                                }
+                                if button_status.iter().any(|&(idx, scene_idx, pressed)| idx == 4 && scene_idx == 3 && pressed) &&
+                                button_status.iter().any(|&(idx, scene_idx, pressed)| idx == 2 && scene_idx == 3 && pressed) &&
+                                button_status.iter().any(|&(idx, scene_idx, pressed)| idx == 3 && scene_idx == 3 && pressed){
+                                    state.sc3state = 1;
+                                    if button_status.iter().any(|&(idx, scene_idx, pressed)| idx == 1 && scene_idx == 3 && pressed){
+                                        state.sc3state = 2;
+                                    }
+                                    if state.dbg {
+                                        println!("scene 3 state = {}", state.sc3state);
+                                    }
+                                }else {
+                                    state.sc3state = 0;
+                                }
                             },
                             _ => (),
                         }
@@ -112,6 +196,10 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
     }
     match state.cstop {
         1 => {
+            if state.dbg {
+                state.switched_5_6 = true;
+                state.switched_1_4 = true; 
+            }
             if state.switched_1_4{
                 match state.doors[0].axis {
                     0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x - state.doors[0].movement,
@@ -129,21 +217,27 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
             }
         }
         2 => {
-            //if state.switched_1_4{
-            //    match state.doors[0].axis {
-            //        0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x - state.doors[0].movement,
-            //        1 => state.scn.objects[state.doors[0].index].physic_object.pos.y = state.doors[0].initial_pos.y - state.doors[0].movement,
-            //        2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z - state.doors[0].movement,
-            //        _ => {}
-            //    }
-            //}else{
-            //    match state.doors[0].axis {
-            //        0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x,
-            //        1 => state.scn.objects[state.doors[0].index].physic_object.pos.y = state.doors[0].initial_pos.y,
-            //        2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z,
-            //        _ => {}
-            //    }
-            //}
+            if state.dbg {
+                state.ekey = usize::MAX;
+                state.gkey = usize::MAX;
+            }
+            if state.sc3state == 1{
+                match state.doors[1].axis {
+                    0 => state.scn.objects[state.doors[1].index].physic_object.pos.x = state.doors[1].initial_pos.x - state.doors[1].movement,
+                    1 => state.scn.objects[state.doors[1].index].physic_object.pos.y = state.doors[1].initial_pos.y - state.doors[1].movement,
+                    2 => state.scn.objects[state.doors[1].index].physic_object.pos.z = state.doors[1].initial_pos.z - state.doors[1].movement,
+                    _ => {}
+                }
+            }else{
+                match state.doors[1].axis {
+                    0 => state.scn.objects[state.doors[1].index].physic_object.pos.x = state.doors[1].initial_pos.x,
+                    1 => state.scn.objects[state.doors[1].index].physic_object.pos.y = state.doors[1].initial_pos.y,
+                    2 => state.scn.objects[state.doors[1].index].physic_object.pos.z = state.doors[1].initial_pos.z,
+                    _ => {}
+                }
+            }
+
+            handle_final_door_interaction(eng, state);
         }
         _ => {
         }
