@@ -9,11 +9,18 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     let (mut eng, mut state) = init::create_app(
-        if args.len() > 1 && args[1] == "-debug" { 
+        if args.iter().any(|x| x == "-debug") { 
             true 
         } 
         else { 
-            false }
+            false
+        },
+        if args.iter().any(|x| x == "-skipl2") { 
+            true 
+        } 
+        else { 
+            false
+        }
         );
 
     while eng.work() {

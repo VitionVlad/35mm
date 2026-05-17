@@ -7,7 +7,7 @@ use crate::{
     },
 };
 
-pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
+pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let mut eng = Engine::new();
     eng.render.set_title("35mm");
     eng.render.set_new_resolution(1280, 720);
@@ -65,6 +65,11 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
     let bti2 = Image::new_from_files(&eng, vec!["assets/ui/bwf.png".to_string()]);
     let bti3 = Image::new_from_files(&eng, vec!["assets/ui/bwc.png".to_string()]);
     let bti4 = Image::new_from_files(&eng, vec!["assets/ui/pas.png".to_string()]);
+    let bti5 = Image::new_from_files(&eng, vec!["assets/ui/btn.png".to_string()]);
+    let bti6 = Image::new_from_files(&eng, vec!["assets/ui/nk.png".to_string()]);
+    let bti7 = Image::new_from_files(&eng, vec!["assets/ui/tram.png".to_string()]);
+    let bti8 = Image::new_from_files(&eng, vec!["assets/ui/ne.png".to_string()]);
+    let bti9 = Image::new_from_files(&eng, vec!["assets/ui/fin.png".to_string()]);
 
     let mut viewport = UIplane::new(&mut eng, mat, black);
     viewport.object.physic_object.pos.z = 1.0;
@@ -86,6 +91,22 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
     let mut psbtn = UIplane::new(&mut eng, mati, bti4);
     psbtn.object.physic_object.pos.z = 0.1;
     psbtn.signal = true;
+
+    let mut btnbtn = UIplane::new(&mut eng, mati, bti5);
+    btnbtn.object.physic_object.pos.z = 0.1;
+    btnbtn.signal = true;
+    let mut nkbtn = UIplane::new(&mut eng, mati, bti6);
+    nkbtn.object.physic_object.pos.z = 0.1;
+    nkbtn.signal = true;
+    let mut trambtn = UIplane::new(&mut eng, mati, bti7);
+    trambtn.object.physic_object.pos.z = 0.1;
+    trambtn.signal = true;
+    let mut nebtn = UIplane::new(&mut eng, mati, bti8);
+    nebtn.object.physic_object.pos.z = 0.1;
+    nebtn.signal = true;
+    let mut drbtn = UIplane::new(&mut eng, mati, bti9);
+    drbtn.object.physic_object.pos.z = 0.1;
+    drbtn.signal = true;
 
     let mut fpscnt = UItext::new_from_file(
         &mut eng,
@@ -322,6 +343,11 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
         bwbtn,
         colbtn,
         psbtn,
+        btnbtn,
+        nkbtn,
+        trambtn,
+        nebtn,
+        drbtn,
         fpscnt,
         phcnt,
         scn,
@@ -360,6 +386,7 @@ pub fn create_app(show_dbg_info: bool) -> (Engine, AppState) {
         sc3state: 0,
         finaldooridx: fdi,
         initial_pivot_pos,
+        skp2: skipl2,
     };
 
     (eng, state)

@@ -19,45 +19,6 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.colbtn.object.draw = false;
             state.colbtn.exec(eng);
 
-            if distance(
-                state.scn.objects[state.pu].physic_object.pos,
-                state.scn.objects[state.tramin].physic_object.pos,
-            ) < 7.5 && !state.intram && state.cstop < state.stops.len() as u32 && ((state.cstop == 1 && state.switched_1_4 && state.switched_5_6) || state.cstop != 1) {
-                let tx = &format!("E");
-                state.phcnt.draw = true;
-                state.phcnt.size.x = 15_f32;
-                state.phcnt.size.y = 30_f32;
-                state.phcnt.pos.z = 0.1;
-                state.phcnt.pos.x =
-                    eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt.size.x) / 2.0);
-                state.phcnt.pos.y = state.bwbtn.object.physic_object.pos.y - state.phcnt.size.y * 2.0;
-                state.phcnt.exec(eng, tx);
-
-                state.bluepan.object.draw = true;
-                state.bluepan.object.physic_object.scale.y = state.phcnt.size.y;
-                state.bluepan.object.physic_object.scale.x = state.bwbtn.object.physic_object.scale.x * 2.0;
-                state.bluepan.object.physic_object.pos.x =
-                    eng.render.resolution_x as f32 / 2.0 - state.bluepan.object.physic_object.scale.x / 2.0;
-                state.bluepan.object.physic_object.pos.y = state.phcnt.pos.y;
-                state.bluepan.object.mesh.ubo[50] = 0.0;
-                state.bluepan.exec(eng);
-
-                if eng.control.get_key_state(26) && state.tm <= 0 && !state.intram {
-                    state.lsp.1 = false;
-                    state.tm = 50;
-                    if state.dbg {
-                        println!("current cstop: {}, next stop: {}", state.cstop, state.cstop + 1);
-                    }
-                    state.cstop += 1;
-                    state.intram = true;
-                }
-            } else {
-                state.phcnt.draw = false;
-                state.phcnt.exec(eng, " ");
-                state.bluepan.object.draw = false;
-                state.bluepan.exec(eng);
-            }
-
             if state.cme && !state.intram {
                 state.cambtn.object.physic_object.scale.x = 80.0;
                 state.cambtn.object.physic_object.scale.y = 80.0;
@@ -74,6 +35,58 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.cambtn.object.draw = false;
                 state.cambtn.exec(eng);
             }
+
+            if distance(
+                state.scn.objects[state.pu].physic_object.pos,
+                state.scn.objects[state.tramin].physic_object.pos,
+            ) < 7.5 && !state.intram {
+                if state.cstop < state.stops.len() as u32 && ((state.cstop == 1 && state.switched_1_4 && state.switched_5_6) || state.cstop != 1){
+                    state.phcnt.draw = false;
+                    state.bluepan.object.draw = false;
+
+                    state.trambtn.object.physic_object.scale.x = 80.0;
+                    state.trambtn.object.physic_object.scale.y = 80.0;
+                    state.trambtn.object.physic_object.pos.x =
+                        eng.render.resolution_x as f32 / 2.0 - state.trambtn.object.physic_object.scale.x / 2.0;
+                    state.trambtn.object.physic_object.pos.y =
+                        eng.render.resolution_y as f32 - state.trambtn.object.physic_object.scale.y * 2.0 - 20.0;
+                    state.trambtn.object.draw = true;
+                    let tram_pressed = state.trambtn.exec(eng) && eng.control.mousebtn[2];
+
+                    if (eng.control.get_key_state(26) || tram_pressed) && state.tm <= 0 {
+                        state.lsp.1 = false;
+                        state.tm = 50;
+                        if state.dbg {
+                            println!("current cstop: {}, next stop: {}", state.cstop, state.cstop + 1);
+                        }
+                        state.cstop += 1;
+                        state.intram = true;
+                    }
+                } else if state.cstop == 1 && !(state.switched_1_4 && state.switched_5_6){
+                    state.nebtn.object.physic_object.scale.x = 80.0;
+                    state.nebtn.object.physic_object.scale.y = 80.0;
+                    state.nebtn.object.physic_object.pos.x =
+                        eng.render.resolution_x as f32 / 2.0 - state.nebtn.object.physic_object.scale.x / 2.0;
+                    state.nebtn.object.physic_object.pos.y =
+                        eng.render.resolution_y as f32 - state.nebtn.object.physic_object.scale.y * 2.0 - 20.0;
+                    state.nebtn.object.draw = true;
+                    state.nebtn.exec(eng);
+                }else {
+                    state.nebtn.object.draw = false;
+                    state.nebtn.exec(eng);
+                    state.trambtn.object.draw = false;
+                    state.trambtn.exec(eng);
+                }
+            }else{
+                state.nebtn.object.draw = false;
+                state.nebtn.exec(eng);
+                state.trambtn.object.draw = false;
+                state.trambtn.exec(eng);
+            }
+            state.bluepan.object.draw = false;
+            state.bluepan.exec(eng);
+            state.phcnt.draw = false;
+            state.phcnt.exec(eng, " ");
         }
         1 => {
             eng.used_light_count = state.locls + 1;
@@ -177,6 +190,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.cambtn.object.draw = false;
             state.cambtn.exec(eng);
+
+            state.trambtn.object.draw = false;
+            state.trambtn.exec(eng);
         }
         2 => {
             eng.used_light_count = state.locls;
@@ -204,7 +220,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.tm = 50;
                 state.sfx[1].move_sound_cursor(0.0);
                 state.sfx[1].play = true;
-            } else if eng.control.get_key_state(26) && state.tm <= 0 {
+            } else if eng.control.get_key_state(26) && state.tm <= 0 && state.lsp.1 {
                 state.scn.objects[state.pu].physic_object.pos.x = state.lsp.0.x;
                 state.scn.objects[state.pu].physic_object.pos.z = state.lsp.0.y;
                 state.pkbf = 2.0;
@@ -239,6 +255,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.cambtn.object.draw = false;
             state.cambtn.exec(eng);
+
+            state.trambtn.object.draw = false;
+            state.trambtn.exec(eng);
         }
         _ => {}
     }
