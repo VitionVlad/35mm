@@ -3,6 +3,19 @@ use crate::{
     engine::{engine::Engine, math::vec3::Vec3},
 };
 
+fn apply_tram_acceleration(ph: &mut crate::engine::physics::PhysicsObject, target_x: f32, distance_scale: f32, min_acc: f32, max_acc: f32) {
+    let distance = target_x - ph.pos.x;
+    if distance.abs() < f32::EPSILON {
+        return;
+    }
+
+    let direction = distance.signum();
+    let distance_factor = (distance.abs() / distance_scale).clamp(0.0, 1.0);
+    let accel = min_acc + (max_acc - min_acc) * distance_factor;
+
+    ph.acceleration.x += direction * accel;
+}
+
 pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
     match state.selp {
         0 => {
@@ -56,11 +69,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                     if (eng.control.get_key_state(26) || tram_pressed) && state.tm <= 0 {
                         state.lsp.1 = false;
                         state.tm = 50;
+                        state.ttm = 250;
+                        state.intram = true;
                         if state.dbg {
-                            println!("current cstop: {}, next stop: {}", state.cstop, state.cstop + 1);
+                            println!("tram will start in {} ticks, current cstop: {}, next stop: {}", state.ttm, state.cstop, state.cstop + 1);
                         }
                         state.cstop += 1;
-                        state.intram = true;
                     }
                 } else if state.cstop == 1 && !(state.switched_1_4 && state.switched_5_6){
                     state.nebtn.object.physic_object.scale.x = 80.0;
@@ -124,25 +138,25 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                         if distance(
                             Vec3 {
                                 x: state.aproxpoint[j].x,
-                                y: state.scn.objects[state.destructables[i]].physic_object.pos.y,
+                                y: state.scn.objects[state.destructables[i].index].physic_object.pos.y,
                                 z: state.aproxpoint[j].y,
                             },
-                            state.scn.objects[state.destructables[i]].physic_object.pos,
+                            state.scn.objects[state.destructables[i].index].physic_object.pos,
                         ) <= (2.0 + j as f32)
                         {
-                            if state.destructables[i] == state.ekey {
+                            if state.destructables[i].index == state.ekey {
                                 state.ekey = usize::MAX;
                                 if state.dbg {
                                     println!("ekey collected");
                                 }
-                            } else if state.destructables[i] == state.gkey {
+                            } else if state.destructables[i].index == state.gkey {
                                 state.gkey = usize::MAX;
                                 if state.dbg {
                                     println!("gkey collected");
                                 }
                             }
-                            state.scn.objects[state.destructables[i]].physic_object.pos.y = -1000.0;
-                            state.scn.objects[state.destructables[i]].draw = false;
+                            state.scn.objects[state.destructables[i].index].physic_object.pos.y = -1000.0;
+                            state.scn.objects[state.destructables[i].index].draw = false;
                             break;
                         }
                     }
@@ -211,7 +225,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.phcnt.pos.y = state.colbtn.object.physic_object.pos.y - state.phcnt.size.y;
             state.phcnt.exec(eng, tx);
 
-            if eng.control.get_key_state(48) && state.tm <= 0 && state.bwfilm > 0 {
+            if eng.control.get_key_state(48) && state.tm <= 0 && state.clfilm > 0 {
                 state.lsp.0.x = state.scn.objects[state.pu].physic_object.pos.x;
                 state.lsp.0.y = state.scn.objects[state.pu].physic_object.pos.z;
                 state.lsp.1 = true;
@@ -263,14 +277,23 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
     }
 
     if state.intram {
-        state.sfx[5].play = true;
+        state.sfx[5].play = false;
         state.scn.objects[state.pu].physic_object.solid = false;
         state.scn.objects[state.pu].physic_object.pos = state.scn.objects[state.tramin].physic_object.pos;
-        state.scn.objects[state.tramin].physic_object.acceleration.x += SPEED * 5.0 * eng.times_to_calculate_physics as f32;
-        if state.scn.objects[state.tramin].physic_object.pos.x >= state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x {
-            state.intram = false;
-            state.scn.objects[state.pu].physic_object.pos.x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
-            state.scn.objects[state.pu].physic_object.pos.z = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.z + 5.0;
+        if state.ttm <= 0 {
+            let target_x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
+            apply_tram_acceleration(
+                &mut state.scn.objects[state.tramin].physic_object,
+                target_x,
+                30.0,
+                SPEED * 0.1 * eng.times_to_calculate_physics as f32,
+                SPEED * 5.0 * eng.times_to_calculate_physics as f32,
+            );
+            if state.scn.objects[state.tramin].physic_object.pos.x >= target_x {
+                state.intram = false;
+                state.scn.objects[state.pu].physic_object.pos.x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
+                state.scn.objects[state.pu].physic_object.pos.z = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.z + 2.5;
+            }
         }
     } else {
         state.scn.objects[state.pu].physic_object.solid = true;

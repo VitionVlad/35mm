@@ -23,6 +23,27 @@ fn reset_final_door_game(state: &mut AppState) {
         button.pressed = false;
     }
 
+    // reset collectibles to initial positions and state
+    for c in state.cvec.iter_mut() {
+        state.scn.objects[c.index].physic_object.pos = c.initial_pos;
+        c.consumed = false;
+        state.scn.objects[c.index].draw = true;
+        state.scn.objects[c.index].draw_shadow = true;
+        state.scn.objects[c.index].physic_object.reset_states();
+    }
+
+    // reset destructables to initial positions and state
+    for d in state.destructables.iter_mut() {
+        state.scn.objects[d.index].physic_object.pos = d.initial_pos;
+        state.scn.objects[d.index].draw = true;
+        state.scn.objects[d.index].draw_shadow = true;
+        state.scn.objects[d.index].physic_object.reset_states();
+    }
+
+    // restore key indices
+    state.ekey = state.initial_ekey;
+    state.gkey = state.initial_gkey;
+
     let player_pos = &mut state.scn.objects[state.pu].physic_object.pos;
     player_pos.x = state.initial_pivot_pos.x;
     player_pos.y = state.initial_pivot_pos.y;
@@ -38,7 +59,7 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
     let door_pos = state.scn.objects[state.finaldooridx].physic_object.pos;
     let dist = distance(player_pos, door_pos);
 
-    if dist <= 1.0 && state.selp == 0 {
+    if dist <= 1.5 && state.selp == 0 {
         let can_open = state.gkey == usize::MAX && state.sc3state == 2;
         let icon = if can_open { 
             &mut state.drbtn 

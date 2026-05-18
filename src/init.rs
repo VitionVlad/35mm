@@ -154,6 +154,11 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                     index: i,
                     ctype: 0,
                     consumed: false,
+                    initial_pos: Vec3 {
+                        x: scn.objects[i].physic_object.pos.x,
+                        y: scn.objects[i].physic_object.pos.y,
+                        z: scn.objects[i].physic_object.pos.z,
+                    },
                 });
                 if show_dbg_info{
                     println!("Camera collectible found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
@@ -166,6 +171,11 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                     index: i,
                     ctype: 1,
                     consumed: false,
+                    initial_pos: Vec3 {
+                        x: scn.objects[i].physic_object.pos.x,
+                        y: scn.objects[i].physic_object.pos.y,
+                        z: scn.objects[i].physic_object.pos.z,
+                    },
                 });
                 if show_dbg_info{
                     println!("B&W film collectible found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
@@ -178,6 +188,11 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                     index: i,
                     ctype: 2,
                     consumed: false,
+                    initial_pos: Vec3 {
+                        x: scn.objects[i].physic_object.pos.x,
+                        y: scn.objects[i].physic_object.pos.y,
+                        z: scn.objects[i].physic_object.pos.z,
+                    },
                 });
                 if show_dbg_info{
                     println!("Color film collectible found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
@@ -185,18 +200,39 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
             } else if bt[0] == b'c' && bt[1] == b'm' && bt[2] == b'r'{
                 if bt[3] == b'e'{
                     ekey = i;
-                    destructables.push(i);
+                    destructables.push(Destructable {
+                        index: i,
+                        initial_pos: Vec3 {
+                            x: scn.objects[i].physic_object.pos.x,
+                            y: scn.objects[i].physic_object.pos.y,
+                            z: scn.objects[i].physic_object.pos.z,
+                        },
+                    });
                     if show_dbg_info{
                         println!("destructable ekey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
                     }
                 } else if bt[3] == b'g'{
                     gkey = i;
-                    destructables.push(i);
+                    destructables.push(Destructable {
+                        index: i,
+                        initial_pos: Vec3 {
+                            x: scn.objects[i].physic_object.pos.x,
+                            y: scn.objects[i].physic_object.pos.y,
+                            z: scn.objects[i].physic_object.pos.z,
+                        },
+                    });
                     if show_dbg_info{
                         println!("destructable gkey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
                     }
                 }else{
-                    destructables.push(i);
+                    destructables.push(Destructable {
+                        index: i,
+                        initial_pos: Vec3 {
+                            x: scn.objects[i].physic_object.pos.x,
+                            y: scn.objects[i].physic_object.pos.y,
+                            z: scn.objects[i].physic_object.pos.z,
+                        },
+                    });
                     if show_dbg_info{
                         println!("destructable found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
                     }
@@ -355,6 +391,8 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         destructables,
         ekey: ekey,
         gkey: gkey,
+        initial_ekey: ekey,
+        initial_gkey: gkey,
         btns: btns,
         scenelightsources: ltsc,
         doors: doors,
@@ -362,6 +400,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         cstop: 0_u32,
         intram: false,
         tm: 0,
+        ttm: 0,
         pu,
         pivotr: 0.0_f32,
         pkbf: 1_f32,

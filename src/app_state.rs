@@ -11,6 +11,12 @@ pub struct Colectable {
     pub index: usize,
     pub ctype: u8,
     pub consumed: bool,
+    pub initial_pos: Vec3,
+}
+
+pub struct Destructable {
+    pub index: usize,
+    pub initial_pos: Vec3,
 }
 
 pub struct Ingbutton{
@@ -48,9 +54,11 @@ pub struct AppState {
     pub phcnt: UItext,
     pub scn: Scene,
     pub cvec: Vec<Colectable>,
-    pub destructables: Vec<usize>,
+    pub destructables: Vec<Destructable>,
     pub ekey: usize,
     pub gkey: usize,
+    pub initial_ekey: usize,
+    pub initial_gkey: usize,
     pub stops: Vec<usize>,
     pub btns: Vec<Ingbutton>,
     pub scenelightsources: Vec<Scenelightsource>,
@@ -58,6 +66,7 @@ pub struct AppState {
     pub cstop: u32,
     pub intram: bool,
     pub tm: i32,
+    pub ttm: i32,
     pub pu: usize,
     pub pivotr: f32,
     pub pkbf: f32,

@@ -237,6 +237,7 @@ impl PhysicsObject{
     pub fn reset_states(&mut self){
         self.is_interacting = false;
     }
+
     fn calclninter(&mut self, l1p1: Vec2, l1p2: Vec2, l2p1: Vec2, l2p2: Vec2){
         self.hit = false;
 

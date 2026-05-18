@@ -7,6 +7,15 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     if state.tm > 0 {
         state.tm -= eng.times_to_calculate_physics as i32;
     }
+    if state.ttm > 0 {
+        state.ttm -= eng.times_to_calculate_physics as i32;
+        if state.ttm <= 0 {
+            //state.intram = true;
+            if state.dbg {
+                println!("tram is starting");
+            }
+        }
+    }
 
     state.viewport.ubo_index = 51;
     state.viewport.object.mesh.ubo[49] = state.scn.objects[state.pu].physic_object.pos.x;
@@ -79,8 +88,8 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
                 state.sfx[6].play = true;
                 match state.cvec[i].ctype {
                     0 => state.cme = true,
-                    1 => state.bwfilm += 8,
-                    2 => state.clfilm += 8,
+                    1 => state.bwfilm += 2,
+                    2 => state.clfilm += 2,
                     _ => {}
                 }
             }
