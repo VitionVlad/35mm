@@ -358,11 +358,22 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     sfx[5].play = false;
     sfx[5].pos_dependency = false;
     sfx[5].use_pan = false;
+    sfx[5].volume = 0.0;
     sfx.push(Speaker::new(&mut eng, "assets/audio/pickup.mp3"));
     sfx[6].loopsound = false;
     sfx[6].play = false;
     sfx[6].pos_dependency = false;
     sfx[6].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/bell.mp3"));
+    sfx[7].loopsound = false;
+    sfx[7].play = false;
+    sfx[7].pos_dependency = false;
+    sfx[7].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/stop.mp3"));
+    sfx[8].loopsound = true;
+    sfx[8].play = false;
+    sfx[8].pos_dependency = false;
+    sfx[8].use_pan = false;
 
     for i in 0..sfx.len() {
         sfx[i].volume = 1.0;

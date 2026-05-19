@@ -71,6 +71,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                         state.tm = 50;
                         state.ttm = 250;
                         state.intram = true;
+                        state.sfx[7].move_sound_cursor(0.0);
+                        state.sfx[7].play = true;
                         if state.dbg {
                             println!("tram will start in {} ticks, current cstop: {}, next stop: {}", state.ttm, state.cstop, state.cstop + 1);
                         }
@@ -277,25 +279,51 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
     }
 
     if state.intram {
-        state.sfx[5].play = false;
+        let max_tram_acc = SPEED * 5.0 * eng.times_to_calculate_physics as f32;
         state.scn.objects[state.pu].physic_object.solid = false;
         state.scn.objects[state.pu].physic_object.pos = state.scn.objects[state.tramin].physic_object.pos;
         if state.ttm <= 0 {
             let target_x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
+            let distance = target_x - state.scn.objects[state.tramin].physic_object.pos.x;
+            let approaching_stop = distance.abs() < 30.0;
+
             apply_tram_acceleration(
                 &mut state.scn.objects[state.tramin].physic_object,
                 target_x,
                 30.0,
                 SPEED * 0.1 * eng.times_to_calculate_physics as f32,
-                SPEED * 5.0 * eng.times_to_calculate_physics as f32,
+                max_tram_acc,
             );
             if state.scn.objects[state.tramin].physic_object.pos.x >= target_x {
                 state.intram = false;
                 state.scn.objects[state.pu].physic_object.pos.x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
                 state.scn.objects[state.pu].physic_object.pos.z = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.z + 2.5;
             }
+
+            let tram_acc = state.scn.objects[state.tramin].physic_object.acceleration.x.abs();
+            state.sfx[5].volume = (tram_acc / max_tram_acc).clamp(0.0, 1.0);
+            if state.dbg {
+                println!("tram_acc: {}, max_tram_acc: {}, volume: {}", tram_acc, max_tram_acc, state.sfx[5].volume);
+            }
+
+            let stop_sound_vol = if approaching_stop {
+                state.sfx[5].volume*2.0
+            } else {
+                0.0
+            };
+            state.sfx[8].volume = stop_sound_vol;
+            state.sfx[8].play = stop_sound_vol > 0.01;
+        } else {
+            state.sfx[8].play = false;
+            state.sfx[8].volume = 0.0;
         }
+
+        state.sfx[5].play = true;
     } else {
+        state.sfx[5].play = false;
+        state.sfx[5].volume = 0.0;
+        state.sfx[8].play = false;
+        state.sfx[8].volume = 0.0;
         state.scn.objects[state.pu].physic_object.solid = true;
     }
 }
