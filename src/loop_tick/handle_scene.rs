@@ -229,6 +229,7 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
                     2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z - state.doors[0].movement,
                     _ => {}
                 }
+                state.sfx[2].play = true;
             }else{
                 match state.doors[0].axis {
                     0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x,

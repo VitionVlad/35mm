@@ -8,18 +8,34 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.scn.objects[state.pu].physic_object.acceleration.x += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI / 2.0;
             state.sfx[0].play = true;
+            state.controlt = 0;
         } else if eng.control.get_key_state(44) {
             state.scn.objects[state.pu].physic_object.acceleration.x += SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = (PI / 2.0) * 3.0;
             state.sfx[0].play = true;
+            state.controlt = 0;
         } else if eng.control.get_key_state(25) {
             state.scn.objects[state.pu].physic_object.acceleration.z += SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI;
             state.sfx[0].play = true;
+            state.controlt = 0;
         } else if eng.control.get_key_state(22) {
             state.scn.objects[state.pu].physic_object.acceleration.z += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = 0.0;
             state.sfx[0].play = true;
+            state.controlt = 0;
+        }else if eng.control.get_key_state(13) && state.cme && state.tm <= 0 && !state.intram {
+            state.selp = 0;
+            state.tm = 50;
+            state.controlt = 0;
+        }else if eng.control.get_key_state(14) && state.cme && state.tm <= 0 && !state.intram {
+            state.selp = 1;
+            state.tm = 50;
+            state.controlt = 0;
+        }else if eng.control.get_key_state(15) && state.cme && state.tm <= 0 && !state.intram {
+            state.selp = 2;
+            state.tm = 50;
+            state.controlt = 0;
         }
     }
 

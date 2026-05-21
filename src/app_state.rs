@@ -50,6 +50,8 @@ pub struct AppState {
     pub trambtn: UIplane,
     pub nebtn: UIplane,
     pub drbtn: UIplane,
+    pub shbtn: UIplane,
+    pub reccbtn: UIplane,
     pub fpscnt: UItext,
     pub phcnt: UItext,
     pub scn: Scene,
@@ -87,6 +89,7 @@ pub struct AppState {
     pub finaldooridx: usize,
     pub initial_pivot_pos: Vec3,
     pub skp2: bool,
+    pub controlt: u8,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

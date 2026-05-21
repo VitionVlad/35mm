@@ -70,6 +70,8 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let bti7 = Image::new_from_files(&eng, vec!["assets/ui/tram.png".to_string()]);
     let bti8 = Image::new_from_files(&eng, vec!["assets/ui/ne.png".to_string()]);
     let bti9 = Image::new_from_files(&eng, vec!["assets/ui/fin.png".to_string()]);
+    let bti10 = Image::new_from_files(&eng, vec!["assets/ui/shutter.png".to_string()]);
+    let bti11 = Image::new_from_files(&eng, vec!["assets/ui/recc.png".to_string()]);
 
     let mut viewport = UIplane::new(&mut eng, mat, black);
     viewport.object.physic_object.pos.z = 1.0;
@@ -107,6 +109,12 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let mut drbtn = UIplane::new(&mut eng, mati, bti9);
     drbtn.object.physic_object.pos.z = 0.1;
     drbtn.signal = true;
+    let mut shbtn = UIplane::new(&mut eng, mati, bti10);
+    shbtn.object.physic_object.pos.z = 0.1;
+    shbtn.signal = true;
+    let mut reccbtn = UIplane::new(&mut eng, mati, bti11);
+    reccbtn.object.physic_object.pos.z = 0.1;
+    reccbtn.signal = true;
 
     let mut fpscnt = UItext::new_from_file(
         &mut eng,
@@ -374,10 +382,17 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     sfx[8].play = false;
     sfx[8].pos_dependency = false;
     sfx[8].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/ca.mp3"));
+    sfx[9].loopsound = true;
+    sfx[9].play = false;
+    sfx[9].pos_dependency = false;
+    sfx[9].use_pan = false;
 
     for i in 0..sfx.len() {
         sfx[i].volume = 1.0;
     }
+
+    sfx[2].volume = 0.5;
 
     eng.audio.vol = 1.0;
 
@@ -395,6 +410,8 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         trambtn,
         nebtn,
         drbtn,
+        shbtn,
+        reccbtn,
         fpscnt,
         phcnt,
         scn,
@@ -437,6 +454,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         finaldooridx: fdi,
         initial_pivot_pos,
         skp2: skipl2,
+        controlt: 0,
     };
 
     (eng, state)

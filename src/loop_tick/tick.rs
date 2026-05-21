@@ -118,4 +118,6 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
             eng.render.resolution_x as f32 / 2.0 - state.psbtn.object.physic_object.scale.x / 2.0;
     }
     state.psbtn.exec(eng);
+
+    state.sfx[9].play = true;
 }
