@@ -37,6 +37,32 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.tm = 50;
             state.controlt = 0;
         }
+
+        // Virtual joystick: left half-screen press engages controlt = 1
+        if eng.control.mousebtn[2] {
+            let resx_half = (eng.render.resolution_x as f64) / 2.0;
+            if eng.control.xpos < resx_half {
+                if state.controlt != 1 {
+                    state.controlt = 1;
+                    state.joy_origin.x = eng.control.xpos as f32;
+                    state.joy_origin.y = eng.control.ypos as f32;
+                }
+                // while held, compute angle from origin to current mouse and set pivot target
+                let dx = eng.control.xpos as f32 - state.joy_origin.x;
+                let dy = eng.control.ypos as f32 - state.joy_origin.y;
+                if dx != 0.0 || dy != 0.0 {
+                    let ang = dx.atan2(dy)+PI/4.0;
+                    state.pivotr = ang;
+                    let a = SPEED * eng.times_to_calculate_physics as f32;
+                    state.scn.objects[state.pu].physic_object.acceleration.x += -a * state.pivotr.sin();
+                    state.scn.objects[state.pu].physic_object.acceleration.z += -a * state.pivotr.cos();
+                    state.sfx[0].play = true;
+                }
+            }
+        } else if state.controlt == 1 && !eng.control.mousebtn[2] {
+            // release
+            state.controlt = 0;
+        }
     }
 
     let step = SPEED * eng.times_to_calculate_physics as f32 * 20.0;

@@ -90,6 +90,7 @@ pub struct AppState {
     pub initial_pivot_pos: Vec3,
     pub skp2: bool,
     pub controlt: u8,
+    pub joy_origin: Vec2,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {
