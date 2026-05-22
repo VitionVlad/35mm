@@ -75,7 +75,9 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
         icon.object.draw = true;
         let icon_pressed = icon.exec(eng) && can_open && eng.control.mousebtn[2];
 
-        if can_open && ((eng.control.get_key_state(26) || icon_pressed) && state.tm <= 0) {
+        let abtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(0) && can_open;
+
+        if can_open && ((eng.control.get_key_state(26) || icon_pressed || abtn_pressed) && state.tm <= 0) {
             state.sfx[3].move_sound_cursor(0.0);
             state.sfx[3].play = true;
             reset_final_door_game(state);
@@ -110,7 +112,8 @@ fn process_button_interactions(eng: &mut Engine, state: &mut AppState) {
                 icon.object.physic_object.pos.y = eng.render.resolution_y as f32 - icon.object.physic_object.scale.y * 2.0 - 20.0;
                 icon.object.draw = true;
                 let icon_pressed = icon.exec(eng) && !show_nk && eng.control.mousebtn[2];
-                if can_use && ((eng.control.get_key_state(26) || icon_pressed) && state.tm <= 0) {
+                let abtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(0) && !show_nk;
+                if can_use && ((eng.control.get_key_state(26) || icon_pressed || abtn_pressed) && state.tm <= 0) {
                         let rot_axis = button.axis;
                         match rot_axis {
                             0 => state.scn.objects[button.index].physic_object.rot.x += PI,

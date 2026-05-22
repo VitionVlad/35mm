@@ -59,6 +59,36 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             }
         }
 
+        if eng.control.gamepad_axis_count > 0 {
+            let axis_x = eng.control.get_gamepad_axis_state(0);
+            let axis_y = eng.control.get_gamepad_axis_state(1);
+            if axis_x.abs() > 0.1 || axis_y.abs() > 0.1 {
+                state.controlt = 2;
+                let ang = (axis_x as f32).atan2(axis_y as f32);
+                state.pivotr = ang;
+                let a = SPEED * eng.times_to_calculate_physics as f32;
+                state.scn.objects[state.pu].physic_object.acceleration.x += -a * state.pivotr.sin();
+                state.scn.objects[state.pu].physic_object.acceleration.z += -a * state.pivotr.cos();
+                state.sfx[0].play = true;
+            }
+        }
+
+        if eng.control.gamepad_button_count > 0 {
+            if eng.control.get_gamepad_button_state(0) && state.cme && state.tm <= 0 && !state.intram {
+                state.selp = 0;
+                state.tm = 50;
+                state.controlt = 2;
+            } else if eng.control.get_gamepad_button_state(1) && state.cme && state.tm <= 0 && !state.intram {
+                state.selp = 1;
+                state.tm = 50;
+                state.controlt = 2;
+            } else if eng.control.get_gamepad_button_state(2) && state.cme && state.tm <= 0 && !state.intram {
+                state.selp = 2;
+                state.tm = 50;
+                state.controlt = 2;
+            }
+        }
+
         if state.controlt != 1{
             state.shbtn.object.draw = false;
             state.reccbtn.object.draw = false;
