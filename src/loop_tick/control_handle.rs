@@ -38,16 +38,14 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.controlt = 0;
         }
 
-        // Virtual joystick: left half-screen press engages controlt = 1
         if eng.control.mousebtn[2] {
             let resx_half = (eng.render.resolution_x as f64) / 2.0;
-            if eng.control.xpos < resx_half {
+            if eng.control.xpos < resx_half - 80.0 && !state.left_hand || eng.control.xpos >= resx_half + 80.0 && state.left_hand {
                 if state.controlt != 1 {
                     state.controlt = 1;
                     state.joy_origin.x = eng.control.xpos as f32;
                     state.joy_origin.y = eng.control.ypos as f32;
                 }
-                // while held, compute angle from origin to current mouse and set pivot target
                 let dx = eng.control.xpos as f32 - state.joy_origin.x;
                 let dy = eng.control.ypos as f32 - state.joy_origin.y;
                 if dx != 0.0 || dy != 0.0 {
@@ -59,9 +57,12 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
                     state.sfx[0].play = true;
                 }
             }
-        } else if state.controlt == 1 && !eng.control.mousebtn[2] {
-            // release
-            state.controlt = 0;
+        }
+
+        if state.controlt != 1{
+            state.shbtn.object.draw = false;
+            state.reccbtn.object.draw = false;
+            state.shbtn.exec(eng);
         }
     }
 

@@ -32,6 +32,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.colbtn.object.draw = false;
             state.colbtn.exec(eng);
 
+            state.shbtn.object.draw = false;
+            state.reccbtn.object.draw = false;
+
             if state.cme && !state.intram {
                 state.cambtn.object.physic_object.scale.x = 80.0;
                 state.cambtn.object.physic_object.scale.y = 80.0;
@@ -103,6 +106,10 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.bluepan.exec(eng);
             state.phcnt.draw = false;
             state.phcnt.exec(eng, " ");
+            state.shbtn.object.draw = false;
+            state.reccbtn.object.draw = false;
+            state.shbtn.exec(eng);
+            state.reccbtn.exec(eng);
         }
         1 => {
             eng.used_light_count = state.locls + 1;
@@ -134,7 +141,29 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                         - state.scn.objects[state.pu].physic_object.rot.y.cos() * (i + 1) as f32;
             }
 
-            if eng.control.get_key_state(48) && state.tm <= 0 && state.bwfilm > 0 {
+            let mut touch_shutter = false;
+            state.shbtn.object.draw = false;
+            state.reccbtn.object.draw = false;
+            if state.controlt == 1 {
+                let button_size = 80.0;
+                let mut sign = 1.0;
+                let button_x = if state.left_hand {
+                    sign = -1.0;
+                    eng.render.resolution_x as f32 / 4.0 - button_size / 2.0
+                } else {
+                    eng.render.resolution_x as f32 * 3.0 / 4.0 - button_size / 2.0
+                };
+                let center_y = eng.render.resolution_y as f32 / 2.0;
+
+                state.shbtn.object.physic_object.scale.x = button_size;
+                state.shbtn.object.physic_object.scale.y = button_size;
+                state.shbtn.object.physic_object.pos.x = button_x + sign*button_size;
+                state.shbtn.object.physic_object.pos.y = center_y + button_size * 1.5;
+                state.shbtn.object.draw = true;
+                touch_shutter = state.shbtn.exec(eng) && eng.control.mousebtn[2];
+            }
+
+            if (eng.control.get_key_state(48) || touch_shutter) && state.tm <= 0 && state.bwfilm > 0 {
                 for i in 0..state.destructables.len() {
                     for j in 0..state.aproxpoint.len() {
                         if distance(
@@ -256,6 +285,55 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.bwbtn.object.draw = false;
             state.bwbtn.exec(eng);
+
+            let mut touch_shutter = false;
+            let mut touch_recc = false;
+            state.shbtn.object.draw = false;
+            state.reccbtn.object.draw = false;
+            if state.controlt == 1 {
+                let button_size = 80.0;
+                let mut sign = 1.0;
+                let button_x = if state.left_hand {
+                    sign = -1.0;
+                    eng.render.resolution_x as f32 / 4.0 - button_size / 2.0
+                } else {
+                    eng.render.resolution_x as f32 * 3.0 / 4.0 - button_size / 2.0
+                };
+                let center_y = eng.render.resolution_y as f32 / 2.0;
+
+                state.shbtn.object.physic_object.scale.x = button_size;
+                state.shbtn.object.physic_object.scale.y = button_size;
+                state.reccbtn.object.physic_object.scale.x = button_size;
+                state.reccbtn.object.physic_object.scale.y = button_size;
+
+                state.shbtn.object.physic_object.pos.x = button_x + sign * button_size;
+                state.shbtn.object.physic_object.pos.y = center_y + button_size * 2.0;
+                state.shbtn.object.draw = true;
+                touch_shutter = state.shbtn.exec(eng) && eng.control.mousebtn[2];
+
+                state.reccbtn.object.physic_object.pos.x = button_x + sign * button_size;
+                state.reccbtn.object.physic_object.pos.y = center_y;
+                state.reccbtn.object.draw = true;
+                touch_recc = state.reccbtn.exec(eng) && eng.control.mousebtn[2];
+            }
+
+            if (eng.control.get_key_state(48) || touch_shutter) && state.tm <= 0 && state.clfilm > 0 {
+                state.lsp.0.x = state.scn.objects[state.pu].physic_object.pos.x;
+                state.lsp.0.y = state.scn.objects[state.pu].physic_object.pos.z;
+                state.lsp.1 = true;
+                state.pkbf = 2.0;
+                state.clfilm -= 1;
+                state.tm = 50;
+                state.sfx[1].move_sound_cursor(0.0);
+                state.sfx[1].play = true;
+            } else if (eng.control.get_key_state(26) || touch_recc) && state.tm <= 0 && state.lsp.1 {
+                state.scn.objects[state.pu].physic_object.pos.x = state.lsp.0.x;
+                state.scn.objects[state.pu].physic_object.pos.z = state.lsp.0.y;
+                state.pkbf = 2.0;
+                state.tm = 50;
+                state.sfx[1].move_sound_cursor(0.0);
+                state.sfx[1].play = true;
+            }
 
             state.colbtn.object.physic_object.scale.x = 80.0;
             state.colbtn.object.physic_object.scale.y = 80.0;

@@ -456,6 +456,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         skp2: skipl2,
         controlt: 0,
         joy_origin: Vec2 { x: 0.0, y: 0.0 },
+        left_hand: false,
     };
 
     (eng, state)

@@ -91,6 +91,7 @@ pub struct AppState {
     pub skp2: bool,
     pub controlt: u8,
     pub joy_origin: Vec2,
+    pub left_hand: bool,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {
