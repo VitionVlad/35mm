@@ -4,35 +4,35 @@ use crate::{app_state::{AppState, SPEED}, engine::engine::Engine};
 
 pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
     if !state.intram {
-        if eng.control.get_key_state(40) {
+        if eng.control.get_key_state(state.keycodes[2]) {
             state.scn.objects[state.pu].physic_object.acceleration.x += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI / 2.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        } else if eng.control.get_key_state(44) {
+        } else if eng.control.get_key_state(state.keycodes[3]) {
             state.scn.objects[state.pu].physic_object.acceleration.x += SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = (PI / 2.0) * 3.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        } else if eng.control.get_key_state(25) {
+        } else if eng.control.get_key_state(state.keycodes[4]) {
             state.scn.objects[state.pu].physic_object.acceleration.z += SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI;
             state.sfx[0].play = true;
             state.controlt = 0;
-        } else if eng.control.get_key_state(22) {
+        } else if eng.control.get_key_state(state.keycodes[5]) {
             state.scn.objects[state.pu].physic_object.acceleration.z += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = 0.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        }else if eng.control.get_key_state(13) && state.cme && state.tm <= 0 && !state.intram {
+        }else if eng.control.get_key_state(state.keycodes[6]) && state.cme && state.tm <= 0 && !state.intram {
             state.selp = 0;
             state.tm = 50;
             state.controlt = 0;
-        }else if eng.control.get_key_state(14) && state.cme && state.tm <= 0 && !state.intram {
+        }else if eng.control.get_key_state(state.keycodes[7]) && state.cme && state.tm <= 0 && !state.intram {
             state.selp = 1;
             state.tm = 50;
             state.controlt = 0;
-        }else if eng.control.get_key_state(15) && state.cme && state.tm <= 0 && !state.intram {
+        }else if eng.control.get_key_state(state.keycodes[8]) && state.cme && state.tm <= 0 && !state.intram {
             state.selp = 2;
             state.tm = 50;
             state.controlt = 0;
@@ -60,8 +60,8 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
         }
 
         if eng.control.gamepad_axis_count > 0 {
-            let axis_x = eng.control.get_gamepad_axis_state(0);
-            let axis_y = eng.control.get_gamepad_axis_state(1);
+            let axis_x = eng.control.get_gamepad_axis_state(state.gamepad_axes[0]);
+            let axis_y = eng.control.get_gamepad_axis_state(state.gamepad_axes[1]);
             if axis_x.abs() > 0.1 || axis_y.abs() > 0.1 {
                 state.controlt = 2;
                 let ang = (axis_x as f32).atan2(axis_y as f32);
@@ -74,15 +74,15 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
         }
 
         if eng.control.gamepad_button_count > 0 {
-            if eng.control.get_gamepad_button_state(0) && state.cme && state.tm <= 0 && !state.intram {
+            if eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.cme && state.tm <= 0 && !state.intram {
                 state.selp = 0;
                 state.tm = 50;
                 state.controlt = 2;
-            } else if eng.control.get_gamepad_button_state(1) && state.cme && state.tm <= 0 && !state.intram {
+            } else if eng.control.get_gamepad_button_state(state.gamepad_buttons[1]) && state.cme && state.tm <= 0 && !state.intram {
                 state.selp = 1;
                 state.tm = 50;
                 state.controlt = 2;
-            } else if eng.control.get_gamepad_button_state(2) && state.cme && state.tm <= 0 && !state.intram {
+            } else if eng.control.get_gamepad_button_state(state.gamepad_buttons[2]) && state.cme && state.tm <= 0 && !state.intram {
                 state.selp = 2;
                 state.tm = 50;
                 state.controlt = 2;

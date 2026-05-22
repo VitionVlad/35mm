@@ -69,9 +69,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                     state.trambtn.object.draw = true;
                     let tram_pressed = state.trambtn.exec(eng) && eng.control.mousebtn[2];
 
-                    let abtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(0);
+                    let abtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]);
 
-                    if (eng.control.get_key_state(26) || tram_pressed || abtn_pressed) && state.tm <= 0 {
+                    if (eng.control.get_key_state(state.keycodes[0]) || tram_pressed || abtn_pressed) && state.tm <= 0 {
                         state.lsp.1 = false;
                         state.tm = 50;
                         state.ttm = 250;
@@ -166,12 +166,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             }
 
             let trigg = if eng.control.gamepad_axis_count > 0 {
-                eng.control.get_gamepad_axis_state(5) > 0.0
+                eng.control.get_gamepad_axis_state(state.gamepad_axes[2]) > 0.0
             } else {
                 false
             };
 
-            if (eng.control.get_key_state(48) || touch_shutter || trigg) && state.tm <= 0 && state.bwfilm > 0 {
+            if (eng.control.get_key_state(state.keycodes[1]) || touch_shutter || trigg) && state.tm <= 0 && state.bwfilm > 0 {
                 for i in 0..state.destructables.len() {
                     for j in 0..state.aproxpoint.len() {
                         if distance(
@@ -265,12 +265,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.phcnt.exec(eng, tx);
 
             let trigg = if eng.control.gamepad_axis_count > 0 {
-                eng.control.get_gamepad_axis_state(5) > 0.0
+                eng.control.get_gamepad_axis_state(state.gamepad_axes[2]) > 0.0
             } else {
                 false
             };
 
-            let ybtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(3);
+            let ybtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[3]);
 
             state.bluepan.object.draw = true;
             state.bluepan.object.physic_object.scale.y = state.phcnt.size.y;
@@ -315,7 +315,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 touch_recc = state.reccbtn.exec(eng) && eng.control.mousebtn[2];
             }
 
-            if (eng.control.get_key_state(48) || touch_shutter || trigg) && state.tm <= 0 && state.clfilm > 0 {
+            if (eng.control.get_key_state(state.keycodes[1]) || touch_shutter || trigg) && state.tm <= 0 && state.clfilm > 0 {
                 state.lsp.0.x = state.scn.objects[state.pu].physic_object.pos.x;
                 state.lsp.0.y = state.scn.objects[state.pu].physic_object.pos.z;
                 state.lsp.1 = true;
@@ -324,7 +324,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.tm = 50;
                 state.sfx[1].move_sound_cursor(0.0);
                 state.sfx[1].play = true;
-            } else if (eng.control.get_key_state(26) || touch_recc || ybtn_pressed) && state.tm <= 0 && state.lsp.1 {
+            } else if (eng.control.get_key_state(state.keycodes[0]) || touch_recc || ybtn_pressed) && state.tm <= 0 && state.lsp.1 {
                 state.scn.objects[state.pu].physic_object.pos.x = state.lsp.0.x;
                 state.scn.objects[state.pu].physic_object.pos.z = state.lsp.0.y;
                 state.pkbf = 2.0;

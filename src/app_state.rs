@@ -92,6 +92,9 @@ pub struct AppState {
     pub controlt: u8,
     pub joy_origin: Vec2,
     pub left_hand: bool,
+    pub keycodes: Vec<u32>,
+    pub gamepad_axes: Vec<u8>,
+    pub gamepad_buttons: Vec<u8>,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {
