@@ -1,6 +1,6 @@
 use crate::{
     app_state::{distance, AppState, SPEED},
-    engine::{engine::Engine, light::LightType, math::vec3::Vec3},
+    engine::{engine::Engine, math::vec3::Vec3},
 };
 
 pub fn tick(eng: &mut Engine, state: &mut AppState) {
@@ -42,22 +42,6 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     eng.cameras[0].fov = 37.5_f32;
     eng.cameras[0].physic_object.rot.x = 0.7_f32;
     eng.cameras[0].physic_object.rot.y = 2.355_f32;
-
-    eng.lights[0].camera.physic_object.pos = Vec3 {
-        x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
-        y: 55_f32,
-        z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
-    };
-    eng.lights[0].light_type = LightType::Directional;
-    eng.lights[0].direction = Vec3 {
-        x: 1.0_f32,
-        y: -1.0_f32,
-        z: 1.0_f32,
-    };
-    eng.lights[0].pos = eng.lights[0].camera.physic_object.pos;
-    eng.lights[0].rot.x = 0.7_f32;
-    eng.lights[0].rot.y = 2.355_f32;
-    eng.lights[0].camera.fov = 20_f32;
 
     for i in 0..state.cvec.len() {
         if !state.cvec[i].consumed {

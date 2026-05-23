@@ -133,7 +133,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
 
     eng.cameras[0].physic_object.gravity = false;
     eng.cameras[0].physic_object.solid = false;
-    eng.render.shadow_map_resolution = 2000;
+    eng.render.shadow_map_resolution = 1000;
 
     let mut cvec = vec![];
     let mut destructables = vec![];
@@ -460,6 +460,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         keycodes: vec![26u32, 48u32, 40u32, 44u32, 25u32, 22u32, 13u32, 14u32, 15u32],
         gamepad_axes: vec![0u8, 1u8, 5u8],
         gamepad_buttons: vec![0u8, 1u8, 2u8, 3u8],
+        shadowmapquality: eng.render.shadow_map_resolution,
     };
 
     (eng, state)

@@ -114,26 +114,6 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.reccbtn.exec(eng);
         }
         1 => {
-            eng.used_light_count = state.locls + 1;
-            eng.lights[0].color = Vec3 {
-                x: 0.08,
-                y: 0.09,
-                z: 0.1,
-            };
-
-            eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
-            eng.lights[1].pos.x =
-                state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
-            eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
-            eng.lights[1].pos.z =
-                state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
-            eng.lights[1].light_type = crate::engine::light::LightType::Spot;
-            eng.lights[1].color = Vec3 {
-                x: 5.0,
-                y: 5.0,
-                z: 5.0,
-            };
-
             for i in 0..state.aproxpoint.len() {
                 state.aproxpoint[i].x =
                     state.scn.objects[state.pu].physic_object.pos.x
