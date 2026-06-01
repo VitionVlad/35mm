@@ -112,6 +112,31 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.reccbtn.object.draw = false;
             state.shbtn.exec(eng);
             state.reccbtn.exec(eng);
+
+            for i in 0..state.ists.len() {
+                if distance(state.scn.objects[state.pu].physic_object.pos, state.scn.objects[state.ists[i].index].physic_object.pos,) < 1.5 {
+                    state.lettbtn.object.physic_object.scale.x = 80.0;
+                    state.lettbtn.object.physic_object.scale.y = 80.0;
+                    state.lettbtn.object.physic_object.pos.x =
+                        eng.render.resolution_x as f32 / 2.0 - state.lettbtn.object.physic_object.scale.x / 2.0;
+                    state.lettbtn.object.physic_object.pos.y =
+                        eng.render.resolution_y as f32 - state.lettbtn.object.physic_object.scale.y * 2.0 - 20.0;
+                    state.lettbtn.object.draw = true;
+                    if ((state.lettbtn.exec(eng) && eng.control.mousebtn[2]) || eng.control.get_key_state(state.keycodes[0]) || (eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]))) && state.tm <= 0 {
+                        //state.selp = 2;
+                        if state.dbg {
+                            println!("Letter read, index: {}", state.ists[i].index);
+                        }
+                        state.current_letter = state.ists[i].index as i8;
+                        state.selp = 3;
+                        state.tm = 50;
+                    }
+                    break;
+                }else{
+                    state.lettbtn.object.draw = false;
+                    state.lettbtn.exec(eng);
+                }
+            }
         }
         1 => {
             for i in 0..state.aproxpoint.len() {
@@ -226,6 +251,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.trambtn.object.draw = false;
             state.trambtn.exec(eng);
+
+            state.lettbtn.object.draw = false;
+            state.lettbtn.exec(eng);
         }
         2 => {
             eng.used_light_count = state.locls;
@@ -330,6 +358,36 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.trambtn.object.draw = false;
             state.trambtn.exec(eng);
+
+            state.lettbtn.object.draw = false;
+            state.lettbtn.exec(eng);
+        }
+        3 => {
+            //state.bluepan.object.draw = false;
+            //state.bluepan.exec(eng);
+            //state.phcnt.draw = false;
+            //state.phcnt.exec(eng, " ");
+
+            state.phcnt.draw = true;
+            state.phcnt.size.x = 10_f32;
+            state.phcnt.size.y = 20_f32;
+            state.phcnt.max_text_width = 32;
+            state.phcnt.pos.y = 50.0;
+            state.phcnt.pos.x = eng.render.resolution_x as f32 / 2.0 - (state.phcnt.size.x * 16.0);
+            state.phcnt.next_line_on_whitespace = true;
+            state.phcnt.new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+            state.phcnt.exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[0].strval));
+
+            state.cambtn.object.draw = false;
+            state.cambtn.exec(eng);
+            state.bwbtn.object.draw = false;
+            state.bwbtn.exec(eng);
+            state.colbtn.object.draw = false;
+            state.colbtn.exec(eng);
+            state.shbtn.object.draw = false;
+            state.shbtn.exec(eng);
+            state.reccbtn.object.draw = false;
+            state.reccbtn.exec(eng);
         }
         _ => {}
     }

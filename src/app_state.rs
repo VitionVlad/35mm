@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::engine::{
-    math::{vec2::Vec2, vec3::Vec3}, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
+    loader::jsonparser::JsonF, math::{vec2::Vec2, vec3::Vec3}, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
 };
 
 pub const SPEED: f32 = 0.0025_f32;
@@ -38,6 +38,11 @@ pub struct Door{
     pub initial_pos: Vec3,
 }
 
+pub struct Ist{
+    pub index: usize,
+    pub number: u8,
+}
+
 pub struct AppState {
     pub viewport: UIplane,
     pub bluepan: UIplane,
@@ -52,8 +57,10 @@ pub struct AppState {
     pub drbtn: UIplane,
     pub shbtn: UIplane,
     pub reccbtn: UIplane,
+    pub lettbtn: UIplane,
     pub fpscnt: UItext,
     pub phcnt: UItext,
+    pub ruitxt: Vec<UItext>,   
     pub scn: Scene,
     pub cvec: Vec<Colectable>,
     pub destructables: Vec<Destructable>,
@@ -96,6 +103,9 @@ pub struct AppState {
     pub gamepad_axes: Vec<u8>,
     pub gamepad_buttons: Vec<u8>,
     pub shadowmapquality: u32,
+    pub ists: Vec<Ist>,
+    pub jsontext: JsonF,
+    pub current_letter: i8,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

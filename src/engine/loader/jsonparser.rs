@@ -214,7 +214,7 @@ impl JsonF {
     }
     return parsedjson;
   }
-  pub fn printme(&mut self){
+  pub fn printme(&self){
     if self.indexed{
       println!("index: {}", self.index);
     }else{

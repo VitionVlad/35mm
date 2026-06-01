@@ -106,6 +106,8 @@ pub struct UItext{
     pub signal_on_value: f32,
     pub signal_off_value: f32,
     pub new_line_symbol: u8,
+    pub max_text_width: u32,
+    pub next_line_on_whitespace: bool,
     blank: bool,
 }
 
@@ -131,6 +133,8 @@ impl UItext {
             signal_on_value: 1.0f32,
             signal_off_value: 0.0f32,
             new_line_symbol: b'\n',
+            max_text_width: 0,
+            next_line_on_whitespace: false,
             draw: true,
         }
     }
@@ -155,6 +159,8 @@ impl UItext {
             signal_on_value: 1.0f32,
             signal_off_value: 0.0f32,
             new_line_symbol: b'\n',
+            max_text_width: 0,
+            next_line_on_whitespace: false,
             draw: false,
         }
     }
@@ -180,6 +186,8 @@ impl UItext {
             signal_on_value: 1.0f32,
             signal_off_value: 0.0f32,
             new_line_symbol: b'\n',
+            max_text_width: 0,
+            next_line_on_whitespace: false,
             draw: true,
         }
     }
@@ -219,8 +227,10 @@ impl UItext {
             }
             let mut posy: f32 = self.pos.y;
             let mut bp: usize = 0;
+            let mut bp2 = 0;
             if self.draw{
                 for i in 0..bt.len(){
+                    bp2+=1;
                     for j in 0..self.symbols.len(){
                         if bt[i] == self.symbols[j] {
                             self.planes[i].mesh.draw = true;
@@ -254,10 +264,16 @@ impl UItext {
                             self.planes[i].exec(eng);
                             break;
                         }
-                        if bt[i] == self.new_line_symbol {
-                            posy+=self.size.y;
+                        if bt[i] == self.new_line_symbol{
+                            posy += self.size.y;
                             bp = i+1;
+                            bp2 = 0;
                             break;
+                        }
+                        if bp2 > self.max_text_width && self.max_text_width != 0 && ((bt[i] == b' ' && self.next_line_on_whitespace) || !self.next_line_on_whitespace){
+                            posy += self.size.y;
+                            bp = i;
+                            bp2 = 0;
                         }
                     }
                 }

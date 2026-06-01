@@ -4,35 +4,35 @@ use crate::{app_state::{AppState, SPEED}, engine::engine::Engine};
 
 pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
     if !state.intram {
-        if eng.control.get_key_state(state.keycodes[2]) {
+        if eng.control.get_key_state(state.keycodes[2]) && state.selp != 3{
             state.scn.objects[state.pu].physic_object.acceleration.x += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI / 2.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        } else if eng.control.get_key_state(state.keycodes[3]) {
+        } else if eng.control.get_key_state(state.keycodes[3]) && state.selp != 3{
             state.scn.objects[state.pu].physic_object.acceleration.x += SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = (PI / 2.0) * 3.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        } else if eng.control.get_key_state(state.keycodes[4]) {
+        } else if eng.control.get_key_state(state.keycodes[4]) && state.selp != 3{
             state.scn.objects[state.pu].physic_object.acceleration.z += SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI;
             state.sfx[0].play = true;
             state.controlt = 0;
-        } else if eng.control.get_key_state(state.keycodes[5]) {
+        } else if eng.control.get_key_state(state.keycodes[5]) && state.selp != 3{
             state.scn.objects[state.pu].physic_object.acceleration.z += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = 0.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        }else if eng.control.get_key_state(state.keycodes[6]) && state.cme && state.tm <= 0 && !state.intram {
+        }else if eng.control.get_key_state(state.keycodes[6]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3 {
             state.selp = 0;
             state.tm = 50;
             state.controlt = 0;
-        }else if eng.control.get_key_state(state.keycodes[7]) && state.cme && state.tm <= 0 && !state.intram {
+        }else if eng.control.get_key_state(state.keycodes[7]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3 {
             state.selp = 1;
             state.tm = 50;
             state.controlt = 0;
-        }else if eng.control.get_key_state(state.keycodes[8]) && state.cme && state.tm <= 0 && !state.intram {
+        }else if eng.control.get_key_state(state.keycodes[8]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3 {
             state.selp = 2;
             state.tm = 50;
             state.controlt = 0;
@@ -73,7 +73,7 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             }
         }
 
-        if eng.control.gamepad_button_count > 0 {
+        if eng.control.gamepad_button_count > 0 && state.selp != 3 {
             if eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.cme && state.tm <= 0 && !state.intram {
                 state.selp = 0;
                 state.tm = 50;

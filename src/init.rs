@@ -3,7 +3,7 @@ use std::fs;
 use crate::{
     app_state::*,
     engine::{
-        engine::Engine, image::Image, material::Material, math::vec3::Vec3, math::vec2::Vec2, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
+        engine::Engine, image::Image, loader::jsonparser::JsonF, material::Material, math::{vec2::Vec2, vec3::Vec3}, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
     },
 };
 
@@ -72,6 +72,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let bti9 = Image::new_from_files(&eng, vec!["assets/ui/fin.png".to_string()]);
     let bti10 = Image::new_from_files(&eng, vec!["assets/ui/shutter.png".to_string()]);
     let bti11 = Image::new_from_files(&eng, vec!["assets/ui/recc.png".to_string()]);
+    let bti12 = Image::new_from_files(&eng, vec!["assets/ui/letter.png".to_string()]);
 
     let mut viewport = UIplane::new(&mut eng, mat, black);
     viewport.object.physic_object.pos.z = 1.0;
@@ -115,6 +116,9 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let mut reccbtn = UIplane::new(&mut eng, mati, bti11);
     reccbtn.object.physic_object.pos.z = 0.1;
     reccbtn.signal = true;
+    let mut lettbtn = UIplane::new(&mut eng, mati, bti12);
+    lettbtn.object.physic_object.pos.z = 0.1;
+    lettbtn.signal = true;
 
     let mut fpscnt = UItext::new_from_file(
         &mut eng,
@@ -128,6 +132,21 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         "assets/textlat.png",
         "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%",
     );
+    //let phcnt = UItext::new_from_file(
+    //    &mut eng,
+    //    matt,
+    //    "assets/textlat.png",
+    //    "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%",
+    //);
+    //let mut ruitxt = vec![fpscnt, phcnt];
+
+    let mut ruitxt = vec![];
+    ruitxt.push(UItext::new_from_file(
+        &mut eng,
+        matt,
+        "assets/textlat.png",
+        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%",
+    ));
 
     let mut scn = Scene::load_from_gltf(&mut eng, "assets/scene.glb", matgeneral);
 
@@ -141,6 +160,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let mut btns = vec![];
     let mut doors = vec![];
     let mut ltsc = vec![]; 
+    let mut ists = vec![]; 
     let mut pu = 0usize;
     let mut tramin = 0usize;
 
@@ -322,6 +342,14 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                 if show_dbg_info{
                     println!("light source found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
                 }
+            }else if bt[0] == b'i' && bt[1] == b's' && bt[2] == b't' {
+                ists.push(Ist {
+                    index: i,
+                    number: (bt[3]-b'0') as u8,
+                });
+                if show_dbg_info{
+                    println!("Paper found at index {}, number: {}", i, ists.last().unwrap().number);
+                }
             }
         }
     }
@@ -398,6 +426,12 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
 
     let initial_pivot_pos = scn.objects[pu].physic_object.pos;
 
+    let jsontext = JsonF::load_from_file("assets/text.json");
+    if show_dbg_info{
+        println!("Loaded JSON:");
+        jsontext.printme();
+    }
+
     let state = AppState {
         viewport,
         bluepan,
@@ -412,8 +446,10 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         drbtn,
         shbtn,
         reccbtn,
+        lettbtn,
         fpscnt,
         phcnt,
+        ruitxt,
         scn,
         cvec,
         destructables,
@@ -461,6 +497,9 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         gamepad_axes: vec![0u8, 1u8, 5u8],
         gamepad_buttons: vec![0u8, 1u8, 2u8, 3u8],
         shadowmapquality: eng.render.shadow_map_resolution,
+        ists: ists,
+        jsontext,
+        current_letter: -1,
     };
 
     (eng, state)
