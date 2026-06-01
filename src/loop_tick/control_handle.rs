@@ -24,21 +24,30 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.pivotr = 0.0;
             state.sfx[0].play = true;
             state.controlt = 0;
-        }else if eng.control.get_key_state(state.keycodes[6]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3 {
+        }else if eng.control.get_key_state(state.keycodes[6]) && state.cme && state.tm <= 0 && !state.intram {
             state.selp = 0;
             state.tm = 50;
             state.controlt = 0;
-        }else if eng.control.get_key_state(state.keycodes[7]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3 {
+            state.current_letter = -1;
+        }else if eng.control.get_key_state(state.keycodes[7]) && state.cme && state.tm <= 0 && !state.intram {
             state.selp = 1;
             state.tm = 50;
             state.controlt = 0;
-        }else if eng.control.get_key_state(state.keycodes[8]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3 {
+            state.current_letter = -1;
+        }else if eng.control.get_key_state(state.keycodes[8]) && state.cme && state.tm <= 0 && !state.intram {
             state.selp = 2;
             state.tm = 50;
             state.controlt = 0;
+            state.current_letter = -1;
+        }
+        else if eng.control.get_key_state(state.keycodes[0]) && state.tm <= 0 && !state.intram && state.selp == 3{
+            state.selp = 0;
+            state.tm = 50;
+            state.controlt = 0;
+            state.current_letter = -1;
         }
 
-        if eng.control.mousebtn[2] {
+        if eng.control.mousebtn[2] && state.selp != 3{
             let resx_half = (eng.render.resolution_x as f64) / 2.0;
             if eng.control.xpos < resx_half - 80.0 && !state.left_hand || eng.control.xpos >= resx_half + 80.0 && state.left_hand {
                 if state.controlt != 1 {
@@ -59,7 +68,7 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             }
         }
 
-        if eng.control.gamepad_axis_count > 0 {
+        if eng.control.gamepad_axis_count > 0 && state.selp != 3{
             let axis_x = eng.control.get_gamepad_axis_state(state.gamepad_axes[0]);
             let axis_y = eng.control.get_gamepad_axis_state(state.gamepad_axes[1]);
             if axis_x.abs() > 0.1 || axis_y.abs() > 0.1 {
@@ -73,16 +82,23 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             }
         }
 
-        if eng.control.gamepad_button_count > 0 && state.selp != 3 {
-            if eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.cme && state.tm <= 0 && !state.intram {
+        if eng.control.gamepad_button_count > 0 {
+            if eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3{
                 state.selp = 0;
                 state.tm = 50;
                 state.controlt = 2;
-            } else if eng.control.get_gamepad_button_state(state.gamepad_buttons[1]) && state.cme && state.tm <= 0 && !state.intram {
-                state.selp = 1;
-                state.tm = 50;
-                state.controlt = 2;
-            } else if eng.control.get_gamepad_button_state(state.gamepad_buttons[2]) && state.cme && state.tm <= 0 && !state.intram {
+            } else if eng.control.get_gamepad_button_state(state.gamepad_buttons[1]) && state.tm <= 0 && !state.intram{
+                if state.selp != 3 && state.cme{
+                    state.selp = 1;
+                    state.tm = 50;
+                    state.controlt = 2;
+                }else if state.selp == 3{
+                    state.selp = 0;
+                    state.tm = 50;
+                    state.controlt = 2;
+                    state.current_letter = -1;
+                }
+            } else if eng.control.get_gamepad_button_state(state.gamepad_buttons[2]) && state.cme && state.tm <= 0 && !state.intram && state.selp != 3{
                 state.selp = 2;
                 state.tm = 50;
                 state.controlt = 2;

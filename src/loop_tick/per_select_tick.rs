@@ -388,6 +388,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.shbtn.exec(eng);
             state.reccbtn.object.draw = false;
             state.reccbtn.exec(eng);
+            state.lettbtn.object.draw = false;
+            state.lettbtn.exec(eng);
         }
         _ => {}
     }
