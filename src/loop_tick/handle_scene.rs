@@ -221,6 +221,7 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
 
     match state.cstop {
         0 => {
+            eng.render.shadow_map_resolution = state.shadowmapquality;
             eng.lights[0].camera.physic_object.pos = Vec3 {
                 x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
                 y: 55_f32,

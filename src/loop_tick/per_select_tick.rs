@@ -127,7 +127,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                         if state.dbg {
                             println!("Letter read, index: {}", state.ists[i].index);
                         }
-                        state.current_letter = state.ists[i].index as i8;
+                        state.current_letter = state.ists[i].number as i8;
                         state.selp = 3;
                         state.tm = 50;
                     }
@@ -137,6 +137,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                     state.lettbtn.exec(eng);
                 }
             }
+            state.ruitxt[0].draw = true;
+            state.ruitxt[0].exec(eng, " ");
         }
         1 => {
             for i in 0..state.aproxpoint.len() {
@@ -368,15 +370,39 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             //state.phcnt.draw = false;
             //state.phcnt.exec(eng, " ");
 
+            state.bluepan.object.draw = true;
+            state.bluepan.object.physic_object.scale.y = eng.render.resolution_y as f32 - 100.0;
+            state.bluepan.object.physic_object.scale.x = 300.0;
+            state.bluepan.object.physic_object.pos.x =
+                eng.render.resolution_x as f32 / 2.0 - state.bluepan.object.physic_object.scale.x / 2.0;
+            state.bluepan.object.physic_object.pos.y = 15.0;
+            state.bluepan.object.mesh.ubo[50] = 0.0;
+            state.bluepan.exec(eng);
+
             state.phcnt.draw = true;
             state.phcnt.size.x = 10_f32;
-            state.phcnt.size.y = 20_f32;
-            state.phcnt.max_text_width = 32;
-            state.phcnt.pos.y = 50.0;
-            state.phcnt.pos.x = eng.render.resolution_x as f32 / 2.0 - (state.phcnt.size.x * 16.0);
+            state.phcnt.size.y = 20_f32;    
+            state.phcnt.max_text_width = 16;
+            state.phcnt.pos.y = 25.0;
+            state.phcnt.pos.x =state.bluepan.object.physic_object.pos.x + state.phcnt.size.x;
             state.phcnt.next_line_on_whitespace = true;
-            state.phcnt.new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
-            state.phcnt.exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[0].strval));
+            state.phcnt.new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+            state.phcnt.exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[(state.current_letter - 1) as usize].strval));
+
+            let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[0].strval.clone();
+            state.ruitxt[0].draw = true;
+            state.ruitxt[0].size.x = 15_f32;
+            state.ruitxt[0].size.y = 30_f32;
+            state.ruitxt[0].pos.z = state.phcnt.pos.z;
+            state.ruitxt[0].pos.x = eng.render.resolution_x as f32 / 2.0 + state.bluepan.object.physic_object.scale.x / 2.0 - state.ruitxt[0].size.x*(txt.len() as f32) - 10.0;
+            state.ruitxt[0].pos.y = eng.render.resolution_y as f32 - 70.0 - state.ruitxt[0].size.y*2.0;
+            state.ruitxt[0].signal = true;
+            state.ruitxt[0].per_symbol = false;
+            if state.ruitxt[0].exec(eng, &format!("{}", txt)) && state.tm <= 0 && eng.control.mousebtn[2] {
+                state.selp = 0;
+                state.tm = 50;
+                state.current_letter = -1;
+            }
 
             state.cambtn.object.draw = false;
             state.cambtn.exec(eng);
