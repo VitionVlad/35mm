@@ -1,4 +1,6 @@
-use std::env;
+use std::{env, fs};
+
+use crate::loop_tick::save_load::load_progress;
 
 mod app_state;
 mod engine;
@@ -22,6 +24,10 @@ fn main() {
             false
         }
         );
+
+    if fs::exists("save.json").unwrap() {
+        let _ = load_progress("save.json", &mut state);
+    }
 
     while eng.work() {
         loop_tick::soundwork::soundwork(&mut eng, &mut state);

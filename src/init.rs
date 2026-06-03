@@ -493,7 +493,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         controlt: 0,
         joy_origin: Vec2 { x: 0.0, y: 0.0 },
         left_hand: false,
-        keycodes: vec![26u32, 48u32, 40u32, 44u32, 25u32, 22u32, 13u32, 14u32, 15u32],
+        keycodes: vec![26u32, 48u32, 40u32, 44u32, 25u32, 22u32, 13u32, 14u32, 15u32, 3u32, 4u32],
         gamepad_axes: vec![0u8, 1u8, 5u8],
         gamepad_buttons: vec![0u8, 1u8, 2u8, 3u8],
         shadowmapquality: eng.render.shadow_map_resolution,

@@ -1,6 +1,6 @@
 use crate::{
-    app_state::{distance, AppState, SPEED},
-    engine::{engine::Engine, math::vec3::Vec3},
+    app_state::{AppState, SPEED, distance},
+    engine::{engine::Engine, math::vec3::Vec3}, loop_tick::save_load::save_progress,
 };
 
 fn apply_tram_acceleration(ph: &mut crate::engine::physics::PhysicsObject, target_x: f32, distance_scale: f32, min_acc: f32, max_acc: f32) {
@@ -455,6 +455,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.intram = false;
                 state.scn.objects[state.pu].physic_object.pos.x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
                 state.scn.objects[state.pu].physic_object.pos.z = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.z + 2.5;
+                let _ = save_progress("save.json", &state);
             }
 
             let tram_acc = state.scn.objects[state.tramin].physic_object.acceleration.x.abs();

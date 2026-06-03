@@ -40,12 +40,6 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.controlt = 0;
             state.current_letter = -1;
         }
-        else if eng.control.get_key_state(state.keycodes[0]) && state.tm <= 0 && !state.intram && state.selp == 3{
-            state.selp = 0;
-            state.tm = 50;
-            state.controlt = 0;
-            state.current_letter = -1;
-        }
 
         if eng.control.mousebtn[2] && state.selp != 3{
             let resx_half = (eng.render.resolution_x as f64) / 2.0;

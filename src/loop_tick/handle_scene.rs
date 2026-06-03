@@ -81,6 +81,7 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
             state.sfx[3].move_sound_cursor(0.0);
             state.sfx[3].play = true;
             reset_final_door_game(state);
+            state.current_light_scene = 0;
             state.drbtn.object.draw = false;
             state.drbtn.exec(eng);
         }
