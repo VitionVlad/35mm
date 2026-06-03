@@ -106,6 +106,7 @@ pub struct AppState {
     pub ists: Vec<Ist>,
     pub jsontext: JsonF,
     pub current_letter: i8,
+    pub current_light_scene: u8,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

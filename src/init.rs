@@ -500,6 +500,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         ists: ists,
         jsontext,
         current_letter: -1,
+        current_light_scene: 0,
     };
 
     (eng, state)

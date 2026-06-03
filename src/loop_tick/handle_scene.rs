@@ -94,6 +94,217 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
     }
 }
 
+fn process_lighting(eng: &mut Engine, state: &mut AppState) {
+    match state.current_light_scene {
+        0 => {
+            eng.render.shadow_map_resolution = state.shadowmapquality;
+            eng.lights[0].camera.physic_object.pos = Vec3 {
+                x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
+                y: 55_f32,
+                z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
+            };
+            eng.lights[0].light_type = LightType::Directional;
+            eng.lights[0].direction = Vec3 {
+                x: 1.0_f32,
+                y: -1.0_f32,
+                z: 1.0_f32,
+            };
+            eng.lights[0].pos = eng.lights[0].camera.physic_object.pos;
+            eng.lights[0].rot.x = 0.7_f32;
+            eng.lights[0].rot.y = 2.355_f32;
+            eng.lights[0].camera.fov = 20_f32;
+            eng.used_light_count = 1;
+
+            if state.selp == 1{
+                eng.used_light_count = 2;
+                eng.lights[0].color = Vec3 {
+                    x: 0.08,
+                    y: 0.09,
+                    z: 0.1,
+                };
+
+                eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
+                eng.lights[1].pos.x =
+                    state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
+                eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
+                eng.lights[1].pos.z =
+                    state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
+                eng.lights[1].light_type = crate::engine::light::LightType::Spot;
+                eng.lights[1].camera.fov = 90.0;
+                eng.lights[1].color = Vec3 {
+                    x: 5.0,
+                    y: 5.0,
+                    z: 5.0,
+                };
+            }
+        }
+        1 => {
+            eng.render.shadow_map_resolution = state.shadowmapquality / 2;
+
+            eng.lights[0].camera.physic_object.pos = Vec3 {
+                x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
+                y: 55_f32,
+                z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
+            };
+            eng.lights[0].light_type = LightType::Directional;
+            eng.lights[0].direction = Vec3 {
+                x: 0.0_f32,
+                y: 0.0_f32,
+                z: 0.0_f32,
+            };
+
+            match state.selp {
+                1 => {
+                    eng.lights[0].color = Vec3 {
+                        x: 0.0,
+                        y: 0.0,
+                        z: 0.0,
+                    };
+                },
+                2 => {
+                    eng.lights[0].color = Vec3 {
+                        x: 0.5,
+                        y: 0.45,
+                        z: 0.5,
+                    };
+                },
+                _ => {
+                     eng.lights[0].color = Vec3 {
+                        x: 0.08,
+                        y: 0.09,
+                        z: 0.1,
+                    };
+                }
+            }
+            eng.lights[0].shadow = false;
+
+            eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
+            eng.lights[1].pos.x =
+                state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
+            eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
+            eng.lights[1].pos.z =
+                state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
+            eng.lights[1].light_type = crate::engine::light::LightType::Spot;
+            eng.lights[1].camera.fov = 90.0;
+            eng.lights[1].color = Vec3 {
+                x: 1.0,
+                y: 1.0,
+                z: 1.0,
+            };
+
+            eng.used_light_count = 2;
+
+            if state.switched_1_4 && state.switched_5_6 {
+                for i in 0..state.scenelightsources.len() {
+                    if distance(state.scenelightsources[i].pos, state.scn.objects[state.pu].physic_object.pos) < 20.0 {
+                        eng.lights[eng.used_light_count as usize].light_type = LightType::Spot;
+                        eng.lights[eng.used_light_count as usize].rot.y = 0.0;
+                        eng.lights[eng.used_light_count as usize].rot.x = PI / 2.0;
+                        eng.lights[eng.used_light_count as usize].pos.x = state.scenelightsources[i].pos.x;
+                        eng.lights[eng.used_light_count as usize].pos.y = state.scenelightsources[i].pos.y;
+                        eng.lights[eng.used_light_count as usize].pos.z = state.scenelightsources[i].pos.z;
+                        eng.lights[eng.used_light_count as usize].light_type = crate::engine::light::LightType::Spot;
+                        eng.lights[eng.used_light_count as usize].camera.fov = 110.0;
+                        eng.lights[eng.used_light_count as usize].color = Vec3 {
+                            x: 1.0,
+                            y: 0.9,
+                            z: 0.5,
+                        };
+                        eng.used_light_count+=1;
+                    }
+                }
+            }
+        }
+        2 => {
+            eng.render.shadow_map_resolution = state.shadowmapquality / 2;
+
+            eng.lights[0].camera.physic_object.pos = Vec3 {
+                x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
+                y: 55_f32,
+                z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
+            };
+            eng.lights[0].light_type = LightType::Directional;
+            eng.lights[0].direction = Vec3 {
+                x: 0.0_f32,
+                y: 0.0_f32,
+                z: 0.0_f32,
+            };
+
+            match state.selp {
+                1 => {
+                    eng.lights[0].color = Vec3 {
+                        x: 0.0,
+                        y: 0.0,
+                        z: 0.0,
+                    };
+                },
+                2 => {
+                    eng.lights[0].color = Vec3 {
+                        x: 0.5,
+                        y: 0.45,
+                        z: 0.5,
+                    };
+                },
+                _ => {
+                     eng.lights[0].color = Vec3 {
+                        x: 0.08,
+                        y: 0.09,
+                        z: 0.1,
+                    };
+                }
+            }
+            eng.lights[0].shadow = false;
+
+            eng.used_light_count = 1;
+
+            for i in 0..state.scenelightsources.len() {
+                if distance(state.scenelightsources[i].pos, state.scn.objects[state.pu].physic_object.pos) < 20.0 {
+                    eng.lights[eng.used_light_count as usize].light_type = LightType::Spot;
+                    eng.lights[eng.used_light_count as usize].rot.y = 0.0;
+                    eng.lights[eng.used_light_count as usize].rot.x = PI / 2.0;
+                    eng.lights[eng.used_light_count as usize].pos.x = state.scenelightsources[i].pos.x;
+                    eng.lights[eng.used_light_count as usize].pos.y = state.scenelightsources[i].pos.y;
+                    eng.lights[eng.used_light_count as usize].pos.z = state.scenelightsources[i].pos.z;
+                    eng.lights[eng.used_light_count as usize].light_type = crate::engine::light::LightType::Spot;
+                    eng.lights[eng.used_light_count as usize].camera.fov = 110.0;
+                    eng.lights[eng.used_light_count as usize].color = Vec3 {
+                        x: 1.0,
+                        y: 0.9,
+                        z: 0.5,
+                    };
+                    eng.used_light_count+=1;
+                }
+            }
+
+            if state.selp == 1{
+                eng.lights[0].color = Vec3 {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                };
+
+                eng.lights[eng.used_light_count as usize].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
+                eng.lights[eng.used_light_count as usize].rot.x = 0.0;
+                eng.lights[eng.used_light_count as usize].pos.x =
+                    state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
+                eng.lights[eng.used_light_count as usize].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
+                eng.lights[eng.used_light_count as usize].pos.z =
+                    state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
+                eng.lights[eng.used_light_count as usize].light_type = crate::engine::light::LightType::Spot;
+                eng.lights[eng.used_light_count as usize].camera.fov = 90.0;
+                eng.lights[eng.used_light_count as usize].color = Vec3 {
+                    x: 1.0,
+                    y: 1.0,
+                    z: 1.0,
+                };
+                eng.used_light_count = eng.used_light_count + 1;
+            }
+        }
+        _ => {
+        }
+    }
+}
+
 fn process_button_interactions(eng: &mut Engine, state: &mut AppState) {
     let mut button_status: Vec<(u32, u32, bool)> = state.btns.iter().map(|b| (b.in_scene_index, b.scene_index, b.pressed)).collect();
     for i in 0..state.btns.len() {
@@ -220,50 +431,7 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
     //state.nkbtn.object.draw = false;
 
     match state.cstop {
-        0 => {
-            eng.render.shadow_map_resolution = state.shadowmapquality;
-            eng.lights[0].camera.physic_object.pos = Vec3 {
-                x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
-                y: 55_f32,
-                z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
-            };
-            eng.lights[0].light_type = LightType::Directional;
-            eng.lights[0].direction = Vec3 {
-                x: 1.0_f32,
-                y: -1.0_f32,
-                z: 1.0_f32,
-            };
-            eng.lights[0].pos = eng.lights[0].camera.physic_object.pos;
-            eng.lights[0].rot.x = 0.7_f32;
-            eng.lights[0].rot.y = 2.355_f32;
-            eng.lights[0].camera.fov = 20_f32;
-            eng.used_light_count = 1;
-
-            if state.selp == 1{
-                eng.used_light_count = 2;
-                eng.lights[0].color = Vec3 {
-                    x: 0.08,
-                    y: 0.09,
-                    z: 0.1,
-                };
-
-                eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
-                eng.lights[1].pos.x =
-                    state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
-                eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
-                eng.lights[1].pos.z =
-                    state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
-                eng.lights[1].light_type = crate::engine::light::LightType::Spot;
-                eng.lights[1].camera.fov = 90.0;
-                eng.lights[1].color = Vec3 {
-                    x: 5.0,
-                    y: 5.0,
-                    z: 5.0,
-                };
-            }
-        }
         1 => {
-            eng.render.shadow_map_resolution = state.shadowmapquality / 2;
             if state.skp2 {
                 state.switched_5_6 = true;
                 state.switched_1_4 = true; 
@@ -284,83 +452,8 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
                     _ => {}
                 }
             }
-
-            eng.lights[0].camera.physic_object.pos = Vec3 {
-                x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
-                y: 55_f32,
-                z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
-            };
-            eng.lights[0].light_type = LightType::Directional;
-            eng.lights[0].direction = Vec3 {
-                x: 0.0_f32,
-                y: 0.0_f32,
-                z: 0.0_f32,
-            };
-
-            match state.selp {
-                1 => {
-                    eng.lights[0].color = Vec3 {
-                        x: 0.0,
-                        y: 0.0,
-                        z: 0.0,
-                    };
-                },
-                2 => {
-                    eng.lights[0].color = Vec3 {
-                        x: 0.5,
-                        y: 0.45,
-                        z: 0.5,
-                    };
-                },
-                _ => {
-                     eng.lights[0].color = Vec3 {
-                        x: 0.08,
-                        y: 0.09,
-                        z: 0.1,
-                    };
-                }
-            }
-            eng.lights[0].shadow = false;
-
-            eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
-            eng.lights[1].pos.x =
-                state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
-            eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
-            eng.lights[1].pos.z =
-                state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
-            eng.lights[1].light_type = crate::engine::light::LightType::Spot;
-            eng.lights[1].camera.fov = 90.0;
-            eng.lights[1].color = Vec3 {
-                x: 1.0,
-                y: 1.0,
-                z: 1.0,
-            };
-
-            eng.used_light_count = 2;
-
-            if state.switched_1_4 && state.switched_5_6 {
-                for i in 0..state.scenelightsources.len() {
-                    if distance(state.scenelightsources[i].pos, state.scn.objects[state.pu].physic_object.pos) < 20.0 {
-                        eng.lights[eng.used_light_count as usize].light_type = LightType::Spot;
-                        eng.lights[eng.used_light_count as usize].rot.y = 0.0;
-                        eng.lights[eng.used_light_count as usize].rot.x = PI / 2.0;
-                        eng.lights[eng.used_light_count as usize].pos.x = state.scenelightsources[i].pos.x;
-                        eng.lights[eng.used_light_count as usize].pos.y = state.scenelightsources[i].pos.y;
-                        eng.lights[eng.used_light_count as usize].pos.z = state.scenelightsources[i].pos.z;
-                        eng.lights[eng.used_light_count as usize].light_type = crate::engine::light::LightType::Spot;
-                        eng.lights[eng.used_light_count as usize].camera.fov = 110.0;
-                        eng.lights[eng.used_light_count as usize].color = Vec3 {
-                            x: 1.0,
-                            y: 0.9,
-                            z: 0.5,
-                        };
-                        eng.used_light_count+=1;
-                    }
-                }
-            }
         }
         2 => {
-            eng.render.shadow_map_resolution = state.shadowmapquality / 2;
             if state.dbg {
                 state.ekey = usize::MAX;
                 state.gkey = usize::MAX;
@@ -382,92 +475,14 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
             }
 
             handle_final_door_interaction(eng, state);
-
-            eng.lights[0].camera.physic_object.pos = Vec3 {
-                x: state.scn.objects[state.pu].physic_object.pos.x - 47.5_f32,
-                y: 55_f32,
-                z: state.scn.objects[state.pu].physic_object.pos.z - 47.5_f32,
-            };
-            eng.lights[0].light_type = LightType::Directional;
-            eng.lights[0].direction = Vec3 {
-                x: 0.0_f32,
-                y: 0.0_f32,
-                z: 0.0_f32,
-            };
-
-            match state.selp {
-                1 => {
-                    eng.lights[0].color = Vec3 {
-                        x: 0.0,
-                        y: 0.0,
-                        z: 0.0,
-                    };
-                },
-                2 => {
-                    eng.lights[0].color = Vec3 {
-                        x: 0.5,
-                        y: 0.45,
-                        z: 0.5,
-                    };
-                },
-                _ => {
-                     eng.lights[0].color = Vec3 {
-                        x: 0.08,
-                        y: 0.09,
-                        z: 0.1,
-                    };
-                }
-            }
-            eng.lights[0].shadow = false;
-
-            eng.used_light_count = 1;
-
-            for i in 0..state.scenelightsources.len() {
-                if distance(state.scenelightsources[i].pos, state.scn.objects[state.pu].physic_object.pos) < 20.0 {
-                    eng.lights[eng.used_light_count as usize].light_type = LightType::Spot;
-                    eng.lights[eng.used_light_count as usize].rot.y = 0.0;
-                    eng.lights[eng.used_light_count as usize].rot.x = PI / 2.0;
-                    eng.lights[eng.used_light_count as usize].pos.x = state.scenelightsources[i].pos.x;
-                    eng.lights[eng.used_light_count as usize].pos.y = state.scenelightsources[i].pos.y;
-                    eng.lights[eng.used_light_count as usize].pos.z = state.scenelightsources[i].pos.z;
-                    eng.lights[eng.used_light_count as usize].light_type = crate::engine::light::LightType::Spot;
-                    eng.lights[eng.used_light_count as usize].camera.fov = 110.0;
-                    eng.lights[eng.used_light_count as usize].color = Vec3 {
-                        x: 1.0,
-                        y: 0.9,
-                        z: 0.5,
-                    };
-                    eng.used_light_count+=1;
-                }
-            }
-
-            if state.selp == 1{
-                eng.lights[0].color = Vec3 {
-                    x: 0.0,
-                    y: 0.0,
-                    z: 0.0,
-                };
-
-                eng.lights[eng.used_light_count as usize].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
-                eng.lights[eng.used_light_count as usize].rot.x = 0.0;
-                eng.lights[eng.used_light_count as usize].pos.x =
-                    state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
-                eng.lights[eng.used_light_count as usize].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
-                eng.lights[eng.used_light_count as usize].pos.z =
-                    state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
-                eng.lights[eng.used_light_count as usize].light_type = crate::engine::light::LightType::Spot;
-                eng.lights[eng.used_light_count as usize].camera.fov = 90.0;
-                eng.lights[eng.used_light_count as usize].color = Vec3 {
-                    x: 1.0,
-                    y: 1.0,
-                    z: 1.0,
-                };
-                eng.used_light_count = eng.used_light_count + 1;
-            }
         }
         _ => {
         }
     }
 
+    // Process lighting for the current scene
+    process_lighting(eng, state);
+
+    // Handle button interactions
     process_button_interactions(eng, state);
 }

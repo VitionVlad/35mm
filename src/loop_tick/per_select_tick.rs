@@ -444,6 +444,11 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             let tram_acc = state.scn.objects[state.tramin].physic_object.acceleration.x.abs();
             state.sfx[5].volume = (tram_acc / max_tram_acc).clamp(0.0, 1.0);
+            //state.viewport.object.mesh.ubo[51] = -state.sfx[5].volume;
+            state.pkbf = state.sfx[5].volume + 10.0;
+            if state.sfx[5].volume > 0.8{
+                state.current_light_scene = state.cstop as u8;
+            }
             if state.dbg {
                 println!("tram_acc: {}, max_tram_acc: {}, volume: {}", tram_acc, max_tram_acc, state.sfx[5].volume);
             }
