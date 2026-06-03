@@ -10,6 +10,10 @@
             ],
             "ui": [
                 "Back"
+            ],
+            "tutorials": [
+                "Experemental B&W film: this film can capture objects marked with red line, to use it, just look at object and press space button on keyboard, right trigger on gamepad, or actual button for touchscreen, it will capture all marked objects withitn its field of view.",
+                "Experemental colour film: this film can move holder to position where it was shot, to use it, just take a photo by pressing space button on keyboard, right trigger on gamepad, or actual button for touchscreen, to store position, and there you can teleport back by pressing E button on keyboard, Y button on gamepad or actual button for touchscreen."
             ]
         }
     }

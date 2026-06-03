@@ -501,6 +501,8 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         jsontext,
         current_letter: -1,
         current_light_scene: 0,
+        firstbw: false,
+        firstcol: false,
     };
 
     (eng, state)

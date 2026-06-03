@@ -141,6 +141,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.ruitxt[0].exec(eng, " ");
         }
         1 => {
+            if !state.firstbw {
+                state.firstbw = true;
+                state.selp = 3;
+                state.current_letter = 11;
+            }   
+
             for i in 0..state.aproxpoint.len() {
                 state.aproxpoint[i].x =
                     state.scn.objects[state.pu].physic_object.pos.x
@@ -258,6 +264,11 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.lettbtn.exec(eng);
         }
         2 => {
+            if !state.firstcol {
+                state.firstcol = true;
+                state.selp = 3;
+                state.current_letter = 12;
+            }   
             eng.used_light_count = state.locls;
             eng.lights[0].color = Vec3 {
                 x: 1.0,
@@ -387,7 +398,11 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.phcnt.pos.x =state.bluepan.object.physic_object.pos.x + state.phcnt.size.x;
             state.phcnt.next_line_on_whitespace = true;
             state.phcnt.new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
-            state.phcnt.exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[(state.current_letter - 1) as usize].strval));
+            if state.current_letter > 10{
+                state.phcnt.exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[4].other_nodes[(state.current_letter - 11) as usize].strval));
+            }else{
+                state.phcnt.exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[(state.current_letter - 1) as usize].strval));
+            }
 
             let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[0].strval.clone();
             state.ruitxt[0].draw = true;
