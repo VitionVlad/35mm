@@ -109,6 +109,7 @@ pub struct AppState {
     pub current_light_scene: u8,
     pub firstbw: bool,
     pub firstcol: bool,
+    pub pausemn: bool,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

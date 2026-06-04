@@ -115,7 +115,8 @@ vec3 PBR(vec3 norm, vec3 albedo, float metallic, float roughness, float ao, vec3
   vec3 F0 = vec3(0.04); 
   F0 = mix(F0, albedo, metallic);
   vec3 Lo = vec3(0.0);
-  for(int i = 0; i < mi.lightinfo.x; i++) {
+  int scs = 0;
+  for(int i = 0; i < mi.lightinfo.w; i++) {
     vec3 L = normalize(-smi.lightpos[i].xyz);
     vec3 H = normalize(V + L);
     float distance = 1.0;
@@ -129,7 +130,7 @@ vec3 PBR(vec3 norm, vec3 albedo, float metallic, float roughness, float ao, vec3
     vec3 radiance     = (smi.lightcol[i].xyz) * attenuation;    
     float NDF = DistributionGGX(N, H, roughness);        
     float G   = GeometrySmith(N, V, L, roughness);      
-    vec3 F   = fresnelSchlick(max(dot(H, V), 0.0), F0);       
+    vec3 F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
     kD *= 1.0 - metallic;	  
@@ -137,11 +138,16 @@ vec3 PBR(vec3 norm, vec3 albedo, float metallic, float roughness, float ao, vec3
     float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
     vec3 specular     = numerator / denominator;  
     float NdotL = max(dot(N, L), 0.0);
-    if(smi.lightpos[i].w == 1.0){
-      Lo += (kD * albedo / PI + specular) * radiance * NdotL * max(shcalcpl(WorldPos, 0.0, i), 0.001); 
-    }else{
-      Lo += (kD * albedo / PI + specular) * radiance * NdotL * max(shcalcpld(WorldPos, 0.0, i), 0.001); 
+    float shadow = 1.0;
+    if(smi.lightcol[i].w != 0.0){
+      if(smi.lightpos[i].w == 1.0){
+        shadow = max(shcalcpl(WorldPos, 0.0, scs), 0.001); 
+      }else{
+        shadow = max(shcalcpld(WorldPos, 0.0, scs), 0.001); 
+      }
+      scs++;
     }
+    Lo += (kD * albedo / PI + specular) * radiance * NdotL * max(shadow, 0.001);
   }
   vec3 ambient = vec3(0.001) * albedo * ao;
   vec3 color = ambient + Lo;

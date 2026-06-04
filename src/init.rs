@@ -503,6 +503,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         current_light_scene: 0,
         firstbw: false,
         firstcol: false,
+        pausemn: false,
     };
 
     (eng, state)

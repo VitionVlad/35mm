@@ -80,10 +80,10 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
         if can_open && ((eng.control.get_key_state(state.keycodes[0]) || icon_pressed || abtn_pressed) && state.tm <= 0) {
             state.sfx[3].move_sound_cursor(0.0);
             state.sfx[3].play = true;
-            reset_final_door_game(state);
             state.current_light_scene = 0;
             state.drbtn.object.draw = false;
             state.drbtn.exec(eng);
+            reset_final_door_game(state);
         }
     } else {
         state.drbtn.object.draw = false;
@@ -114,6 +114,7 @@ fn process_lighting(eng: &mut Engine, state: &mut AppState) {
             eng.lights[0].rot.x = 0.7_f32;
             eng.lights[0].rot.y = 2.355_f32;
             eng.lights[0].camera.fov = 20_f32;
+            eng.lights[0].shadow = true;
             eng.used_light_count = 1;
 
             if state.selp == 1{
@@ -125,6 +126,7 @@ fn process_lighting(eng: &mut Engine, state: &mut AppState) {
                 };
 
                 eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
+                eng.lights[1].rot.x = 0.0;
                 eng.lights[1].pos.x =
                     state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
                 eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
@@ -132,6 +134,7 @@ fn process_lighting(eng: &mut Engine, state: &mut AppState) {
                     state.scn.objects[state.pu].physic_object.pos.z - state.scn.objects[state.pu].physic_object.rot.y.cos() * 0.3;
                 eng.lights[1].light_type = crate::engine::light::LightType::Spot;
                 eng.lights[1].camera.fov = 90.0;
+                eng.lights[1].shadow = true;
                 eng.lights[1].color = Vec3 {
                     x: 5.0,
                     y: 5.0,
@@ -211,6 +214,7 @@ fn process_lighting(eng: &mut Engine, state: &mut AppState) {
                             y: 0.9,
                             z: 0.5,
                         };
+                        eng.lights[eng.used_light_count as usize].shadow = true;
                         eng.used_light_count+=1;
                     }
                 }

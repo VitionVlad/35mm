@@ -99,15 +99,25 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     let fps = eng.fps;
     state.fpscnt.exec(eng, &format!("fps:{}", fps));
 
-    state.psbtn.object.physic_object.scale.x = 80.0;
-    state.psbtn.object.physic_object.scale.y = 80.0;
-    state.psbtn.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0;
-    state.psbtn.object.physic_object.pos.y = eng.render.resolution_y as f32 - state.psbtn.object.physic_object.scale.y;
-    if !state.cme || state.intram || state.selp == 3 {
-        state.psbtn.object.physic_object.pos.x =
-            eng.render.resolution_x as f32 / 2.0 - state.psbtn.object.physic_object.scale.x / 2.0;
+    if !state.pausemn{
+        state.psbtn.object.physic_object.scale.x = 80.0;
+        state.psbtn.object.physic_object.scale.y = 80.0;
+        state.psbtn.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0;
+        state.psbtn.object.physic_object.pos.y = eng.render.resolution_y as f32 - state.psbtn.object.physic_object.scale.y;
+        if !state.cme || state.intram || state.selp == 3 {
+            state.psbtn.object.physic_object.pos.x =
+                eng.render.resolution_x as f32 / 2.0 - state.psbtn.object.physic_object.scale.x / 2.0;
+        }
+        if state.psbtn.exec(eng) && eng.control.mousebtn[2] && state.tm <= 0{
+            state.pausemn = true;
+            state.selp = 3;
+            state.tm = 50;
+        }
+
+    }else{
+        state.psbtn.object.draw = false;
+        state.psbtn.exec(eng);
     }
-    state.psbtn.exec(eng);
 
     state.sfx[9].play = true;
 }
