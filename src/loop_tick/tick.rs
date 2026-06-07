@@ -17,6 +17,22 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
         }
     }
 
+    for i in 0..state.scn.objects.len() {
+        let lb = *state.scn.objects[i].name.as_bytes().last().unwrap();
+        if lb != (state.current_light_scene+1).to_string().as_bytes()[0] && lb != b'0'{
+            state.scn.objects[i].draw = false;
+            state.scn.objects[i].draw_shadow = false;
+        }else{
+            state.scn.objects[i].draw = true;
+            state.scn.objects[i].draw_shadow = true;
+        }
+    }
+
+    state.scn.objects[state.pu].draw = true;
+    state.scn.objects[state.pu].draw_shadow = true;
+    state.scn.objects[state.tramin].draw = true;
+    state.scn.objects[state.tramin].draw_shadow = true;
+
     state.viewport.ubo_index = 51;
     state.viewport.object.mesh.ubo[49] = state.scn.objects[state.pu].physic_object.pos.x;
     state.viewport.object.mesh.ubo[50] = state.scn.objects[state.pu].physic_object.pos.z;
@@ -83,6 +99,9 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
                     _ => {}
                 }
             }
+        }else{
+            state.scn.objects[state.cvec[i].index].draw = false;
+            state.scn.objects[state.cvec[i].index].draw_shadow = false;
         }
     }
 

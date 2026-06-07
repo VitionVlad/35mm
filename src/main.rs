@@ -23,7 +23,7 @@ fn main() {
         else { 
             false
         }
-        );
+    );
 
     if fs::exists("save.json").unwrap() {
         let _ = load_progress("save.json", &mut state);

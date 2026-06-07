@@ -2,11 +2,12 @@ use std::f32::consts::PI;
 
 use crate::{
     app_state::*,
-    engine::{engine::Engine, light::LightType, math::vec3::Vec3},
+    engine::{engine::Engine, light::LightType, math::vec3::Vec3}, loop_tick::save_load::save_progress,
 };
 
 fn reset_final_door_game(state: &mut AppState) {
     state.cstop = 0;
+    state.current_light_scene = 0;
     state.tm = 0;
     state.intram = false;
     state.sc3state = 0;
@@ -52,6 +53,8 @@ fn reset_final_door_game(state: &mut AppState) {
     if state.dbg {
         println!("final door activated: resetting game state and player position");
     }
+
+    let _ = save_progress("save.json", state);
 }
 
 fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
