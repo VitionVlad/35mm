@@ -110,6 +110,7 @@ pub struct AppState {
     pub firstbw: bool,
     pub firstcol: bool,
     pub pausemn: bool,
+    pub framecnt: u64,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

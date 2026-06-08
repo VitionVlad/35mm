@@ -12,6 +12,10 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     eng.render.set_title("35mm");
     eng.render.set_new_resolution(1280, 720);
 
+    for _ in 0..2{
+      eng.work();
+    }
+
     let vert = fs::read("shaders/vert").unwrap();
     let frag = fs::read("shaders/frag").unwrap();
     let dvert = fs::read("shaders/vdeffered").unwrap();
@@ -467,7 +471,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         ttm: 0,
         pu,
         pivotr: 0.0_f32,
-        pkbf: 1_f32,
+        pkbf: 11_f32,
         tramin,
         bwfilm: 0_u32,
         clfilm: 0_u32,
@@ -504,6 +508,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         firstbw: false,
         firstcol: false,
         pausemn: false,
+        framecnt: 0u64,
     };
 
     (eng, state)

@@ -38,21 +38,25 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     state.viewport.object.mesh.ubo[50] = state.scn.objects[state.pu].physic_object.pos.z;
     state.viewport.object.mesh.ubo[51] = state.pkbf;
 
-    if !state.intram{
-        if state.pkbf >= 5.0{
-            state.pkbf = 1.0;
-        }
-
-        if state.pkbf < 1_f32 {
-            state.pkbf += SPEED * 5.0 * eng.times_to_calculate_physics as f32;
-        }
-        if state.pkbf > 1_f32 {
-            state.pkbf -= SPEED * 5.0 * eng.times_to_calculate_physics as f32;
-        }
-        if (1.0 - SPEED * 5.0 * eng.times_to_calculate_physics as f32) < state.pkbf
-            && (1.0 + SPEED * 5.0 * eng.times_to_calculate_physics as f32) > state.pkbf
-        {
-            state.pkbf = 1.0;
+    if !state.intram && state.framecnt > 10{
+        if state.pkbf >= 5f32 {
+            if state.pkbf >= 10f32{
+                state.pkbf -= SPEED * eng.times_to_calculate_physics as f32 / 10.0;
+            }else{
+                state.pkbf = 1f32;
+            }
+        }else{
+            if state.pkbf < 1_f32 {
+                state.pkbf += SPEED * 5.0 * eng.times_to_calculate_physics as f32;
+            }
+            if state.pkbf > 1_f32 {
+                state.pkbf -= SPEED * 5.0 * eng.times_to_calculate_physics as f32;
+            }
+            if (1.0 - SPEED * 5.0 * eng.times_to_calculate_physics as f32) < state.pkbf
+                && (1.0 + SPEED * 5.0 * eng.times_to_calculate_physics as f32) > state.pkbf
+            {
+                state.pkbf = 1.0;
+            }
         }
     }
 

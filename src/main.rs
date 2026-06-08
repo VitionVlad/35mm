@@ -35,6 +35,8 @@ fn main() {
         loop_tick::tick::tick(&mut eng, &mut state);
         loop_tick::per_select_tick::per_select_tick(&mut eng, &mut state);
         loop_tick::handle_scene::handle_scene(&mut eng, &mut state);
+        loop_tick::menu_handle::menu_handle(&mut eng, &mut state);
+        state.framecnt+=1;
     }
 
     eng.end();
