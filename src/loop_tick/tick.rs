@@ -41,7 +41,7 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     if !state.intram && state.framecnt > 10{
         if state.pkbf >= 5f32 {
             if state.pkbf >= 10f32{
-                state.pkbf -= SPEED * eng.times_to_calculate_physics as f32 / 10.0;
+                state.pkbf -= SPEED * eng.times_to_calculate_physics as f32;
             }else{
                 state.pkbf = 1f32;
             }
@@ -115,12 +115,12 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     state.viewport.object.physic_object.scale.y = eng.render.resolution_y as f32;
     state.viewport.exec(eng);
 
-    state.fpscnt.pos.x = 0.0;
-    state.fpscnt.pos.y = 0.0;
+    let fpstxt = format!("fps:{}", eng.fps);
     state.fpscnt.size.x = 15_f32;
     state.fpscnt.size.y = 30_f32;
-    let fps = eng.fps;
-    state.fpscnt.exec(eng, &format!("fps:{}", fps));
+    state.fpscnt.pos.x = eng.render.resolution_x as f32 - fpstxt.len() as f32*state.fpscnt.size.x;
+    state.fpscnt.pos.y = 0.0;
+    state.fpscnt.exec(eng, &fpstxt);
 
     if !state.pausemn{
         state.psbtn.object.physic_object.scale.x = 80.0;
@@ -133,10 +133,12 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
         }
         if state.psbtn.exec(eng) && eng.control.mousebtn[2] && state.tm <= 0{
             state.pausemn = true;
-            state.selp = 3;
+            state.selp = 0;
             state.tm = 50;
+            state.current_letter = -1;
         }
-
+        state.logo.object.draw = false;
+        state.logo.exec(eng);
     }else{
         state.psbtn.object.draw = false;
         state.psbtn.exec(eng);

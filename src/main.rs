@@ -37,6 +37,9 @@ fn main() {
         loop_tick::handle_scene::handle_scene(&mut eng, &mut state);
         loop_tick::menu_handle::menu_handle(&mut eng, &mut state);
         state.framecnt+=1;
+        if state.close{
+            break;
+        }
     }
 
     eng.end();

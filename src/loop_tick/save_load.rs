@@ -72,10 +72,10 @@ pub fn load_progress(path: &str, state: &mut AppState){
             "current_light_scene" => state.current_light_scene = json.other_nodes[i].numeral_val as u8,
             "cstop" => {
                 state.cstop = json.other_nodes[i].numeral_val as u32;
-                if state.dbg{
-                    println!("cstop {}, initial_tram_pos: {}, => {}", state.cstop, state.scn.objects[state.tramin].physic_object.pos.x, state.scn.objects[state.stops[state.cstop as usize-1]].physic_object.pos.x)
-                }
-                state.scn.objects[state.tramin].physic_object.pos.x = state.scn.objects[state.stops[state.cstop as usize-1]].physic_object.pos.x;
+                //if state.dbg{
+                //    println!("cstop {}, initial_tram_pos: {}, => {}", state.cstop, state.scn.objects[state.tramin].physic_object.pos.x, state.scn.objects[state.stops[state.cstop as usize-1]].physic_object.pos.x)
+                //}
+                state.scn.objects[state.tramin].physic_object.pos.x = state.scn.objects[state.stops[state.cstop as usize]].physic_object.pos.x;
             },
             "switched_1_4" => state.switched_1_4 = json.other_nodes[i].bolean,
             "switched_5_6" => state.switched_5_6 = json.other_nodes[i].bolean,
@@ -91,7 +91,10 @@ pub fn load_progress(path: &str, state: &mut AppState){
             },
             "destructables" => {
                 for j in 0..json.other_nodes[i].other_nodes.len() {
-                    if !json.other_nodes[i].other_nodes[j].bolean {
+                    if json.other_nodes[i].other_nodes[j].bolean {
+                        state.scn.objects[state.destructables[j].index].draw = true;
+                        state.scn.objects[state.destructables[j].index].physic_object.pos = state.destructables[j].initial_pos;
+                    }else{
                         state.scn.objects[state.destructables[j].index].draw = false;
                         state.scn.objects[state.destructables[j].index].physic_object.pos.y = -1000.0;
                     }

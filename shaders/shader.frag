@@ -189,7 +189,7 @@ void main() {
 
   if(mi.addinfo.w < 1.0){
     op.rg *= max(min(mi.addinfo.w, 1.0), 0.25);
-  }else if(mi.addinfo.w >= 10.0){
+  }else if(mi.addinfo.w >= 5.0){
     op.rgb = mix(op.rgb, vec3(0.0), max(min(mi.addinfo.w-10.0, 1.0), 0.0));
   }else{
     op.rgb = mix(op.rgb, vec3(1.0), max(min(mi.addinfo.w-1.0, 1.0), 0.0));

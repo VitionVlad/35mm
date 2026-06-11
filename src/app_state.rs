@@ -58,6 +58,7 @@ pub struct AppState {
     pub shbtn: UIplane,
     pub reccbtn: UIplane,
     pub lettbtn: UIplane,
+    pub logo: UIplane,
     pub fpscnt: UItext,
     pub phcnt: UItext,
     pub ruitxt: Vec<UItext>,   
@@ -111,6 +112,9 @@ pub struct AppState {
     pub firstcol: bool,
     pub pausemn: bool,
     pub framecnt: u64,
+    pub menusel: u8,
+    pub close: bool,
+    pub autosaves: bool,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

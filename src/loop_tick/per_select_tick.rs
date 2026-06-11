@@ -35,7 +35,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.shbtn.object.draw = false;
             state.reccbtn.object.draw = false;
 
-            if state.cme && !state.intram {
+            if state.cme && !state.intram && !state.pausemn{
                 state.cambtn.object.physic_object.scale.x = 80.0;
                 state.cambtn.object.physic_object.scale.y = 80.0;
                 state.cambtn.object.physic_object.pos.x =
@@ -57,7 +57,6 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.scn.objects[state.tramin].physic_object.pos,
             ) < 7.5 && !state.intram {
                 if state.cstop < state.stops.len() as u32 && ((state.cstop == 1 && state.switched_1_4 && state.switched_5_6) || state.cstop != 1){
-                    state.phcnt.draw = false;
                     state.bluepan.object.draw = false;
 
                     state.trambtn.object.physic_object.scale.x = 80.0;
@@ -137,7 +136,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                     state.lettbtn.exec(eng);
                 }
             }
-            state.ruitxt[0].draw = true;
+            state.ruitxt[0].draw = false;
             state.ruitxt[0].exec(eng, " ");
         }
         1 => {
@@ -262,6 +261,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.lettbtn.object.draw = false;
             state.lettbtn.exec(eng);
+
+            state.ruitxt[0].draw = false;
+            state.ruitxt[0].exec(eng, " ");
         }
         2 => {
             if !state.firstcol {
@@ -374,6 +376,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             state.lettbtn.object.draw = false;
             state.lettbtn.exec(eng);
+
+            state.ruitxt[0].draw = false;
+            state.ruitxt[0].exec(eng, " ");
         }
         3 => {
             //state.bluepan.object.draw = false;
@@ -455,7 +460,9 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.intram = false;
                 state.scn.objects[state.pu].physic_object.pos.x = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.x;
                 state.scn.objects[state.pu].physic_object.pos.z = state.scn.objects[state.stops[(state.cstop - 1) as usize]].physic_object.pos.z + 2.5;
-                let _ = save_progress("save.json", &state);
+                if state.autosaves{
+                    let _ = save_progress("save.json", &state);
+                }
             }
 
             let tram_acc = state.scn.objects[state.tramin].physic_object.acceleration.x.abs();

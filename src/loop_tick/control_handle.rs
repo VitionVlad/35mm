@@ -3,7 +3,7 @@ use std::f32::consts::PI;
 use crate::{app_state::{AppState, SPEED}, engine::engine::Engine};
 
 pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
-    if !state.intram {
+    if !state.intram && !state.pausemn{
         if eng.control.get_key_state(state.keycodes[2]) && state.selp != 3{
             state.scn.objects[state.pu].physic_object.acceleration.x += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI / 2.0;
@@ -102,8 +102,15 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
         if state.controlt != 1{
             state.shbtn.object.draw = false;
             state.reccbtn.object.draw = false;
+            //state.selp = 0;
             state.shbtn.exec(eng);
+            state.reccbtn.exec(eng);
         }
+    }
+
+    if eng.control.get_key_state(state.keycodes[11]) && state.tm <= 0{
+        state.pausemn = !state.pausemn;
+        state.tm = 50;
     }
 
     let step = SPEED * eng.times_to_calculate_physics as f32 * 20.0;

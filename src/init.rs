@@ -77,6 +77,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let bti10 = Image::new_from_files(&eng, vec!["assets/ui/shutter.png".to_string()]);
     let bti11 = Image::new_from_files(&eng, vec!["assets/ui/recc.png".to_string()]);
     let bti12 = Image::new_from_files(&eng, vec!["assets/ui/letter.png".to_string()]);
+    let lg = Image::new_from_files(&eng, vec!["assets/ui/logo.png".to_string()]);
 
     let mut viewport = UIplane::new(&mut eng, mat, black);
     viewport.object.physic_object.pos.z = 1.0;
@@ -123,18 +124,21 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let mut lettbtn = UIplane::new(&mut eng, mati, bti12);
     lettbtn.object.physic_object.pos.z = 0.1;
     lettbtn.signal = true;
+    let mut logo = UIplane::new(&mut eng, mati, lg);
+    logo.object.physic_object.pos.z = 0.1;
+    logo.signal = true;
 
     let mut fpscnt = UItext::new_from_file(
         &mut eng,
         matt,
-        "assets/textlat.png",
-        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%",
+        "assets/lat.png",
+        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
     );
     let phcnt = UItext::new_from_file(
         &mut eng,
         matt,
-        "assets/textlat.png",
-        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%",
+        "assets/lat.png",
+        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
     );
     //let phcnt = UItext::new_from_file(
     //    &mut eng,
@@ -145,12 +149,14 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     //let mut ruitxt = vec![fpscnt, phcnt];
 
     let mut ruitxt = vec![];
-    ruitxt.push(UItext::new_from_file(
-        &mut eng,
-        matt,
-        "assets/textlat.png",
-        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$%",
-    ));
+    for _ in 0..8{
+        ruitxt.push(UItext::new_from_file(
+            &mut eng,
+            matt,
+            "assets/lat.png",
+            "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
+        ));
+    }
 
     let mut scn = Scene::load_from_gltf(&mut eng, "assets/scene.glb", matgeneral);
 
@@ -451,6 +457,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         shbtn,
         reccbtn,
         lettbtn,
+        logo,
         fpscnt,
         phcnt,
         ruitxt,
@@ -497,7 +504,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         controlt: 0,
         joy_origin: Vec2 { x: 0.0, y: 0.0 },
         left_hand: false,
-        keycodes: vec![26u32, 48u32, 40u32, 44u32, 25u32, 22u32, 13u32, 14u32, 15u32, 3u32, 4u32],
+        keycodes: vec![26u32, 48u32, 40u32, 44u32, 25u32, 22u32, 13u32, 14u32, 15u32, 3u32, 4u32, 49u32],
         gamepad_axes: vec![0u8, 1u8, 5u8],
         gamepad_buttons: vec![0u8, 1u8, 2u8, 3u8],
         shadowmapquality: eng.render.shadow_map_resolution,
@@ -509,6 +516,9 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         firstcol: false,
         pausemn: false,
         framecnt: 0u64,
+        menusel: 0u8,
+        close: false,
+        autosaves: false,
     };
 
     (eng, state)

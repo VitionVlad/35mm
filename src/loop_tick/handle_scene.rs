@@ -5,7 +5,7 @@ use crate::{
     engine::{engine::Engine, light::LightType, math::vec3::Vec3}, loop_tick::save_load::save_progress,
 };
 
-fn reset_final_door_game(state: &mut AppState) {
+pub fn reset_final_door_game(state: &mut AppState) {
     state.cstop = 0;
     state.current_light_scene = 0;
     state.tm = 0;

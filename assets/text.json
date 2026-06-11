@@ -9,7 +9,25 @@
                 "Evacuation seems to be completed, most of the residents were moved to other cities inside country, trains still would stop at trains station"
             ],
             "ui": [
-                "Back"
+                "Back",
+                "Continue",
+                "New game",
+                "Save",
+                "Load",
+                "Settings",
+                "Quit",
+                "Video",
+                "Audio",
+                "Control",
+                "Game",
+                "Fullscreen: ",
+                "Render resolution: ",
+                "Shadows quality: ",
+                "Show fps: ",
+                "Volume: ",
+                "Invert touch controls: ",
+                "Autosaves: ",
+                "Language: "
             ],
             "tutorials": [
                 "Experemental Black and white film: this film can capture objects marked with red line, to use it, just look at object and press space button on keyboard, right trigger on gamepad, or actual button for touchscreen, it will capture all marked objects withitn its field of view.",
