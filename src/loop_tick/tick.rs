@@ -115,12 +115,18 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     state.viewport.object.physic_object.scale.y = eng.render.resolution_y as f32;
     state.viewport.exec(eng);
 
-    let fpstxt = format!("fps:{}", eng.fps);
-    state.fpscnt.size.x = 15_f32;
-    state.fpscnt.size.y = 30_f32;
-    state.fpscnt.pos.x = eng.render.resolution_x as f32 - fpstxt.len() as f32*state.fpscnt.size.x;
-    state.fpscnt.pos.y = 0.0;
-    state.fpscnt.exec(eng, &fpstxt);
+    if state.showfps{
+        let fpstxt = format!("fps:{}", eng.fps);
+        state.fpscnt.size.x = 15_f32;
+        state.fpscnt.size.y = 30_f32;
+        state.fpscnt.pos.x = eng.render.resolution_x as f32 - fpstxt.len() as f32*state.fpscnt.size.x;
+        state.fpscnt.pos.y = 0.0;
+        state.fpscnt.draw = true;
+        state.fpscnt.exec(eng, &fpstxt);
+    }else{
+        state.fpscnt.draw = false;
+        state.fpscnt.exec(eng, " ");
+    }
 
     if !state.pausemn{
         state.psbtn.object.physic_object.scale.x = 80.0;

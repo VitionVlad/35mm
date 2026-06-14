@@ -519,6 +519,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         menusel: 0u8,
         close: false,
         autosaves: false,
+        showfps: false,
     };
 
     (eng, state)

@@ -50,6 +50,8 @@ pub fn reset_final_door_game(state: &mut AppState) {
     player_pos.y = state.initial_pivot_pos.y;
     player_pos.z = state.initial_pivot_pos.z;
 
+    state.scn.objects[state.tramin].physic_object.pos.x = 6.34336;
+
     if state.dbg {
         println!("final door activated: resetting game state and player position");
     }

@@ -115,6 +115,7 @@ pub struct AppState {
     pub menusel: u8,
     pub close: bool,
     pub autosaves: bool,
+    pub showfps: bool,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

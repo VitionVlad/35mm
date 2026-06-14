@@ -169,29 +169,49 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     state.ruitxt[i].size = Vec2{ x: 20f32, y: 40f32};
                     state.ruitxt[i].pos = Vec3{ x: 0f32, y: state.ruitxt[0].pos.y+state.ruitxt[0].size.y+6.0+(i-1) as f32*(state.ruitxt[i].size.y+6.0), z: 0.1};
                     let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[newind].strval.clone();
-                    if txt.len() as f32 * state.ruitxt[i].size.x > lg{
-                        lg = txt.len() as f32 * state.ruitxt[i].size.x;
+                    if (txt.len() + 5) as f32 * state.ruitxt[i].size.x > lg{
+                        lg = (txt.len() + 5) as f32 * state.ruitxt[i].size.x;
                     }
-                    if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
-                        match i {
-                            1 => {
-                                //state.menusel = 2;
+                    match i {
+                        1 => {
+                            //state.menusel = 2;
+                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, eng.render.fullscreen)) && eng.control.mousebtn[2] && state.tm <= 0{
+                                eng.render.fullscreen = !eng.render.fullscreen;
                                 state.tm = 50;
-                            },
-                            2 => {
-                                //state.menusel = 3;
+                            }
+                        },
+                        2 => {
+                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, (eng.render.resolution_scale*100.0) as u32)) && eng.control.mousebtn[2] && state.tm <= 0{
+                                eng.render.resolution_scale = ((eng.render.resolution_scale*100.0) as u32 - 10) as f32 / 100.0;
+                                if eng.render.resolution_scale < 0.2{
+                                    eng.render.resolution_scale = 1.0;
+                                }
                                 state.tm = 50;
-                            },
-                            3 => {
-                                //state.menusel = 4;
+                            }
+                        },
+                        3 => {
+                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, match state.shadowmapquality{
+                                    1000 => "Low",
+                                    2000 => "Medium",
+                                    4000 => "High",
+                                    _ => "What?",
+                                })) && eng.control.mousebtn[2] && state.tm <= 0{
+                                state.shadowmapquality = match state.shadowmapquality{
+                                    1000 => 2000,
+                                    2000 => 4000,
+                                    4000 => 1000,
+                                    _ => 1000,
+                                };
                                 state.tm = 50;
-                            },
-                            4 => {
-                                //state.menusel = 5;
+                            }
+                        },
+                        4 => {
+                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, state.showfps)) && eng.control.mousebtn[2] && state.tm <= 0{
+                                state.showfps = !state.showfps;
                                 state.tm = 50;
-                            },
-                            _ => {}
-                        }
+                            }
+                        },
+                        _ => {}
                     }
                 }
 
@@ -237,10 +257,14 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[1].size = Vec2{ x: 20f32, y: 40f32};
                 state.ruitxt[1].pos = Vec3{ x: 0f32, y: state.ruitxt[0].pos.y+state.ruitxt[0].size.y+6.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[15].strval.clone();
-                if txt.len() as f32 * state.ruitxt[1].size.x > lg{
-                    lg = txt.len() as f32 * state.ruitxt[1].size.x;
+                if (txt.len()+3) as f32 * state.ruitxt[1].size.x > lg{
+                    lg = (txt.len()+3) as f32 * state.ruitxt[1].size.x;
                 }
-                if state.ruitxt[1].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if state.ruitxt[1].exec(eng, &format!("{}{}", txt, (eng.audio.vol*100.0) as i32)) && eng.control.mousebtn[2] && state.tm <= 0{
+                    eng.audio.vol = ((eng.audio.vol*100.0) as i32 - 10) as f32 / 100.0;
+                    if eng.audio.vol < 0.0{
+                        eng.audio.vol = 1.0;
+                    }
                     state.tm = 50;
                 }
 
@@ -291,10 +315,11 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[1].size = Vec2{ x: 20f32, y: 40f32};
                 state.ruitxt[1].pos = Vec3{ x: 0f32, y: state.ruitxt[0].pos.y+state.ruitxt[0].size.y+6.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[16].strval.clone();
-                if txt.len() as f32 * state.ruitxt[1].size.x > lg{
-                    lg = txt.len() as f32 * state.ruitxt[1].size.x;
+                if (txt.len() + 5) as f32 * state.ruitxt[1].size.x > lg{
+                    lg = (txt.len() + 5) as f32 * state.ruitxt[1].size.x;
                 }
-                if state.ruitxt[1].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if state.ruitxt[1].exec(eng, &format!("{}{}", txt, state.left_hand)) && eng.control.mousebtn[2] && state.tm <= 0{
+                    state.left_hand = !state.left_hand;
                     state.tm = 50;
                 }
 
@@ -346,22 +371,29 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     state.ruitxt[i].draw = true;
                     state.ruitxt[i].size = Vec2{ x: 20f32, y: 40f32};
                     state.ruitxt[i].pos = Vec3{ x: 0f32, y: state.ruitxt[0].pos.y+state.ruitxt[0].size.y+6.0+(i-1) as f32*(state.ruitxt[i].size.y+6.0), z: 0.1};
-                    let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[newind].strval.clone();
-                    if txt.len() as f32 * state.ruitxt[i].size.x > lg{
-                        lg = txt.len() as f32 * state.ruitxt[i].size.x;
-                    }
-                    if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
-                        match i {
-                            1 => {
-                                //state.menusel = 2;
-                                state.tm = 50;
-                            },
-                            2 => {
-                                //state.menusel = 3;
+                    match i {
+                        1 => {
+                            //state.menusel = 2;
+                            let txt = format!("{}{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[newind].strval.clone(), state.autosaves);
+                            if txt.len() as f32 * state.ruitxt[i].size.x > lg{
+                                lg = txt.len() as f32 * state.ruitxt[i].size.x;
+                            }
+                            if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                                state.autosaves = !state.autosaves;
                                 state.tm = 50;
                             }
-                            _ => {}
+                        },
+                        2 => {
+                            //state.menusel = 3;
+                            let txt = format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[newind].strval.clone());
+                            if txt.len() as f32 * state.ruitxt[i].size.x > lg{
+                                lg = txt.len() as f32 * state.ruitxt[i].size.x;
+                            }
+                            if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                                state.tm = 50;
+                            }
                         }
+                        _ => {}
                     }
                 }
 
