@@ -10,6 +10,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
         state.selp = 0;
         match state.menusel{
             0 => {
+                state.menumasel = 6;
+
                 state.logo.object.physic_object.scale.x = 200f32;
                 state.logo.object.physic_object.scale.y = 200f32;
                 state.logo.object.physic_object.pos.x = 0.0;
@@ -22,6 +24,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
 
                 for i in 0..6{
                     state.ruitxt[i].signal = true;
+                    if state.controlt == 2{
+                        if i == state.gamepadmenusel as usize{
+                            state.ruitxt[i].signal_off_value = 1.0;
+                        }else{
+                            state.ruitxt[i].signal_off_value = 0.0;
+                        }
+                    }
                     state.ruitxt[i].per_symbol = false;
                     state.ruitxt[i].draw = true;
                     state.ruitxt[i].size = Vec2{ x: 20f32, y: 40f32};
@@ -30,7 +39,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     if txt.len() as f32 * state.ruitxt[i].size.x > lg{
                         lg = txt.len() as f32 * state.ruitxt[i].size.x;
                     }
-                    if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                    if (state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                         match i {
                             0 => {
                                 state.pausemn = !state.pausemn;
@@ -59,6 +68,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             }
                             4 => {
                                 state.menusel = 1;
+                                state.gamepadmenusel = 0;
                                 state.tm = 50;
                             }
                             5 => {
@@ -78,6 +88,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.bluepan.exec(eng);
             },
             1 => {
+                state.menumasel = 5;
                 state.logo.object.draw = false;
                 state.logo.exec(eng);
 
@@ -94,6 +105,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 for i in 1..5{
                     let newind = i+6;
                     state.ruitxt[i].signal = true;
+                    if state.controlt == 2{
+                        if i-1 == state.gamepadmenusel as usize{
+                            state.ruitxt[i].signal_off_value = 1.0;
+                        }else{
+                            state.ruitxt[i].signal_off_value = 0.0;
+                        }
+                    }
                     state.ruitxt[i].per_symbol = false;
                     state.ruitxt[i].draw = true;
                     state.ruitxt[i].size = Vec2{ x: 20f32, y: 40f32};
@@ -102,22 +120,26 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     if txt.len() as f32 * state.ruitxt[i].size.x > lg{
                         lg = txt.len() as f32 * state.ruitxt[i].size.x;
                     }
-                    if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                    if (state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                         match i {
                             1 => {
                                 state.menusel = 2;
+                                state.gamepadmenusel = 0;
                                 state.tm = 50;
                             },
                             2 => {
                                 state.menusel = 3;
+                                state.gamepadmenusel = 0;
                                 state.tm = 50;
                             },
                             3 => {
                                 state.menusel = 4;
+                                state.gamepadmenusel = 0;
                                 state.tm = 50;
                             },
                             4 => {
                                 state.menusel = 5;
+                                state.gamepadmenusel = 0;
                                 state.tm = 50;
                             },
                             _ => {}
@@ -126,6 +148,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[5].signal = true;
+                if state.controlt == 2{
+                    if 4 == state.gamepadmenusel as usize{
+                        state.ruitxt[5].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[5].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[5].per_symbol = false;
                 state.ruitxt[5].draw = true;
                 state.ruitxt[5].size = Vec2{ x: 20f32, y: 40f32};
@@ -134,8 +163,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if txt.len() as f32 * state.ruitxt[5].size.x > lg{
                     lg = txt.len() as f32 * state.ruitxt[5].size.x;
                 }
-                if state.ruitxt[5].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[5].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (4 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.menusel = 0;
+                    state.gamepadmenusel = 0;
                     state.tm = 50;
                 }
 
@@ -148,6 +178,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.bluepan.exec(eng);
             }
             2 => {
+                state.menumasel = 5;
                 state.logo.object.draw = false;
                 state.logo.exec(eng);
 
@@ -164,6 +195,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 for i in 1..5{
                     let newind = i+10;
                     state.ruitxt[i].signal = true;
+                    if state.controlt == 2{
+                        if i-1 == state.gamepadmenusel as usize{
+                            state.ruitxt[i].signal_off_value = 1.0;
+                        }else{
+                            state.ruitxt[i].signal_off_value = 0.0;
+                        }
+                    }
                     state.ruitxt[i].per_symbol = false;
                     state.ruitxt[i].draw = true;
                     state.ruitxt[i].size = Vec2{ x: 20f32, y: 40f32};
@@ -175,13 +213,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     match i {
                         1 => {
                             //state.menusel = 2;
-                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, eng.render.fullscreen)) && eng.control.mousebtn[2] && state.tm <= 0{
+                            if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, eng.render.fullscreen)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 eng.render.fullscreen = !eng.render.fullscreen;
                                 state.tm = 50;
                             }
                         },
                         2 => {
-                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, (eng.render.resolution_scale*100.0) as u32)) && eng.control.mousebtn[2] && state.tm <= 0{
+                            if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, (eng.render.resolution_scale*100.0) as u32)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 eng.render.resolution_scale = ((eng.render.resolution_scale*100.0) as u32 - 10) as f32 / 100.0;
                                 if eng.render.resolution_scale < 0.2{
                                     eng.render.resolution_scale = 1.0;
@@ -190,12 +228,12 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             }
                         },
                         3 => {
-                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, match state.shadowmapquality{
+                            if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, match state.shadowmapquality{
                                     1000 => "Low",
                                     2000 => "Medium",
                                     4000 => "High",
                                     _ => "What?",
-                                })) && eng.control.mousebtn[2] && state.tm <= 0{
+                                })) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.shadowmapquality = match state.shadowmapquality{
                                     1000 => 2000,
                                     2000 => 4000,
@@ -206,7 +244,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             }
                         },
                         4 => {
-                            if state.ruitxt[i].exec(eng, &format!("{}{}", txt, state.showfps)) && eng.control.mousebtn[2] && state.tm <= 0{
+                            if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, state.showfps)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.showfps = !state.showfps;
                                 state.tm = 50;
                             }
@@ -216,6 +254,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[5].signal = true;
+                if state.controlt == 2{
+                    if 4 == state.gamepadmenusel as usize{
+                        state.ruitxt[5].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[5].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[5].per_symbol = false;
                 state.ruitxt[5].draw = true;
                 state.ruitxt[5].size = Vec2{ x: 20f32, y: 40f32};
@@ -224,8 +269,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if txt.len() as f32 * state.ruitxt[5].size.x > lg{
                     lg = txt.len() as f32 * state.ruitxt[5].size.x;
                 }
-                if state.ruitxt[5].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[5].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (4 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.menusel = 1;
+                    state.gamepadmenusel = 0;
                     state.tm = 50;
                 }
 
@@ -238,6 +284,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.bluepan.exec(eng);
             },
             3 => {
+                state.menumasel = 2;
                 state.logo.object.draw = false;
                 state.logo.exec(eng);
 
@@ -252,6 +299,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[0].size.x*txt.len() as f32;
 
                 state.ruitxt[1].signal = true;
+                if state.controlt == 2{
+                    if 0 == state.gamepadmenusel as usize{
+                        state.ruitxt[1].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[1].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[1].per_symbol = false;
                 state.ruitxt[1].draw = true;
                 state.ruitxt[1].size = Vec2{ x: 20f32, y: 40f32};
@@ -260,7 +314,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if (txt.len()+3) as f32 * state.ruitxt[1].size.x > lg{
                     lg = (txt.len()+3) as f32 * state.ruitxt[1].size.x;
                 }
-                if state.ruitxt[1].exec(eng, &format!("{}{}", txt, (eng.audio.vol*100.0) as i32)) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[1].exec(eng, &format!("{}{}", txt, (eng.audio.vol*100.0) as i32)) && eng.control.mousebtn[2] && state.tm <= 0) || (0 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     eng.audio.vol = ((eng.audio.vol*100.0) as i32 - 10) as f32 / 100.0;
                     if eng.audio.vol < 0.0{
                         eng.audio.vol = 1.0;
@@ -269,6 +323,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[2].signal = true;
+                if state.controlt == 2{
+                    if 1 == state.gamepadmenusel as usize{
+                        state.ruitxt[2].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[2].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[2].per_symbol = false;
                 state.ruitxt[2].draw = true;
                 state.ruitxt[2].size = Vec2{ x: 20f32, y: 40f32};
@@ -277,8 +338,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if txt.len() as f32 * state.ruitxt[2].size.x > lg{
                     lg = txt.len() as f32 * state.ruitxt[5].size.x;
                 }
-                if state.ruitxt[2].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[2].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.menusel = 1;
+                    state.gamepadmenusel = 0;
                     state.tm = 50;
                 }
 
@@ -310,6 +372,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[0].size.x*txt.len() as f32;
 
                 state.ruitxt[1].signal = true;
+                if state.controlt == 2{
+                    if 0 == state.gamepadmenusel as usize{
+                        state.ruitxt[1].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[1].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[1].per_symbol = false;
                 state.ruitxt[1].draw = true;
                 state.ruitxt[1].size = Vec2{ x: 20f32, y: 40f32};
@@ -318,12 +387,19 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if (txt.len() + 5) as f32 * state.ruitxt[1].size.x > lg{
                     lg = (txt.len() + 5) as f32 * state.ruitxt[1].size.x;
                 }
-                if state.ruitxt[1].exec(eng, &format!("{}{}", txt, state.left_hand)) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[1].exec(eng, &format!("{}{}", txt, state.left_hand)) && eng.control.mousebtn[2] && state.tm <= 0) || (0 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.left_hand = !state.left_hand;
                     state.tm = 50;
                 }
 
                 state.ruitxt[2].signal = true;
+                if state.controlt == 2{
+                    if 1 == state.gamepadmenusel as usize{
+                        state.ruitxt[2].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[2].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[2].per_symbol = false;
                 state.ruitxt[2].draw = true;
                 state.ruitxt[2].size = Vec2{ x: 20f32, y: 40f32};
@@ -332,8 +408,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if txt.len() as f32 * state.ruitxt[2].size.x > lg{
                     lg = txt.len() as f32 * state.ruitxt[5].size.x;
                 }
-                if state.ruitxt[2].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[2].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.menusel = 1;
+                    state.gamepadmenusel = 0;
                     state.tm = 50;
                 }
 
@@ -367,6 +444,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 for i in 1..3{
                     let newind = i+16;
                     state.ruitxt[i].signal = true;
+                    if state.controlt == 2{
+                        if i-1 == state.gamepadmenusel as usize{
+                            state.ruitxt[i].signal_off_value = 1.0;
+                        }else{
+                            state.ruitxt[i].signal_off_value = 0.0;
+                        }
+                    }
                     state.ruitxt[i].per_symbol = false;
                     state.ruitxt[i].draw = true;
                     state.ruitxt[i].size = Vec2{ x: 20f32, y: 40f32};
@@ -378,7 +462,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             if txt.len() as f32 * state.ruitxt[i].size.x > lg{
                                 lg = txt.len() as f32 * state.ruitxt[i].size.x;
                             }
-                            if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                            if (state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.autosaves = !state.autosaves;
                                 state.tm = 50;
                             }
@@ -389,7 +473,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             if txt.len() as f32 * state.ruitxt[i].size.x > lg{
                                 lg = txt.len() as f32 * state.ruitxt[i].size.x;
                             }
-                            if state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                            if (state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.tm = 50;
                             }
                         }
@@ -398,6 +482,13 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[3].signal = true;
+                if state.controlt == 2{
+                    if 2 == state.gamepadmenusel as usize{
+                        state.ruitxt[3].signal_off_value = 1.0;
+                    }else{
+                        state.ruitxt[3].signal_off_value = 0.0;
+                    }
+                }
                 state.ruitxt[3].per_symbol = false;
                 state.ruitxt[3].draw = true;
                 state.ruitxt[3].size = Vec2{ x: 20f32, y: 40f32};
@@ -406,8 +497,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if txt.len() as f32 * state.ruitxt[3].size.x > lg{
                     lg = txt.len() as f32 * state.ruitxt[3].size.x;
                 }
-                if state.ruitxt[3].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0{
+                if (state.ruitxt[3].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (2 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.menusel = 1;
+                    state.gamepadmenusel = 0;
                     state.tm = 50;
                 }
 

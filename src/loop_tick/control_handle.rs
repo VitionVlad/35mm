@@ -106,6 +106,24 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.shbtn.exec(eng);
             state.reccbtn.exec(eng);
         }
+    }else if state.pausemn{
+        if eng.control.get_gamepad_button_state(state.gamepad_buttons[5]) && state.tm <= 0{
+            state.gamepadmenusel = (state.gamepadmenusel-1).max(0);
+            state.tm = 50;
+            state.controlt = 2;
+        }else if eng.control.get_gamepad_button_state(state.gamepad_buttons[6]) && state.tm <= 0{
+            state.gamepadmenusel = (state.gamepadmenusel+1).min(state.menumasel-1);
+            state.tm = 50;
+            state.controlt = 2;
+        }
+    }
+
+    if eng.control.get_gamepad_button_state(state.gamepad_buttons[4]) && state.tm <= 0{
+        state.pausemn = !state.pausemn;
+        state.menusel = 0;
+        state.gamepadmenusel = 0;
+        state.tm = 50;
+        state.controlt = 2;
     }
 
     if eng.control.get_key_state(state.keycodes[11]) && state.tm <= 0{
