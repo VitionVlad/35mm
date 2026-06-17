@@ -38,7 +38,7 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     state.viewport.object.mesh.ubo[50] = state.scn.objects[state.pu].physic_object.pos.z;
     state.viewport.object.mesh.ubo[51] = state.pkbf;
 
-    if !state.intram && state.framecnt > 10{
+    if !state.intram && state.framecnt > 10 && !state.gameending{
         if state.pkbf >= 5f32 {
             if state.pkbf >= 10f32{
                 state.pkbf -= SPEED * eng.times_to_calculate_physics as f32;

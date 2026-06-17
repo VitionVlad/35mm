@@ -3,7 +3,7 @@ use std::f32::consts::PI;
 use crate::{app_state::{AppState, SPEED}, engine::engine::Engine};
 
 pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
-    if !state.intram && !state.pausemn{
+    if !state.intram && !state.pausemn && !state.gameending{
         if eng.control.get_key_state(state.keycodes[2]) && state.selp != 3{
             state.scn.objects[state.pu].physic_object.acceleration.x += -SPEED * eng.times_to_calculate_physics as f32;
             state.pivotr = PI / 2.0;

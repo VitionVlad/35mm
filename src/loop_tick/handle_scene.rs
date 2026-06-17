@@ -59,6 +59,54 @@ pub fn reset_final_door_game(state: &mut AppState) {
     let _ = save_progress("save.json", state);
 }
 
+fn handle_end(eng: &mut Engine, state: &mut AppState){
+    if state.simtim > 0{
+        state.simtim -= eng.times_to_calculate_physics as i32;
+    }
+
+    if state.pkbf >= 10f32 && state.pkbf < 11f32{
+        state.pkbf += SPEED * eng.times_to_calculate_physics as f32;
+    }
+    if state.pkbf > 11f32{
+        state.pkbf = 11.0;
+    }
+
+    if state.pkbf >= 11.0{
+        state.blacktxt.draw = true;
+        state.blacktxt.size.x = 10_f32;
+        state.blacktxt.size.y = 20_f32;    
+        state.blacktxt.max_text_width = 16;
+        state.blacktxt.pos.y = 25.0;
+        state.blacktxt.pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
+        state.blacktxt.next_line_on_whitespace = true;
+        state.blacktxt.new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+        let ort = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone();
+        let text: String = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone().chars().take(state.lastltsim).collect();
+        state.blacktxt.exec(eng, &text);
+        if state.simtim <= 0 && state.lastltsim != ort.len(){
+            state.lastltsim += 1;
+            state.simtim = 25;
+        }
+        if state.simtim <= 0 && state.lastltsim == ort.len(){
+            state.current_light_scene = 0;
+            state.drbtn.object.draw = false;
+            state.drbtn.exec(eng);
+            state.gameending = false;
+            state.pkbf = 2.0;
+            state.sfx[1].move_sound_cursor(0.0);
+            state.sfx[1].play = true;
+            reset_final_door_game(state);
+        }
+    }
+
+    state.drbtn.object.draw = false;
+    state.nkbtn.object.draw = false;
+    state.nebtn.object.draw = false;
+    state.nkbtn.exec(eng);
+    state.drbtn.exec(eng);
+    state.nebtn.exec(eng);
+}
+
 fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
     let player_pos = state.scn.objects[state.pu].physic_object.pos;
     let door_pos = state.scn.objects[state.finaldooridx].physic_object.pos;
@@ -83,12 +131,30 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
         let abtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && can_open;
 
         if can_open && ((eng.control.get_key_state(state.keycodes[0]) || icon_pressed || abtn_pressed) && state.tm <= 0) {
-            state.sfx[3].move_sound_cursor(0.0);
-            state.sfx[3].play = true;
-            state.current_light_scene = 0;
+            //state.sfx[3].move_sound_cursor(0.0);
+            //state.sfx[3].play = true;
+            //state.current_light_scene = 0;
+            //state.drbtn.object.draw = false;
+            //state.drbtn.exec(eng);
+            //reset_final_door_game(state);
+            //state.cstop = 0;
+            //state.current_light_scene = 0;
+            //state.tm = 0;
+            state.intram = false;
+            //state.sc3state = 0;
+            state.selp = 0;
+            state.cme = false;
+            state.bwfilm = 0;
+            state.clfilm = 0;
+            state.locls = 1;
+            state.pkbf = 10.0;
+            state.gameending = true;
             state.drbtn.object.draw = false;
+            state.nkbtn.object.draw = false;
+            state.nebtn.object.draw = false;
+            state.nkbtn.exec(eng);
             state.drbtn.exec(eng);
-            reset_final_door_game(state);
+            state.nebtn.exec(eng);
         }
     } else {
         state.drbtn.object.draw = false;
@@ -437,58 +503,64 @@ fn process_button_interactions(eng: &mut Engine, state: &mut AppState) {
 }
 
 pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
-    //state.btnbtn.object.draw = false;
-    //state.nkbtn.object.draw = false;
+    if state.gameending{
+        handle_end(eng, state);
+    }else{
+        state.blacktxt.draw = false;
+        state.blacktxt.exec(eng, " ");
 
-    match state.cstop {
-        1 => {
-            if state.skp2 {
-                state.switched_5_6 = true;
-                state.switched_1_4 = true; 
-            }
-            if state.switched_1_4{
-                match state.doors[0].axis {
-                    0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x - state.doors[0].movement,
-                    1 => state.scn.objects[state.doors[0].index].physic_object.pos.y = state.doors[0].initial_pos.y - state.doors[0].movement,
-                    2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z - state.doors[0].movement,
-                    _ => {}
+        match state.cstop {
+            1 => {
+                if state.skp2 {
+                    state.switched_5_6 = true;
+                    state.switched_1_4 = true; 
                 }
-                state.sfx[2].play = true;
-            }else{
-                match state.doors[0].axis {
-                    0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x,
-                    1 => state.scn.objects[state.doors[0].index].physic_object.pos.y = state.doors[0].initial_pos.y,
-                    2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z,
-                    _ => {}
-                }
-            }
-        }
-        2 => {
-            if state.dbg {
-                state.ekey = usize::MAX;
-                state.gkey = usize::MAX;
-            }
-            if state.sc3state != 0{
-                match state.doors[1].axis {
-                    0 => state.scn.objects[state.doors[1].index].physic_object.pos.x = state.doors[1].initial_pos.x - state.doors[1].movement,
-                    1 => state.scn.objects[state.doors[1].index].physic_object.pos.y = state.doors[1].initial_pos.y - state.doors[1].movement,
-                    2 => state.scn.objects[state.doors[1].index].physic_object.pos.z = state.doors[1].initial_pos.z - state.doors[1].movement,
-                    _ => {}
-                }
-            }else{
-                match state.doors[1].axis {
-                    0 => state.scn.objects[state.doors[1].index].physic_object.pos.x = state.doors[1].initial_pos.x,
-                    1 => state.scn.objects[state.doors[1].index].physic_object.pos.y = state.doors[1].initial_pos.y,
-                    2 => state.scn.objects[state.doors[1].index].physic_object.pos.z = state.doors[1].initial_pos.z,
-                    _ => {}
+                if state.switched_1_4{
+                    match state.doors[0].axis {
+                        0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x - state.doors[0].movement,
+                        1 => state.scn.objects[state.doors[0].index].physic_object.pos.y = state.doors[0].initial_pos.y - state.doors[0].movement,
+                        2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z - state.doors[0].movement,
+                        _ => {}
+                    }
+                    state.sfx[2].play = true;
+                }else{
+                    match state.doors[0].axis {
+                        0 => state.scn.objects[state.doors[0].index].physic_object.pos.x = state.doors[0].initial_pos.x,
+                        1 => state.scn.objects[state.doors[0].index].physic_object.pos.y = state.doors[0].initial_pos.y,
+                        2 => state.scn.objects[state.doors[0].index].physic_object.pos.z = state.doors[0].initial_pos.z,
+                        _ => {}
+                    }
                 }
             }
+            2 => {
+                if state.dbg {
+                    state.ekey = usize::MAX;
+                    state.gkey = usize::MAX;
+                }
+                if state.sc3state != 0{
+                    match state.doors[1].axis {
+                        0 => state.scn.objects[state.doors[1].index].physic_object.pos.x = state.doors[1].initial_pos.x - state.doors[1].movement,
+                        1 => state.scn.objects[state.doors[1].index].physic_object.pos.y = state.doors[1].initial_pos.y - state.doors[1].movement,
+                        2 => state.scn.objects[state.doors[1].index].physic_object.pos.z = state.doors[1].initial_pos.z - state.doors[1].movement,
+                        _ => {}
+                    }
+                }else{
+                    match state.doors[1].axis {
+                        0 => state.scn.objects[state.doors[1].index].physic_object.pos.x = state.doors[1].initial_pos.x,
+                        1 => state.scn.objects[state.doors[1].index].physic_object.pos.y = state.doors[1].initial_pos.y,
+                        2 => state.scn.objects[state.doors[1].index].physic_object.pos.z = state.doors[1].initial_pos.z,
+                        _ => {}
+                    }
+                }
 
-            handle_final_door_interaction(eng, state);
-        }
-        _ => {
+                handle_final_door_interaction(eng, state);
+            }
+            _ => {
+            }
         }
     }
+    //state.btnbtn.object.draw = false;
+    //state.nkbtn.object.draw = false;
 
     // Process lighting for the current scene
     process_lighting(eng, state);

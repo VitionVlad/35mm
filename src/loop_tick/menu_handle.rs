@@ -39,6 +39,11 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     if txt.len() as f32 * state.ruitxt[i].size.x > lg{
                         lg = txt.len() as f32 * state.ruitxt[i].size.x;
                     }
+                    if i == 2 && state.intram{
+                        state.ruitxt[i].signal_on_value = 0.0;
+                    }else{
+                        state.ruitxt[i].signal_on_value = 1.0;
+                    }
                     if (state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                         match i {
                             0 => {
@@ -54,9 +59,11 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                                 state.sfx[1].play = true;
                             }
                             2 => {
-                                let _ = save_progress("save.json", state);
-                                state.pausemn = false;
-                                state.tm = 50;
+                                if !state.intram{
+                                    let _ = save_progress("save.json", state);
+                                    state.pausemn = false;
+                                    state.tm = 50;
+                                }
                             }
                             3 => {
                                 let _ = load_progress("save.json", state);
@@ -231,10 +238,10 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                         },
                         3 => {
                             if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, match state.shadowmapquality{
-                                    1000 => "Low",
-                                    2000 => "Medium",
-                                    4000 => "High",
-                                    _ => "What?",
+                                    1000 => "1",
+                                    2000 => "2",
+                                    4000 => "3",
+                                    _ => "?",
                                 })) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.shadowmapquality = match state.shadowmapquality{
                                     1000 => 2000,

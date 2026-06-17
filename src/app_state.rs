@@ -61,6 +61,7 @@ pub struct AppState {
     pub logo: UIplane,
     pub fpscnt: UItext,
     pub phcnt: UItext,
+    pub blacktxt: UItext,
     pub ruitxt: Vec<UItext>,   
     pub scn: Scene,
     pub cvec: Vec<Colectable>,
@@ -118,6 +119,9 @@ pub struct AppState {
     pub showfps: bool,
     pub gamepadmenusel: i8,
     pub menumasel: i8,
+    pub gameending: bool,
+    pub lastltsim: usize,
+    pub simtim: i32,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

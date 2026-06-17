@@ -140,6 +140,12 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         "assets/lat.png",
         "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
     );
+    let blacktxt = UItext::new_from_file(
+        &mut eng,
+        matt,
+        "assets/latblack.png",
+        "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
+    );
     //let phcnt = UItext::new_from_file(
     //    &mut eng,
     //    matt,
@@ -460,6 +466,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         logo,
         fpscnt,
         phcnt,
+        blacktxt,
         ruitxt,
         scn,
         cvec,
@@ -522,6 +529,9 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         showfps: false,
         gamepadmenusel: 0i8,
         menumasel: 0i8,
+        gameending: false,
+        lastltsim: 1,
+        simtim: 0,
     };
 
     (eng, state)

@@ -12,7 +12,7 @@ pub fn save_progress(path: &str, app: &AppState) -> Result<(), std::io::Error> {
     s.push_str(&format!("  \"firstbw\": {},\n", app.firstbw));
     s.push_str(&format!("  \"firstcol\": {},\n", app.firstcol));
     s.push_str(&format!("  \"current_light_scene\": {},\n", app.current_light_scene));
-    s.push_str(&format!("  \"cstop\": {},\n", app.cstop+1));
+    s.push_str(&format!("  \"cstop\": {},\n", app.cstop));
     s.push_str(&format!("  \"switched_1_4\": {},\n", app.switched_1_4));
     s.push_str(&format!("  \"switched_5_6\": {},\n", app.switched_5_6));
 
@@ -90,15 +90,16 @@ pub fn load_progress(path: &str, state: &mut AppState){
             "firstcol" => state.firstcol = json.other_nodes[i].bolean,
             "current_light_scene" => state.current_light_scene = json.other_nodes[i].numeral_val as u8,
             "cstop" => {
-                state.cstop = json.other_nodes[i].numeral_val as u32;
+                let lcstop = json.other_nodes[i].numeral_val as u32;
                 //if state.dbg{
                 //    println!("cstop {}, initial_tram_pos: {}, => {}", state.cstop, state.scn.objects[state.tramin].physic_object.pos.x, state.scn.objects[state.stops[state.cstop as usize-1]].physic_object.pos.x)
                 //}
-                if state.cstop == 0{
+                if lcstop == 0{
                     state.scn.objects[state.tramin].physic_object.pos.x = 6.34336;
+                    state.cstop = 0;
                 }else{
-                    state.scn.objects[state.tramin].physic_object.pos.x = state.scn.objects[state.stops[state.cstop as usize]].physic_object.pos.x;
-                    state.cstop -= 1;
+                    state.cstop = lcstop;
+                    state.scn.objects[state.tramin].physic_object.pos.x = state.scn.objects[state.stops[state.cstop as usize-1]].physic_object.pos.x;
                 }
             },
             "switched_1_4" => state.switched_1_4 = json.other_nodes[i].bolean,
@@ -133,12 +134,6 @@ pub fn load_progress(path: &str, state: &mut AppState){
                     if j < state.btns.len() {
                         state.btns[j].pressed = json.other_nodes[i].other_nodes[j].bolean;
                     }
-                }
-            },
-            "btns_pressed_flag" => {
-                let flag = json.other_nodes[i].numeral_val as u32;
-                for j in 0..state.btns.len() {
-                    state.btns[j].pressed = (flag & (1u32 << j)) != 0;
                 }
             },
             "cvec" => {
