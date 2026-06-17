@@ -208,6 +208,7 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                             }
                             state.scn.objects[state.destructables[i].index].physic_object.pos.y = -1000.0;
                             state.scn.objects[state.destructables[i].index].draw = false;
+                            state.destructables[i].destroyed = true;
                             break;
                         }
                     }

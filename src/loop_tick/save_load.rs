@@ -1,6 +1,7 @@
 #[allow(dead_code)]
 use std::fs;
 use std::io::Write;
+use std::f32::consts::PI;
 use crate::engine::loader::jsonparser::JsonF;
 use crate::app_state::AppState;
 use crate::engine::engine::Engine;
@@ -42,9 +43,11 @@ pub fn save_progress(path: &str, app: &AppState) -> Result<(), std::io::Error> {
 
     // destructables_draw array
     s.push_str("  \"destructables\": [");
-    for (i, d) in app.destructables.iter().enumerate() {
-        if i != 0 { s.push_str(", "); }
-        let draw = app.scn.objects[d.index].draw;
+    for i in 0..app.destructables.len(){
+        if i != 0 {
+            s.push_str(", ");
+        }
+        let draw = app.destructables[i].destroyed;
         s.push_str(if draw { "true" } else { "false" });
     }
     s.push_str("],\n");
@@ -116,12 +119,14 @@ pub fn load_progress(path: &str, state: &mut AppState){
             },
             "destructables" => {
                 for j in 0..json.other_nodes[i].other_nodes.len() {
-                    if json.other_nodes[i].other_nodes[j].bolean {
+                    if !json.other_nodes[i].other_nodes[j].bolean {
                         state.scn.objects[state.destructables[j].index].draw = true;
                         state.scn.objects[state.destructables[j].index].physic_object.pos = state.destructables[j].initial_pos;
+                        state.destructables[j].destroyed = false;
                     }else{
                         state.scn.objects[state.destructables[j].index].draw = false;
                         state.scn.objects[state.destructables[j].index].physic_object.pos.y = -1000.0;
+                        state.destructables[j].destroyed = true;
                     }
                 }
             },
@@ -149,6 +154,28 @@ pub fn load_progress(path: &str, state: &mut AppState){
                 state.scn.objects[state.pu].physic_object.pos.z = json.other_nodes[i].other_nodes[2].numeral_val as f32;
             },
             _ => {}
+        }
+    }
+
+    let button_status: Vec<(u32, u32, bool)> = state.btns.iter().map(|b| (b.in_scene_index, b.scene_index, b.pressed)).collect();
+    for button in state.btns.iter() {
+        let rot_axis = if button.axis >= 4 { button.axis - 3 } else { button.axis };
+        let same_index_pressed = button_status.iter().any(|&(idx, scene_idx, pressed)| idx == button.in_scene_index && scene_idx == button.scene_index && pressed);
+
+        if button.axis < 4 {
+            match rot_axis {
+                0 => state.scn.objects[button.index].physic_object.rot.x = if button.pressed { PI } else { 0.0 },
+                1 => state.scn.objects[button.index].physic_object.rot.y = if button.pressed { PI } else { 0.0 },
+                2 => state.scn.objects[button.index].physic_object.rot.z = if button.pressed { PI } else { 0.0 },
+                _ => {}
+            }
+        } else {
+            match rot_axis {
+                0 => state.scn.objects[button.index].physic_object.rot.x = if same_index_pressed { PI } else { 0.0 },
+                1 => state.scn.objects[button.index].physic_object.rot.y = if same_index_pressed { PI } else { 0.0 },
+                2 => state.scn.objects[button.index].physic_object.rot.z = if same_index_pressed { PI } else { 0.0 },
+                _ => {}
+            }
         }
     }
 }

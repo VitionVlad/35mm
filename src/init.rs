@@ -251,6 +251,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                             y: scn.objects[i].physic_object.pos.y,
                             z: scn.objects[i].physic_object.pos.z,
                         },
+                        destroyed: false,
                     });
                     if show_dbg_info{
                         println!("destructable ekey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
@@ -264,6 +265,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                             y: scn.objects[i].physic_object.pos.y,
                             z: scn.objects[i].physic_object.pos.z,
                         },
+                        destroyed: false,
                     });
                     if show_dbg_info{
                         println!("destructable gkey found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);
@@ -276,6 +278,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                             y: scn.objects[i].physic_object.pos.y,
                             z: scn.objects[i].physic_object.pos.z,
                         },
+                        destroyed: false,
                     });
                     if show_dbg_info{
                         println!("destructable found at index {}, pos ({}, {}, {})", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z);

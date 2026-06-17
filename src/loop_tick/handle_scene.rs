@@ -567,4 +567,11 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
 
     // Handle button interactions
     process_button_interactions(eng, state);
+
+    for i in 0..state.destructables.len(){
+        if state.destructables[i].destroyed{
+            state.scn.objects[state.destructables[i].index].draw = false;
+            state.scn.objects[state.destructables[i].index].physic_object.pos.y = -1000.0;
+        }
+    }
 }

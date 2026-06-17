@@ -17,6 +17,7 @@ pub struct Colectable {
 pub struct Destructable {
     pub index: usize,
     pub initial_pos: Vec3,
+    pub destroyed: bool,
 }
 
 pub struct Ingbutton{
