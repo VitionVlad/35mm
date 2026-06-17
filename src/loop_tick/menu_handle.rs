@@ -1,6 +1,6 @@
 use crate::{
     app_state::AppState,
-    engine::{engine::Engine, math::{vec2::Vec2, vec3::Vec3}}, loop_tick::save_load::{load_progress, save_progress},
+    engine::{engine::Engine, math::{vec2::Vec2, vec3::Vec3}}, loop_tick::save_load::{load_progress, save_progress, save_settings},
 };
 
 use super::handle_scene::reset_final_door_game;
@@ -215,6 +215,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             //state.menusel = 2;
                             if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, eng.render.fullscreen)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 eng.render.fullscreen = !eng.render.fullscreen;
+                                let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
                             }
                         },
@@ -224,6 +225,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                                 if eng.render.resolution_scale < 0.2{
                                     eng.render.resolution_scale = 1.0;
                                 }
+                                let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
                             }
                         },
@@ -240,12 +242,14 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                                     4000 => 1000,
                                     _ => 1000,
                                 };
+                                let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
                             }
                         },
                         4 => {
                             if (state.ruitxt[i].exec(eng, &format!("{}{}", txt, state.showfps)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.showfps = !state.showfps;
+                                let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
                             }
                         },
@@ -319,6 +323,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     if eng.audio.vol < 0.0{
                         eng.audio.vol = 1.0;
                     }
+                    let _ = save_settings("settings.json", eng, state);
                     state.tm = 50;
                 }
 
@@ -389,6 +394,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 if (state.ruitxt[1].exec(eng, &format!("{}{}", txt, state.left_hand)) && eng.control.mousebtn[2] && state.tm <= 0) || (0 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.left_hand = !state.left_hand;
+                    let _ = save_settings("settings.json", eng, state);
                     state.tm = 50;
                 }
 
@@ -464,6 +470,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             }
                             if (state.ruitxt[i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.autosaves = !state.autosaves;
+                                let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
                             }
                         },

@@ -3,6 +3,7 @@ use std::fs;
 use std::io::Write;
 use crate::engine::loader::jsonparser::JsonF;
 use crate::app_state::AppState;
+use crate::engine::engine::Engine;
 
 /// Save the provided `AppState` as JSON to `path`.
 pub fn save_progress(path: &str, app: &AppState) -> Result<(), std::io::Error> {
@@ -56,6 +57,24 @@ pub fn save_progress(path: &str, app: &AppState) -> Result<(), std::io::Error> {
     }
     s.push_str("],\n");
     s.push_str(&format!("  \"pivot\": [{:.6}, {:.6}, {:.6}]\n", app.scn.objects[app.pu].physic_object.pos.x, app.scn.objects[app.pu].physic_object.pos.y, app.scn.objects[app.pu].physic_object.pos.z));
+    s.push_str("}\n");
+
+    let mut f = fs::File::create(path)?;
+    f.write_all(s.as_bytes())?;
+    Ok(())
+}
+
+#[allow(dead_code)]
+pub fn save_settings(path: &str, eng: &Engine, app: &AppState) -> Result<(), std::io::Error> {
+    let mut s = String::new();
+    s.push_str("{\n");
+    s.push_str(&format!("  \"fullscreen\": {},\n", eng.render.fullscreen));
+    s.push_str(&format!("  \"render_resolution\": {:.2},\n", eng.render.resolution_scale));
+    s.push_str(&format!("  \"shadowmaps_quality\": {},\n", app.shadowmapquality));
+    s.push_str(&format!("  \"show_fps\": {},\n", app.showfps));
+    s.push_str(&format!("  \"volume\": {:.3},\n", eng.audio.vol));
+    s.push_str(&format!("  \"left_hand_mode\": {},\n", app.left_hand));
+    s.push_str(&format!("  \"autosaves\": {}\n", app.autosaves));
     s.push_str("}\n");
 
     let mut f = fs::File::create(path)?;
@@ -134,6 +153,23 @@ pub fn load_progress(path: &str, state: &mut AppState){
                 state.scn.objects[state.pu].physic_object.pos.y = json.other_nodes[i].other_nodes[1].numeral_val as f32;
                 state.scn.objects[state.pu].physic_object.pos.z = json.other_nodes[i].other_nodes[2].numeral_val as f32;
             },
+            _ => {}
+        }
+    }
+}
+
+#[allow(dead_code)]
+pub fn load_settings(path: &str, eng: &mut Engine, state: &mut AppState){
+    let json = JsonF::load_from_file(path);
+    for i in 0..json.other_nodes.len() {
+        match json.other_nodes[i].name.as_str() {
+            "fullscreen" => eng.render.fullscreen = json.other_nodes[i].bolean,
+            "render_resolution" => eng.render.resolution_scale = json.other_nodes[i].numeral_val as f32,
+            "shadowmaps_quality" => state.shadowmapquality = json.other_nodes[i].numeral_val as u32,
+            "show_fps" => state.showfps = json.other_nodes[i].bolean,
+            "volume" => eng.audio.vol = json.other_nodes[i].numeral_val as f32,
+            "left_hand_mode" => state.left_hand = json.other_nodes[i].bolean,
+            "autosaves" => state.autosaves = json.other_nodes[i].bolean,
             _ => {}
         }
     }

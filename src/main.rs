@@ -1,6 +1,6 @@
 use std::{env, fs};
 
-use crate::loop_tick::save_load::load_progress;
+use crate::loop_tick::save_load::{load_progress, load_settings};
 
 mod app_state;
 mod engine;
@@ -24,6 +24,10 @@ fn main() {
             false
         }
     );
+
+    if fs::exists("settings.json").unwrap() {
+        let _ = load_settings("settings.json", &mut eng, &mut state);
+    }
 
     if fs::exists("save.json").unwrap() {
         let _ = load_progress("save.json", &mut state);
