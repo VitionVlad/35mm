@@ -72,19 +72,21 @@ fn handle_end(eng: &mut Engine, state: &mut AppState){
     }
 
     if state.pkbf >= 11.0{
-        state.blacktxt.draw = true;
-        state.blacktxt.size.x = 10_f32;
-        state.blacktxt.size.y = 20_f32;    
-        state.blacktxt.max_text_width = 16;
-        state.blacktxt.pos.y = 25.0;
-        state.blacktxt.pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
-        state.blacktxt.next_line_on_whitespace = true;
-        state.blacktxt.new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+        state.blacktxt[0].draw = true;
+        state.blacktxt[0].size.x = 10_f32;
+        state.blacktxt[0].size.y = 20_f32;    
+        state.blacktxt[0].max_text_width = 16;
+        state.blacktxt[0].pos.y = 25.0;
+        state.blacktxt[0].pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
+        state.blacktxt[0].next_line_on_whitespace = true;
+        state.blacktxt[0].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
         let ort = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone();
         let text: String = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone().chars().take(state.lastltsim).collect();
-        state.blacktxt.exec(eng, &text);
+        state.blacktxt[0].exec(eng, &text);
         if state.simtim <= 0 && state.lastltsim != ort.len(){
             state.lastltsim += 1;
+            state.sfx[10].play = true;
+            state.sfx[10].move_sound_cursor(0.0);
             state.simtim = 25;
         }
         if state.simtim <= 0 && state.lastltsim == ort.len(){
@@ -506,8 +508,8 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
     if state.gameending{
         handle_end(eng, state);
     }else{
-        state.blacktxt.draw = false;
-        state.blacktxt.exec(eng, " ");
+        state.blacktxt[0].draw = false;
+        state.blacktxt[0].exec(eng, " ");
 
         match state.cstop {
             1 => {
@@ -562,11 +564,20 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
     //state.btnbtn.object.draw = false;
     //state.nkbtn.object.draw = false;
 
-    // Process lighting for the current scene
     process_lighting(eng, state);
 
-    // Handle button interactions
-    process_button_interactions(eng, state);
+    if !state.pausemn && !state.gameending{
+        process_button_interactions(eng, state);
+    }else{
+        state.btnbtn.object.draw = false;
+        state.nkbtn.object.draw = false;
+        state.nebtn.object.draw = false;
+        state.drbtn.object.draw = false;
+        state.btnbtn.exec(eng);
+        state.nkbtn.exec(eng);
+        state.nebtn.exec(eng);
+        state.drbtn.exec(eng);
+    }
 
     for i in 0..state.destructables.len(){
         if state.destructables[i].destroyed{

@@ -134,18 +134,28 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         "assets/lat.png",
         "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
     );
-    let phcnt = UItext::new_from_file(
+    let phcnt = vec![UItext::new_from_file(
         &mut eng,
         matt,
         "assets/lat.png",
         "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
-    );
-    let blacktxt = UItext::new_from_file(
+    ),UItext::new_from_file(
+        &mut eng,
+        matt,
+        "assets/cyr.png",
+        "AaBbVvGgDdEe[]JjZzIiYyKkLlMmNnOoPpRrSsTtUuFfHhXxCc{}/*`~!@#$%^&()'0123456789,.;:'+-<>_ ",
+    )];
+    let blacktxt = vec![UItext::new_from_file(
         &mut eng,
         matt,
         "assets/latblack.png",
         "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
-    );
+    ),UItext::new_from_file(
+        &mut eng,
+        matt,
+        "assets/cyrblack.png",
+        "AaBbVvGgDdEe[]JjZzIiYyKkLlMmNnOoPpRrSsTtUuFfHhXxCc{}/*`~!@#$%^&()'0123456789,.;:'+-<>_ ",
+    )];
     //let phcnt = UItext::new_from_file(
     //    &mut eng,
     //    matt,
@@ -307,6 +317,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                     pressed: false,
                     scene_index: (bt[5]-b'0') as u32,
                     in_scene_index: (bt[4]-b'0') as u32,
+                    initial_rot: scn.objects[i].physic_object.rot,
                 });
                 if show_dbg_info{
                     println!("button found at index {}, pos ({}, {}, {}), scene_index: {}, in_scene_index: {}", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z, btns.last().unwrap().scene_index, btns.last().unwrap().in_scene_index);
@@ -345,6 +356,7 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
                     pressed: false,
                     scene_index: (bt[5]-b'0') as u32,
                     in_scene_index: (bt[4]-b'0') as u32,
+                    initial_rot: scn.objects[i].physic_object.rot,
                 });
                 if show_dbg_info{
                     println!("switch found at index {}, pos ({}, {}, {}), scene_index: {}, in_scene_index: {}", i, scn.objects[i].physic_object.pos.x, scn.objects[i].physic_object.pos.y, scn.objects[i].physic_object.pos.z, btns.last().unwrap().scene_index, btns.last().unwrap().in_scene_index);
@@ -434,6 +446,11 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     sfx[9].play = false;
     sfx[9].pos_dependency = false;
     sfx[9].use_pan = false;
+    sfx.push(Speaker::new(&mut eng, "assets/audio/type.mp3"));
+    sfx[10].loopsound = false;
+    sfx[10].play = false;
+    sfx[10].pos_dependency = false;
+    sfx[10].use_pan = false;
 
     for i in 0..sfx.len() {
         sfx[i].volume = 1.0;

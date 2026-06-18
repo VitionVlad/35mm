@@ -164,16 +164,16 @@ pub fn load_progress(path: &str, state: &mut AppState){
 
         if button.axis < 4 {
             match rot_axis {
-                0 => state.scn.objects[button.index].physic_object.rot.x = if button.pressed { PI } else { 0.0 },
-                1 => state.scn.objects[button.index].physic_object.rot.y = if button.pressed { PI } else { 0.0 },
-                2 => state.scn.objects[button.index].physic_object.rot.z = if button.pressed { PI } else { 0.0 },
+                0 => state.scn.objects[button.index].physic_object.rot.x = button.initial_rot.x + if button.pressed { PI } else { 0.0 },
+                1 => state.scn.objects[button.index].physic_object.rot.y = button.initial_rot.y + if button.pressed { PI } else { 0.0 },
+                2 => state.scn.objects[button.index].physic_object.rot.z = button.initial_rot.z + if button.pressed { PI } else { 0.0 },
                 _ => {}
             }
         } else {
             match rot_axis {
-                0 => state.scn.objects[button.index].physic_object.rot.x = if same_index_pressed { PI } else { 0.0 },
-                1 => state.scn.objects[button.index].physic_object.rot.y = if same_index_pressed { PI } else { 0.0 },
-                2 => state.scn.objects[button.index].physic_object.rot.z = if same_index_pressed { PI } else { 0.0 },
+                0 => state.scn.objects[button.index].physic_object.rot.x = button.initial_rot.x + if same_index_pressed { PI } else { 0.0 },
+                1 => state.scn.objects[button.index].physic_object.rot.y = button.initial_rot.y + if same_index_pressed { PI } else { 0.0 },
+                2 => state.scn.objects[button.index].physic_object.rot.z = button.initial_rot.z + if same_index_pressed { PI } else { 0.0 },
                 _ => {}
             }
         }

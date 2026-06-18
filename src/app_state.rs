@@ -26,6 +26,7 @@ pub struct Ingbutton{
     pub pressed: bool,
     pub scene_index: u32,
     pub in_scene_index: u32,
+    pub initial_rot: Vec3,
 }
 
 pub struct Scenelightsource{
@@ -61,8 +62,8 @@ pub struct AppState {
     pub lettbtn: UIplane,
     pub logo: UIplane,
     pub fpscnt: UItext,
-    pub phcnt: UItext,
-    pub blacktxt: UItext,
+    pub phcnt: Vec<UItext>,
+    pub blacktxt: Vec<UItext>,
     pub ruitxt: Vec<UItext>,   
     pub scn: Scene,
     pub cvec: Vec<Colectable>,

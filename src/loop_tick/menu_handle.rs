@@ -39,8 +39,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     if txt.len() as f32 * state.ruitxt[i].size.x > lg{
                         lg = txt.len() as f32 * state.ruitxt[i].size.x;
                     }
-                    if i == 2 && state.intram{
+                    if (i == 2 || i == 1) && (state.intram || state.gameending){
                         state.ruitxt[i].signal_on_value = 0.0;
+                        state.ruitxt[i].signal_off_value = 0.0;
                     }else{
                         state.ruitxt[i].signal_on_value = 1.0;
                     }
@@ -51,15 +52,17 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                                 state.tm = 50;
                             },
                             1 => {
-                                reset_final_door_game(state);
-                                state.pkbf = 2.0;
-                                state.tm = 50;
-                                state.pausemn = false;
-                                state.sfx[1].move_sound_cursor(0.0);
-                                state.sfx[1].play = true;
+                                if !state.gameending && !state.intram{
+                                    reset_final_door_game(state);
+                                    state.pkbf = 2.0;
+                                    state.tm = 50;
+                                    state.pausemn = false;
+                                    state.sfx[1].move_sound_cursor(0.0);
+                                    state.sfx[1].play = true;
+                                }
                             }
                             2 => {
-                                if !state.intram{
+                                if !state.intram && !state.gameending{
                                     let _ = save_progress("save.json", state);
                                     state.pausemn = false;
                                     state.tm = 50;

@@ -41,7 +41,7 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.current_letter = -1;
         }
 
-        if eng.control.mousebtn[2] && state.selp != 3{
+        if eng.control.mousebtn[2] && state.selp != 3 && state.tm <= 0{
             let resx_half = (eng.render.resolution_x as f64) / 2.0;
             if eng.control.xpos < resx_half - 80.0 && !state.left_hand || eng.control.xpos >= resx_half + 80.0 && state.left_hand {
                 if state.controlt != 1 {
