@@ -151,4 +151,17 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     }
 
     state.sfx[9].play = true;
+
+    for i in 0..state.blacktxt.len(){
+        if i != state.abc{
+            state.blacktxt[i].draw = false;
+            state.blacktxt[i].exec(eng, " ");
+            state.phcnt[i].draw = false;
+            state.phcnt[i].exec(eng, " ");
+            for j in 0..state.ruitxt[i].len(){
+                state.ruitxt[i][j].draw = false;
+                state.ruitxt[i][j].exec(eng, " ");
+            }
+        }
+    }
 }

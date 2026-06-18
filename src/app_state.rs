@@ -64,7 +64,7 @@ pub struct AppState {
     pub fpscnt: UItext,
     pub phcnt: Vec<UItext>,
     pub blacktxt: Vec<UItext>,
-    pub ruitxt: Vec<UItext>,   
+    pub ruitxt: Vec<Vec<UItext>>,   
     pub scn: Scene,
     pub cvec: Vec<Colectable>,
     pub destructables: Vec<Destructable>,
@@ -124,6 +124,9 @@ pub struct AppState {
     pub gameending: bool,
     pub lastltsim: usize,
     pub simtim: i32,
+    pub abc: usize,
+    pub current_lang: usize,
+    pub max_lang_nm: usize,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

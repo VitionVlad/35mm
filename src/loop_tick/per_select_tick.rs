@@ -105,8 +105,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             }
             state.bluepan.object.draw = false;
             state.bluepan.exec(eng);
-            state.phcnt[0].draw = false;
-            state.phcnt[0].exec(eng, " ");
+            state.phcnt[state.abc].draw = false;
+            state.phcnt[state.abc].exec(eng, " ");
             state.shbtn.object.draw = false;
             state.reccbtn.object.draw = false;
             state.shbtn.exec(eng);
@@ -136,8 +136,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                     state.lettbtn.exec(eng);
                 }
             }
-            state.ruitxt[0].draw = false;
-            state.ruitxt[0].exec(eng, " ");
+            state.ruitxt[state.abc][0].draw = false;
+            state.ruitxt[state.abc][0].exec(eng, " ");
         }
         1 => {
             if !state.firstbw {
@@ -221,21 +221,21 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             }
 
             let tx = &format!("{}", state.bwfilm);
-            state.phcnt[0].draw = true;
-            state.phcnt[0].size.x = 15_f32;
-            state.phcnt[0].size.y = 30_f32;
-            state.phcnt[0].pos.z = 0.1;
-            state.phcnt[0].pos.x =
-                eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt[0].size.x) / 2.0);
-            state.phcnt[0].pos.y = state.bwbtn.object.physic_object.pos.y - state.phcnt[0].size.y;
-            state.phcnt[0].exec(eng, tx);
+            state.phcnt[state.abc].draw = true;
+            state.phcnt[state.abc].size.x = 15_f32;
+            state.phcnt[state.abc].size.y = 30_f32;
+            state.phcnt[state.abc].pos.z = 0.1;
+            state.phcnt[state.abc].pos.x =
+                eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt[state.abc].size.x) / 2.0);
+            state.phcnt[state.abc].pos.y = state.bwbtn.object.physic_object.pos.y - state.phcnt[state.abc].size.y;
+            state.phcnt[state.abc].exec(eng, tx);
 
             state.bluepan.object.draw = true;
-            state.bluepan.object.physic_object.scale.y = state.phcnt[0].size.y;
+            state.bluepan.object.physic_object.scale.y = state.phcnt[state.abc].size.y;
             state.bluepan.object.physic_object.scale.x = state.bwbtn.object.physic_object.scale.x * 2.0;
             state.bluepan.object.physic_object.pos.x =
                 eng.render.resolution_x as f32 / 2.0 - state.bluepan.object.physic_object.scale.x / 2.0;
-            state.bluepan.object.physic_object.pos.y = state.phcnt[0].pos.y;
+            state.bluepan.object.physic_object.pos.y = state.phcnt[state.abc].pos.y;
             state.bluepan.object.mesh.ubo[50] = 0.0;
             state.bluepan.exec(eng);
 
@@ -263,8 +263,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.lettbtn.object.draw = false;
             state.lettbtn.exec(eng);
 
-            state.ruitxt[0].draw = false;
-            state.ruitxt[0].exec(eng, " ");
+            state.ruitxt[state.abc][0].draw = false;
+            state.ruitxt[state.abc][0].exec(eng, " ");
         }
         2 => {
             if !state.firstcol {
@@ -279,14 +279,14 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 z: 1.8,
             };
             let tx = &format!("{}", state.clfilm);
-            state.phcnt[0].draw = true;
-            state.phcnt[0].size.x = 15_f32;
-            state.phcnt[0].size.y = 30_f32;
-            state.phcnt[0].pos.z = 0.1;
-            state.phcnt[0].pos.x =
-                eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt[0].size.x) / 2.0);
-            state.phcnt[0].pos.y = state.colbtn.object.physic_object.pos.y - state.phcnt[0].size.y;
-            state.phcnt[0].exec(eng, tx);
+            state.phcnt[state.abc].draw = true;
+            state.phcnt[state.abc].size.x = 15_f32;
+            state.phcnt[state.abc].size.y = 30_f32;
+            state.phcnt[state.abc].pos.z = 0.1;
+            state.phcnt[state.abc].pos.x =
+                eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt[state.abc].size.x) / 2.0);
+            state.phcnt[state.abc].pos.y = state.colbtn.object.physic_object.pos.y - state.phcnt[state.abc].size.y;
+            state.phcnt[state.abc].exec(eng, tx);
 
             let trigg = if eng.control.gamepad_axis_count > 0 {
                 eng.control.get_gamepad_axis_state(state.gamepad_axes[2]) > 0.0
@@ -297,11 +297,11 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             let ybtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[3]);
 
             state.bluepan.object.draw = true;
-            state.bluepan.object.physic_object.scale.y = state.phcnt[0].size.y;
+            state.bluepan.object.physic_object.scale.y = state.phcnt[state.abc].size.y;
             state.bluepan.object.physic_object.scale.x = state.colbtn.object.physic_object.scale.x * 2.0;
             state.bluepan.object.physic_object.pos.x =
                 eng.render.resolution_x as f32 / 2.0 - state.bluepan.object.physic_object.scale.x / 2.0;
-            state.bluepan.object.physic_object.pos.y = state.phcnt[0].pos.y;
+            state.bluepan.object.physic_object.pos.y = state.phcnt[state.abc].pos.y;
             state.bluepan.object.mesh.ubo[50] = 0.0;
             state.bluepan.exec(eng);
 
@@ -378,14 +378,14 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.lettbtn.object.draw = false;
             state.lettbtn.exec(eng);
 
-            state.ruitxt[0].draw = false;
-            state.ruitxt[0].exec(eng, " ");
+            state.ruitxt[state.abc][0].draw = false;
+            state.ruitxt[state.abc][0].exec(eng, " ");
         }
         3 => {
             //state.bluepan.object.draw = false;
             //state.bluepan.exec(eng);
-            //state.phcnt[0].draw = false;
-            //state.phcnt[0].exec(eng, " ");
+            //state.phcnt[state.abc].draw = false;
+            //state.phcnt[state.abc].exec(eng, " ");
 
             state.bluepan.object.draw = true;
             state.bluepan.object.physic_object.scale.y = eng.render.resolution_y as f32 - 100.0;
@@ -396,30 +396,30 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.bluepan.object.mesh.ubo[50] = 0.0;
             state.bluepan.exec(eng);
 
-            state.phcnt[0].draw = true;
-            state.phcnt[0].size.x = 10_f32;
-            state.phcnt[0].size.y = 20_f32;    
-            state.phcnt[0].max_text_width = 16;
-            state.phcnt[0].pos.y = 25.0;
-            state.phcnt[0].pos.x =state.bluepan.object.physic_object.pos.x + state.phcnt[0].size.x;
-            state.phcnt[0].next_line_on_whitespace = true;
-            state.phcnt[0].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+            state.phcnt[state.abc].draw = true;
+            state.phcnt[state.abc].size.x = 10_f32;
+            state.phcnt[state.abc].size.y = 20_f32;    
+            state.phcnt[state.abc].max_text_width = 16;
+            state.phcnt[state.abc].pos.y = 25.0;
+            state.phcnt[state.abc].pos.x =state.bluepan.object.physic_object.pos.x + state.phcnt[state.abc].size.x;
+            state.phcnt[state.abc].next_line_on_whitespace = true;
+            state.phcnt[state.abc].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
             if state.current_letter > 10{
-                state.phcnt[0].exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[4].other_nodes[(state.current_letter - 11) as usize].strval));
+                state.phcnt[state.abc].exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[4].other_nodes[(state.current_letter - 11) as usize].strval));
             }else{
-                state.phcnt[0].exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[(state.current_letter - 1) as usize].strval));
+                state.phcnt[state.abc].exec(eng, &format!("{}", state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[2].other_nodes[(state.current_letter - 1) as usize].strval));
             }
 
-            let txt = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[3].other_nodes[0].strval.clone();
-            state.ruitxt[0].draw = true;
-            state.ruitxt[0].size.x = 15_f32;
-            state.ruitxt[0].size.y = 30_f32;
-            state.ruitxt[0].pos.z = state.phcnt[0].pos.z;
-            state.ruitxt[0].pos.x = eng.render.resolution_x as f32 / 2.0 + state.bluepan.object.physic_object.scale.x / 2.0 - state.ruitxt[0].size.x*(txt.len() as f32) - 10.0;
-            state.ruitxt[0].pos.y = eng.render.resolution_y as f32 - 70.0 - state.ruitxt[0].size.y*2.0;
-            state.ruitxt[0].signal = true;
-            state.ruitxt[0].per_symbol = false;
-            if state.ruitxt[0].exec(eng, &format!("{}", txt)) && state.tm <= 0 && eng.control.mousebtn[2] {
+            let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
+            state.ruitxt[state.abc][0].draw = true;
+            state.ruitxt[state.abc][0].size.x = 15_f32;
+            state.ruitxt[state.abc][0].size.y = 30_f32;
+            state.ruitxt[state.abc][0].pos.z = state.phcnt[state.abc].pos.z;
+            state.ruitxt[state.abc][0].pos.x = eng.render.resolution_x as f32 / 2.0 + state.bluepan.object.physic_object.scale.x / 2.0 - state.ruitxt[state.abc][0].size.x*(txt.len() as f32) - 10.0;
+            state.ruitxt[state.abc][0].pos.y = eng.render.resolution_y as f32 - 70.0 - state.ruitxt[state.abc][0].size.y*2.0;
+            state.ruitxt[state.abc][0].signal = true;
+            state.ruitxt[state.abc][0].per_symbol = false;
+            if state.ruitxt[state.abc][0].exec(eng, &format!("{}", txt)) && state.tm <= 0 && eng.control.mousebtn[2] {
                 state.selp = 0;
                 state.tm = 50;
                 state.current_letter = -1;

@@ -164,13 +164,21 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     //);
     //let mut ruitxt = vec![fpscnt, phcnt];
 
-    let mut ruitxt = vec![];
+    let mut ruitxt = vec![vec![], vec![]];
     for _ in 0..8{
-        ruitxt.push(UItext::new_from_file(
+        ruitxt[0].push(UItext::new_from_file(
             &mut eng,
             matt,
             "assets/lat.png",
             "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789,.;:'+-<>_[]{}/*`~$% ",
+        ));
+    }
+    for _ in 0..8{
+        ruitxt[1].push(UItext::new_from_file(
+            &mut eng,
+            matt,
+            "assets/cyr.png",
+            "AaBbVvGgDdEe[]JjZzIiYyKkLlMmNnOoPpRrSsTtUuFfHhXxCc{}/*`~!@#$%^&()'0123456789,.;:'+-<>_ ",
         ));
     }
 
@@ -468,6 +476,14 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         jsontext.printme();
     }
 
+    let mln = jsontext.other_nodes[0].other_nodes.len();
+
+    let abc = jsontext.other_nodes[0].other_nodes[0].other_nodes[0].numeral_val as usize;
+
+    if show_dbg_info{
+        println!("total number of languages: {}", mln)
+    }
+
     let state = AppState {
         viewport,
         bluepan,
@@ -552,6 +568,9 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
         gameending: false,
         lastltsim: 1,
         simtim: 0,
+        abc: abc,
+        current_lang: 0,
+        max_lang_nm: mln,
     };
 
     (eng, state)

@@ -72,17 +72,17 @@ fn handle_end(eng: &mut Engine, state: &mut AppState){
     }
 
     if state.pkbf >= 11.0{
-        state.blacktxt[0].draw = true;
-        state.blacktxt[0].size.x = 10_f32;
-        state.blacktxt[0].size.y = 20_f32;    
-        state.blacktxt[0].max_text_width = 16;
-        state.blacktxt[0].pos.y = 25.0;
-        state.blacktxt[0].pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
-        state.blacktxt[0].next_line_on_whitespace = true;
-        state.blacktxt[0].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+        state.blacktxt[state.abc].draw = true;
+        state.blacktxt[state.abc].size.x = 10_f32;
+        state.blacktxt[state.abc].size.y = 20_f32;    
+        state.blacktxt[state.abc].max_text_width = 16;
+        state.blacktxt[state.abc].pos.y = 25.0;
+        state.blacktxt[state.abc].pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
+        state.blacktxt[state.abc].next_line_on_whitespace = true;
+        state.blacktxt[state.abc].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
         let ort = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone();
         let text: String = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone().chars().take(state.lastltsim).collect();
-        state.blacktxt[0].exec(eng, &text);
+        state.blacktxt[state.abc].exec(eng, &text);
         if state.simtim <= 0 && state.lastltsim != ort.len(){
             state.lastltsim += 1;
             state.sfx[10].play = true;
@@ -508,8 +508,8 @@ pub fn handle_scene(eng: &mut Engine, state: &mut AppState) {
     if state.gameending{
         handle_end(eng, state);
     }else{
-        state.blacktxt[0].draw = false;
-        state.blacktxt[0].exec(eng, " ");
+        state.blacktxt[state.abc].draw = false;
+        state.blacktxt[state.abc].exec(eng, " ");
 
         match state.cstop {
             1 => {
