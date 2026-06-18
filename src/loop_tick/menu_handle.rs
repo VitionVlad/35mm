@@ -498,6 +498,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                                     state.current_lang = 0;
                                 }
                                 state.abc = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[0].numeral_val as usize;
+                                let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
                             }
                         }

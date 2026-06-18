@@ -128,6 +128,7 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
 
     if eng.control.get_key_state(state.keycodes[11]) && state.tm <= 0{
         state.pausemn = !state.pausemn;
+        state.menusel = 0;
         state.tm = 50;
     }
 

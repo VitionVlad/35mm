@@ -139,6 +139,7 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
         }
         if state.psbtn.exec(eng) && eng.control.mousebtn[2] && state.tm <= 0{
             state.pausemn = true;
+            state.menusel = 0;
             state.selp = 0;
             state.tm = 50;
             state.current_letter = -1;

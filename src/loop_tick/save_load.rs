@@ -77,7 +77,8 @@ pub fn save_settings(path: &str, eng: &Engine, app: &AppState) -> Result<(), std
     s.push_str(&format!("  \"show_fps\": {},\n", app.showfps));
     s.push_str(&format!("  \"volume\": {:.3},\n", eng.audio.vol));
     s.push_str(&format!("  \"left_hand_mode\": {},\n", app.left_hand));
-    s.push_str(&format!("  \"autosaves\": {}\n", app.autosaves));
+    s.push_str(&format!("  \"autosaves\": {},\n", app.autosaves));
+    s.push_str(&format!("  \"lang\": {}\n", app.current_lang));
     s.push_str("}\n");
 
     let mut f = fs::File::create(path)?;
@@ -192,6 +193,10 @@ pub fn load_settings(path: &str, eng: &mut Engine, state: &mut AppState){
             "volume" => eng.audio.vol = json.other_nodes[i].numeral_val as f32,
             "left_hand_mode" => state.left_hand = json.other_nodes[i].bolean,
             "autosaves" => state.autosaves = json.other_nodes[i].bolean,
+            "lang" => {
+                state.current_lang = json.other_nodes[i].numeral_val as usize;
+                state.abc = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[0].numeral_val as usize;
+            },
             _ => {}
         }
     }
