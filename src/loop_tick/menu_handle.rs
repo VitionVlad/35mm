@@ -223,7 +223,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     match i {
                         1 => {
                             //state.menusel = 2;
-                            if (state.ruitxt[state.abc][i].exec(eng, &format!("{}{}", txt, eng.render.fullscreen)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
+                            if (state.ruitxt[state.abc][i].exec(eng, &format!("{}{}", txt, eng.render.fullscreen as u32)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 eng.render.fullscreen = !eng.render.fullscreen;
                                 let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
@@ -257,7 +257,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                             }
                         },
                         4 => {
-                            if (state.ruitxt[state.abc][i].exec(eng, &format!("{}{}", txt, state.showfps)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
+                            if (state.ruitxt[state.abc][i].exec(eng, &format!("{}{}", txt, state.showfps as u32)) && eng.control.mousebtn[2] && state.tm <= 0) || (i-1 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                                 state.showfps = !state.showfps;
                                 let _ = save_settings("settings.json", eng, state);
                                 state.tm = 50;
@@ -402,7 +402,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 if (txt.len() + 5) as f32 * state.ruitxt[state.abc][1].size.x > lg{
                     lg = (txt.len() + 5) as f32 * state.ruitxt[state.abc][1].size.x;
                 }
-                if (state.ruitxt[state.abc][1].exec(eng, &format!("{}{}", txt, state.left_hand)) && eng.control.mousebtn[2] && state.tm <= 0) || (0 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
+                if (state.ruitxt[state.abc][1].exec(eng, &format!("{}{}", txt, state.left_hand as u32)) && eng.control.mousebtn[2] && state.tm <= 0) || (0 == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                     state.left_hand = !state.left_hand;
                     let _ = save_settings("settings.json", eng, state);
                     state.tm = 50;
@@ -474,7 +474,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     match i {
                         1 => {
                             //state.menusel = 2;
-                            let txt = format!("{}{}", state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[newind].strval.clone(), state.autosaves);
+                            let txt = format!("{}{}", state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[newind].strval.clone(), state.autosaves as u32);
                             if txt.len() as f32 * state.ruitxt[state.abc][i].size.x > lg{
                                 lg = txt.len() as f32 * state.ruitxt[state.abc][i].size.x;
                             }
