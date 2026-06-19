@@ -38,6 +38,7 @@ pub fn reset_final_door_game(state: &mut AppState) {
         state.scn.objects[d.index].physic_object.pos = d.initial_pos;
         state.scn.objects[d.index].draw = true;
         state.scn.objects[d.index].draw_shadow = true;
+        d.destroyed = false;
         state.scn.objects[d.index].physic_object.reset_states();
     }
 
@@ -79,9 +80,9 @@ fn handle_end(eng: &mut Engine, state: &mut AppState){
         state.blacktxt[state.abc].pos.y = 25.0;
         state.blacktxt[state.abc].pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
         state.blacktxt[state.abc].next_line_on_whitespace = true;
-        state.blacktxt[state.abc].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
-        let ort = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone();
-        let text: String = state.jsontext.other_nodes[0].other_nodes[0].other_nodes[2].other_nodes[3].strval.clone().chars().take(state.lastltsim).collect();
+        state.blacktxt[state.abc].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
+        let ort = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[2].other_nodes[3].strval.clone();
+        let text: String = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[2].other_nodes[3].strval.clone().chars().take(state.lastltsim).collect();
         state.blacktxt[state.abc].exec(eng, &text);
         if state.simtim <= 0 && state.lastltsim != ort.len(){
             state.lastltsim += 1;
@@ -256,6 +257,7 @@ fn process_lighting(eng: &mut Engine, state: &mut AppState) {
             eng.lights[0].shadow = false;
 
             eng.lights[1].rot.y = -state.scn.objects[state.pu].physic_object.rot.y;
+            eng.lights[1].rot.x = 0.0;
             eng.lights[1].pos.x =
                 state.scn.objects[state.pu].physic_object.pos.x - state.scn.objects[state.pu].physic_object.rot.y.sin() * 0.3;
             eng.lights[1].pos.y = state.scn.objects[state.pu].physic_object.pos.y;
