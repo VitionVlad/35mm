@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"]
 use std::{env, fs};
 
 use crate::loop_tick::save_load::{load_progress, load_settings};

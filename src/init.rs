@@ -3,7 +3,7 @@ use std::fs;
 use crate::{
     app_state::*,
     engine::{
-        engine::Engine, image::Image, loader::jsonparser::JsonF, material::Material, math::{vec2::Vec2, vec3::Vec3}, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
+        engine::Engine, image::Image, loader::{imageasset::ImageAsset, jsonparser::JsonF}, material::Material, math::{vec2::Vec2, vec3::Vec3}, scene::Scene, speaker::Speaker, ui::{UIplane, UItext}
     },
 };
 
@@ -11,6 +11,10 @@ pub fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState) {
     let mut eng = Engine::new();
     eng.render.set_title("35mm");
     eng.render.set_new_resolution(1280, 720);
+
+    let icon = ImageAsset::other_load("assets/ui/icon.png");
+
+    eng.render.set_icon(icon.size[0], icon.size[1], icon.data);
 
     for _ in 0..2{
       eng.work();

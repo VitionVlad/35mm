@@ -24,13 +24,6 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
 
                 for i in 0..6{
                     state.ruitxt[state.abc][i].signal = true;
-                    if state.controlt == 2{
-                        if i == state.gamepadmenusel as usize{
-                            state.ruitxt[state.abc][i].signal_off_value = 1.0;
-                        }else{
-                            state.ruitxt[state.abc][i].signal_off_value = 0.0;
-                        }
-                    }
                     state.ruitxt[state.abc][i].per_symbol = false;
                     state.ruitxt[state.abc][i].draw = true;
                     state.ruitxt[state.abc][i].size = Vec2{ x: 20f32, y: 40f32};
@@ -39,12 +32,22 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     if txt.len() as f32 * state.ruitxt[state.abc][i].size.x > lg{
                         lg = txt.len() as f32 * state.ruitxt[state.abc][i].size.x;
                     }
-                    if (i == 2 || i == 1) && (state.intram || state.gameending){
-                        state.ruitxt[state.abc][i].signal_on_value = 0.0;
-                        state.ruitxt[state.abc][i].signal_off_value = 0.0;
+                    if (i == 2 || i == 1 || i == 3) && (state.intram || state.gameending){
+                        state.ruitxt[state.abc][i].signal_on_value = 11.0;
+                        state.ruitxt[state.abc][i].signal_off_value = 11.0;
                     }else{
                         state.ruitxt[state.abc][i].signal_on_value = 1.0;
+                        state.ruitxt[state.abc][i].signal_off_value = 0.0;
                     }
+
+                    if state.controlt == 2 && !((i == 2 || i == 1 || i == 3) && (state.intram || state.gameending)){
+                        if i == state.gamepadmenusel as usize{
+                            state.ruitxt[state.abc][i].signal_off_value = 1.0;
+                        }else{
+                            state.ruitxt[state.abc][i].signal_off_value = 0.0;
+                        }
+                    }
+
                     if (state.ruitxt[state.abc][i].exec(eng, &txt) && eng.control.mousebtn[2] && state.tm <= 0) || (i == state.gamepadmenusel as usize && state.controlt == 2 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && state.tm <= 0){
                         match i {
                             0 => {
@@ -69,12 +72,14 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                                 }
                             }
                             3 => {
-                                let _ = load_progress("save.json", state);
-                                state.pausemn = false;
-                                state.pkbf = 2.0;
-                                state.sfx[1].move_sound_cursor(0.0);
-                                state.sfx[1].play = true;
-                                state.tm = 50;
+                                if !state.intram && !state.gameending{
+                                    let _ = load_progress("save.json", state);
+                                    state.pausemn = false;
+                                    state.pkbf = 2.0;
+                                    state.sfx[1].move_sound_cursor(0.0);
+                                    state.sfx[1].play = true;
+                                    state.tm = 50;
+                                }
                             }
                             4 => {
                                 state.menusel = 1;

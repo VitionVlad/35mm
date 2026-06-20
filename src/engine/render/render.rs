@@ -102,7 +102,7 @@ impl Render{
     pub fn set_new_resolution(&self, resx: u32, resy: u32){
         unsafe { setresolution(self.euclid, resx, resy); }
     }
-    pub fn set_icon(&mut self, resx: u32, resy: u32, data: Vec<i8>){
+    pub fn set_icon(&mut self, resx: u32, resy: u32, data: Vec<u8>){
         unsafe { seticon(self.euclid, resx, resy, data.as_ptr() as *mut i8) }
     }
     pub fn set_title(&self, title: &str){
