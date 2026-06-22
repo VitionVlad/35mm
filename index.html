@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+  </head>
+  <body>
+    <canvas style="
+      background-color: #ffffff;
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+      " id="render"></canvas>
+    <script type="module">
+      import init, { main } from "./pkg/wasmtest.js";
+
+      init().then(() => {
+        main();
+      });
+    </script>
+  </body>
+</html>
