@@ -1,7 +1,9 @@
 struct MeshInput {
     resolutions: vec4<f32>,
     lightinfo: vec4<f32>,
-    model: mat4x4<f32>,
+    t: mat4x4<f32>,
+    r: mat4x4<f32>,
+    s: mat4x4<f32>,
     addinfo: vec4<f32>,
 }
 

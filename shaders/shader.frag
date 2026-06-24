@@ -198,7 +198,7 @@ fn main(in: FragmentInput) -> @location(0) vec4<f32> {
     //d = (d + 1.0) / 2.0;
     // let d2 = LinearizeDepth(d);
 
-    let albedo = pow(textureSample(defferedTexture, attachmentSampler, uv, 0).rgb, vec3<f32>(2.2));
+    let albedo = textureSample(defferedTexture, attachmentSampler, uv, 0).rgb;
 
     let rma = textureSample(defferedTexture, attachmentSampler, uv, 1).rgb;
     let normal = textureSample(defferedTexture, attachmentSampler, uv, 2).rgb;
@@ -225,7 +225,7 @@ fn main(in: FragmentInput) -> @location(0) vec4<f32> {
     // op = mix(op, vec4<f32>(smi.lightcol[0].xyz, 1.0), mxpw);
     // op = mix(op, vec4<f32>(0.0, 0.0, 0.0, 1.0), mi.addinfo.x);
 
-    return op;
+    return op*1.5;
 
     // return vec4<f32>(textureSample(defferedTexture, attachmentSampler, uv, 0).rgb, 1.0);
     // return vec4<f32>(vec3<f32>(textureSample(shadowTexture, attachmentSampler, uv, 0)), 1.0);

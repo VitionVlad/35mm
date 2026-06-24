@@ -198,6 +198,8 @@ function key_to_code(key){
             return 47;
         case "Space":
             return 48;
+        case " ":
+            return 48;
         case "Escape":
             return 49;
         case "ShiftLeft":
@@ -374,6 +376,7 @@ class Gaussh{
         });
 
         this.canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+        console.log(this.canvasFormat);
         this.context.configure({
           device: device,
           format: this.canvasFormat,

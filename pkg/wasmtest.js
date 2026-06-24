@@ -2,14 +2,14 @@
 import { cend, mozartsetvolume, newsound, soundplay, soundsetloop, soundsetpos, soundstop } from './snippets/wasmtest-5d303aadc99913c3/src/engine/audio/audio.js';
 import { openfs } from './snippets/wasmtest-5d303aadc99913c3/src/engine/loader/loader.js';
 import { getKeyPressed, get_axis, get_button, get_frametime, get_mouse_posx, get_mouse_posy, get_resx, get_resy, modifydeffereddata, modifydeffereduniform, modifyshadowdata, modifyshadowuniform, neweng, newmaterial, newmesh, newtexture, quitfullscreen, req_mouse_lock, req_mouse_unlock, rn, setdrawable, setfullscreen, setmeshbuf, setrendercamera, settitle } from './snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js';
-import * as import1 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
+import * as import1 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/audio/audio.js"
 import * as import2 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 import * as import3 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 import * as import4 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 import * as import5 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 import * as import6 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 import * as import7 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
-import * as import8 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/audio/audio.js"
+import * as import8 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 
 
 export function main() {
@@ -222,7 +222,7 @@ function __wbg_get_imports() {
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 367, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 191, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen__convert__closures_____invoke__hc13772ce33834099);
             return ret;
         },
@@ -239,14 +239,14 @@ function __wbg_get_imports() {
     return {
         __proto__: null,
         "./wasmtest_bg.js": import0,
-        "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import1,
+        "./snippets/wasmtest-5d303aadc99913c3/src/engine/audio/audio.js": import1,
         "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import2,
         "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import3,
         "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import4,
         "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import5,
         "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import6,
         "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import7,
-        "./snippets/wasmtest-5d303aadc99913c3/src/engine/audio/audio.js": import8,
+        "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js": import8,
     };
 }
 
