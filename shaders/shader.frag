@@ -102,9 +102,13 @@ fn shcalcpl(WorldPos: vec3<f32>, bias: f32, i: i32) -> f32 {
 fn shcalcpld(WorldPos: vec3<f32>, bias: f32, i: i32) -> f32 {
     var visibility: f32 = 0.0;
     let smv = smi.shadowViews[i] * vec4<f32>(WorldPos, 1.0);
-    let proj = vec3<f32>((smv.x / smv.w) * 0.5 + 0.5, (smv.y / smv.w) * 0.5 + 0.5, smv.z / smv.w);
+    let proj = vec3<f32>(
+        (smv.x / smv.w) * 0.5 + 0.5, 
+        (smv.y / smv.w) * -0.5 + 0.5, 
+        smv.z / smv.w
+    );
     let oneOverShadowDepthTextureSize = 1.0 / mi.resolutions.z;
-    for (var y: i32 = -1; y <= 1; y = y + 1) {
+    for (var y: i32 = -1; y <= 1; y = y + 1) {  
         for (var x: i32 = -1; x <= 1; x = x + 1) {
             let offset = vec2<f32>(f32(x), f32(y)) * oneOverShadowDepthTextureSize;
             var lv: f32 = 0.0;  
@@ -173,7 +177,7 @@ fn PBR(norm: vec3<f32>, albedo: vec3<f32>, metallic: f32, roughness: f32, ao: f3
 }
 
 fn WorldPosFromDepth(depth: f32, uv: vec2<f32>, inversemat: mat4x4<f32>) -> vec3<f32> {
-    let clipSpacePosition = vec4<f32>(uv * 2.0 - 1.0, depth, 1.0);
+    let clipSpacePosition = vec4<f32>(uv.x * 2.0 - 1.0, uv.y * 2.0 - 1.0, depth, 1.0);
     var viewSpacePosition = inversemat * clipSpacePosition;
     viewSpacePosition = viewSpacePosition / viewSpacePosition.w;
     return viewSpacePosition.xyz;
@@ -189,15 +193,16 @@ struct FragmentInput {
 
 @fragment
 fn main(in: FragmentInput) -> @location(0) vec4<f32> {
-    let uv = vec2f(in.fuv.x, -in.fuv.y);
-    let d = textureSample(defferedDepthTexture, attachmentSampler, uv, 0);
+    let uv = vec2f(in.fuv.x, 1.0 - in.fuv.y);
+    var d = textureSample(defferedDepthTexture, attachmentSampler, uv, 0);
+    //d = (d + 1.0) / 2.0;
     // let d2 = LinearizeDepth(d);
 
     let albedo = pow(textureSample(defferedTexture, attachmentSampler, uv, 0).rgb, vec3<f32>(2.2));
 
     let rma = textureSample(defferedTexture, attachmentSampler, uv, 1).rgb;
     let normal = textureSample(defferedTexture, attachmentSampler, uv, 2).rgb;
-    let wrldpos = WorldPosFromDepth(d, uv, dmi.defferedMVPInverse[0]);
+    let wrldpos = vec3f(textureSample(defferedTexture, attachmentSampler, uv, 0).a, textureSample(defferedTexture, attachmentSampler, uv, 1).b, textureSample(defferedTexture, attachmentSampler, uv, 1).a);
 
     var op = vec4<f32>(PBR(normal, albedo, rma.x, rma.y, 1.0, wrldpos), 1.0);
 

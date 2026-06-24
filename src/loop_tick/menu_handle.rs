@@ -118,6 +118,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[state.abc][0].size.x*txt.len() as f32;
 
                 for i in 1..5{
+                    state.ruitxt[state.abc][i].signal_on_value = 1.0;
+                    state.ruitxt[state.abc][i].signal_off_value = 0.0;
                     let newind = i+6;
                     state.ruitxt[state.abc][i].signal = true;
                     if state.controlt == 2{
@@ -163,6 +165,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[state.abc][5].signal = true;
+                state.ruitxt[state.abc][5].signal_on_value = 1.0;
+                state.ruitxt[state.abc][5].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 4 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][5].signal_off_value = 1.0;
@@ -208,6 +212,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[state.abc][0].size.x*txt.len() as f32;
 
                 for i in 1..5{
+                    state.ruitxt[state.abc][i].signal_on_value = 1.0;
+                    state.ruitxt[state.abc][i].signal_off_value = 0.0;
                     let newind = i+10;
                     state.ruitxt[state.abc][i].signal = true;
                     if state.controlt == 2{
@@ -273,6 +279,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[state.abc][5].signal = true;
+                state.ruitxt[state.abc][5].signal_on_value = 1.0;
+                state.ruitxt[state.abc][5].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 4 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][5].signal_off_value = 1.0;
@@ -318,6 +326,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[state.abc][0].size.x*txt.len() as f32;
 
                 state.ruitxt[state.abc][1].signal = true;
+                state.ruitxt[state.abc][1].signal_on_value = 1.0;
+                state.ruitxt[state.abc][1].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 0 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][1].signal_off_value = 1.0;
@@ -343,6 +353,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[state.abc][2].signal = true;
+                state.ruitxt[state.abc][2].signal_on_value = 1.0;
+                state.ruitxt[state.abc][2].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 1 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][2].signal_off_value = 1.0;
@@ -378,6 +390,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.bluepan.exec(eng);
             },
             4 => {
+                state.menumasel = 2;
                 state.logo.object.draw = false;
                 state.logo.exec(eng);
 
@@ -392,6 +405,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[state.abc][0].size.x*txt.len() as f32;
 
                 state.ruitxt[state.abc][1].signal = true;
+                state.ruitxt[state.abc][1].signal_on_value = 1.0;
+                state.ruitxt[state.abc][1].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 0 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][1].signal_off_value = 1.0;
@@ -414,6 +429,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[state.abc][2].signal = true;
+                state.ruitxt[state.abc][2].signal_on_value = 1.0;
+                state.ruitxt[state.abc][2].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 1 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][2].signal_off_value = 1.0;
@@ -449,6 +466,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.bluepan.exec(eng);
             },
             5 => {
+                state.menumasel = 3;
                 state.logo.object.draw = false;
                 state.logo.exec(eng);
 
@@ -463,6 +481,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 let mut lg = state.ruitxt[state.abc][0].size.x*txt.len() as f32;
 
                 for i in 1..3{
+                    state.ruitxt[state.abc][i].signal_on_value = 1.0;
+                    state.ruitxt[state.abc][i].signal_off_value = 0.0;
                     let newind = i+16;
                     state.ruitxt[state.abc][i].signal = true;
                     if state.controlt == 2{
@@ -512,6 +532,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
 
                 state.ruitxt[state.abc][3].signal = true;
+                state.ruitxt[state.abc][3].signal_on_value = 1.0;
+                state.ruitxt[state.abc][3].signal_off_value = 0.0;
                 if state.controlt == 2{
                     if 2 == state.gamepadmenusel as usize{
                         state.ruitxt[state.abc][3].signal_off_value = 1.0;
