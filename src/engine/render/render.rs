@@ -20,14 +20,14 @@ unsafe extern "C"{
     fn getmr() -> bool;
     fn getml() -> bool;
     fn getmm() -> bool;
+    fn get_axis(eh: u32, n: u32) -> f32;
+    fn get_button(eh: u32, n: u32) -> f32;
     fn touch_control() -> bool;
     fn get_mouse_posx(i: u32)  -> f32;
     fn get_mouse_posy(i: u32)  -> f32;
     fn get_mouse_stat()  -> bool;
     fn req_mouse_lock(eh: u32);
     fn req_mouse_unlock(eh: u32);
-    fn get_axis(eh: u32, n: u8) -> f32;
-    fn get_button(eh: u32, n: u8) -> u8;
     fn gamepad_con(eh: u32) -> u8;
     fn gamepad_axisnm(eh: u32) -> u8;
     fn gamepad_buttonnm(eh: u32) -> u8;
@@ -151,13 +151,18 @@ impl Control{
         return getKeyPressed(keyindex);
     }
     pub fn get_gamepad_button_state(&self, button_index: u8) -> bool{
-        return get_button(self.euclid, button_index) != 0;
+        return get_button(self.euclid, button_index as u32) != 0.0;
+    }
+    pub fn get_gamepad_button_state_float(&self, button_index: u8) -> f32{
+        return get_button(self.euclid, button_index as u32);
     }
     pub fn get_gamepad_axis_state(&self, axis_index: u8) -> f32{
-        return get_axis(self.euclid, axis_index);
+        return get_axis(self.euclid, axis_index as u32);
     }
     pub fn get_mouse_pos(&mut self){
         self.touch = touch_control();
+        self.gamepad_axis_count = gamepad_axisnm(self.euclid);
+        self.gamepad_button_count = gamepad_buttonnm(self.euclid);
         if self.mouse_lock != self.old_mouse_lock{
             match self.mouse_lock {
                 true => req_mouse_lock(self.euclid),

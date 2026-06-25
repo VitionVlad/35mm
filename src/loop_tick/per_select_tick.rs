@@ -177,8 +177,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 touch_shutter = state.shbtn.exec(eng) && eng.control.mousebtn[2];
             }
 
-            let trigg = if eng.control.gamepad_axis_count > 0 {
-                eng.control.get_gamepad_axis_state(state.gamepad_axes[2]) > 0.0
+            let trigg = if eng.control.gamepad_button_count > 0 {
+                eng.control.get_gamepad_button_state(state.gamepad_buttons[7])
             } else {
                 false
             };
@@ -288,8 +288,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.phcnt[state.abc].pos.y = state.colbtn.object.physic_object.pos.y - state.phcnt[state.abc].size.y;
             state.phcnt[state.abc].exec(eng, tx);
 
-            let trigg = if eng.control.gamepad_axis_count > 0 {
-                eng.control.get_gamepad_axis_state(state.gamepad_axes[2]) > 0.0
+            let trigg = if eng.control.gamepad_button_count > 0 {
+                eng.control.get_gamepad_button_state(state.gamepad_buttons[7])
             } else {
                 false
             };

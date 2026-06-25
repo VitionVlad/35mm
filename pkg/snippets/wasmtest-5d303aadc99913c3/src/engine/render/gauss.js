@@ -376,7 +376,6 @@ class Gaussh{
         });
 
         this.canvasFormat = navigator.gpu.getPreferredCanvasFormat();
-        console.log(this.canvasFormat);
         this.context.configure({
           device: device,
           format: this.canvasFormat,
@@ -1271,17 +1270,17 @@ export function getml(){
 export function getmm(){
     return msb[1];
 }
-export function get_axis(n){
+export function get_axis(eh, n){
     if(gpaxes.length <= n){
         return 0;
     }
     return gpaxes[n];
 }
-export function get_button(n){
+export function get_button(eh, n){
     if(gpbtns.length <= n){
         return 0;
     }
-    return gpbtns[n].pressed ? 1 : 0;
+    return gpbtns[n].pressed;
 }
 export function gamepad_con(){
     return gamepaden;

@@ -561,7 +561,7 @@ pub async fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState)
         left_hand: false,
         keycodes: vec![26u32, 48u32, 40u32, 44u32, 25u32, 22u32, 13u32, 14u32, 15u32, 3u32, 4u32, 49u32],
         gamepad_axes: vec![0u8, 1u8, 5u8],
-        gamepad_buttons: vec![0u8, 1u8, 2u8, 3u8, 7u8, 10u8, 12u8],
+        gamepad_buttons: vec![0u8, 1u8, 2u8, 3u8, 9u8, 12u8, 13u8, 7u8],
         shadowmapquality: eng.render.shadow_map_resolution,
         ists: ists,
         jsontext,

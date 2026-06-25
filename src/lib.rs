@@ -9,7 +9,7 @@ mod loop_tick;
 mod app_state;
 
 async fn main_async() {
-    let (mut eng, mut state) = init::create_app(true, false).await;
+    let (mut eng, mut state) = init::create_app(false, false).await;
 
     let _ = load_settings("settings.json", &mut eng, &mut state);
     let _ = load_progress("save.json", &mut state);

@@ -1,7 +1,7 @@
 /* @ts-self-types="./wasmtest.d.ts" */
 import { cend, mozartsetvolume, newsound, soundplay, soundsetloop, soundsetpos, soundstop } from './snippets/wasmtest-5d303aadc99913c3/src/engine/audio/audio.js';
 import { openfs } from './snippets/wasmtest-5d303aadc99913c3/src/engine/loader/loader.js';
-import { getKeyPressed, get_axis, get_button, get_frametime, get_mouse_posx, get_mouse_posy, get_resx, get_resy, modifydeffereddata, modifydeffereduniform, modifyshadowdata, modifyshadowuniform, neweng, newmaterial, newmesh, newtexture, quitfullscreen, req_mouse_lock, req_mouse_unlock, rn, setdrawable, setfullscreen, setmeshbuf, setrendercamera, settitle } from './snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js';
+import { gamepad_axisnm, gamepad_buttonnm, getKeyPressed, get_axis, get_button, get_frametime, get_mouse_posx, get_mouse_posy, get_resx, get_resy, modifydeffereddata, modifydeffereduniform, modifyshadowdata, modifyshadowuniform, neweng, newmaterial, newmesh, newtexture, quitfullscreen, req_mouse_lock, req_mouse_unlock, rn, setdrawable, setfullscreen, setmeshbuf, setrendercamera, settitle } from './snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js';
 import { get_val, set_val } from './snippets/wasmtest-5d303aadc99913c3/src/loop_tick/sav.js';
 import * as import1 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
 import * as import2 from "./snippets/wasmtest-5d303aadc99913c3/src/engine/render/gauss.js"
@@ -44,16 +44,24 @@ function __wbg_get_imports() {
             const ret = cend(arg0 >>> 0);
             return ret;
         },
+        __wbg_gamepad_axisnm_24f0bdf590d5275e: function(arg0) {
+            const ret = gamepad_axisnm(arg0 >>> 0);
+            return ret;
+        },
+        __wbg_gamepad_buttonnm_7da3d74d06738e6f: function(arg0) {
+            const ret = gamepad_buttonnm(arg0 >>> 0);
+            return ret;
+        },
         __wbg_getKeyPressed_7ac1afaa57c58f40: function(arg0) {
             const ret = getKeyPressed(arg0 >>> 0);
             return ret;
         },
-        __wbg_get_axis_5edf8e1f07d57586: function(arg0, arg1) {
-            const ret = get_axis(arg0 >>> 0, arg1);
+        __wbg_get_axis_0c7e7c786d810d6a: function(arg0, arg1) {
+            const ret = get_axis(arg0 >>> 0, arg1 >>> 0);
             return ret;
         },
-        __wbg_get_button_99808f04a7433377: function(arg0, arg1) {
-            const ret = get_button(arg0 >>> 0, arg1);
+        __wbg_get_button_63624d0e29ade9b3: function(arg0, arg1) {
+            const ret = get_button(arg0 >>> 0, arg1 >>> 0);
             return ret;
         },
         __wbg_get_frametime_7afd3d2b2c048b3d: function(arg0) {
@@ -233,7 +241,7 @@ function __wbg_get_imports() {
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 237, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 195, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm_bindgen__convert__closures_____invoke__hc13772ce33834099);
             return ret;
         },
