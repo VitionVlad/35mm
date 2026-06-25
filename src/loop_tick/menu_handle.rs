@@ -22,7 +22,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
 
                 let mut lg = state.logo.object.physic_object.scale.x;
 
-                for i in 0..6{
+                for i in 0..5{
                     state.ruitxt[state.abc][i].signal = true;
                     state.ruitxt[state.abc][i].per_symbol = false;
                     state.ruitxt[state.abc][i].draw = true;
@@ -93,6 +93,9 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                         }
                     }
                 }
+
+                state.ruitxt[state.abc][5].draw = false;
+                state.ruitxt[state.abc][5].exec(eng, " ");
 
                 state.bluepan.object.physic_object.scale.x = lg;
                 state.bluepan.object.physic_object.scale.y = eng.render.resolution_y as f32;
