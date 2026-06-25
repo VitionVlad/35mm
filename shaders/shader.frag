@@ -177,7 +177,7 @@ fn PBR(norm: vec3<f32>, albedo: vec3<f32>, metallic: f32, roughness: f32, ao: f3
 }
 
 fn WorldPosFromDepth(depth: f32, uv: vec2<f32>, inversemat: mat4x4<f32>) -> vec3<f32> {
-    let clipSpacePosition = vec4<f32>(uv.x * 2.0 - 1.0, uv.y * 2.0 - 1.0, depth, 1.0);
+    let clipSpacePosition = vec4<f32>(uv.x * 2.0 - 1.0, (1.0 - uv.y) * 2.0 - 1.0, depth, 1.0);
     var viewSpacePosition = inversemat * clipSpacePosition;
     viewSpacePosition = viewSpacePosition / viewSpacePosition.w;
     return viewSpacePosition.xyz;
@@ -202,7 +202,7 @@ fn main(in: FragmentInput) -> @location(0) vec4<f32> {
 
     let rma = textureSample(defferedTexture, attachmentSampler, uv, 1).rgb;
     let normal = textureSample(defferedTexture, attachmentSampler, uv, 2).rgb;
-    let wrldpos = vec3f(textureSample(defferedTexture, attachmentSampler, uv, 0).a, textureSample(defferedTexture, attachmentSampler, uv, 1).b, textureSample(defferedTexture, attachmentSampler, uv, 1).a);
+    let wrldpos = WorldPosFromDepth(d, uv, dmi.defferedMVPInverse[0]);
 
     var op = vec4<f32>(PBR(normal, albedo, rma.x, rma.y, 1.0, wrldpos), 1.0);
 
@@ -225,7 +225,7 @@ fn main(in: FragmentInput) -> @location(0) vec4<f32> {
     // op = mix(op, vec4<f32>(smi.lightcol[0].xyz, 1.0), mxpw);
     // op = mix(op, vec4<f32>(0.0, 0.0, 0.0, 1.0), mi.addinfo.x);
 
-    return op*1.5;
+    return op*1.75;
 
     // return vec4<f32>(textureSample(defferedTexture, attachmentSampler, uv, 0).rgb, 1.0);
     // return vec4<f32>(vec3<f32>(textureSample(shadowTexture, attachmentSampler, uv, 0)), 1.0);
