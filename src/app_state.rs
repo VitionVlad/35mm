@@ -127,6 +127,7 @@ pub struct AppState {
     pub abc: usize,
     pub current_lang: usize,
     pub max_lang_nm: usize,
+    pub stouch: bool,
 }
 
 pub fn distance(v1: Vec3, v2: Vec3) -> f32 {

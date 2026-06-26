@@ -41,23 +41,50 @@ pub fn control_handle(eng: &mut Engine, state: &mut AppState) {
             state.current_letter = -1;
         }
 
+        if !eng.control.touch{
+            state.stouch = false;
+        }
+
         if eng.control.mousebtn[2] && state.selp != 3 && state.tm <= 0{
-            let resx_half = (eng.render.resolution_x as f32) / 2.0;
-            if eng.control.xpos[0] < resx_half - 80.0 && !state.left_hand || eng.control.xpos[0] >= resx_half + 80.0 && state.left_hand {
-                if state.controlt != 1 {
-                    state.controlt = 1;
-                    state.joy_origin.x = eng.control.xpos[0] as f32;
-                    state.joy_origin.y = eng.control.ypos[0] as f32;
+            if eng.render.resolution_x >= eng.render.resolution_y{
+                let resx_half = (eng.render.resolution_x as f32) / 2.0;
+                if eng.control.xpos[0] < resx_half - 80.0 && !state.left_hand || eng.control.xpos[0] >= resx_half + 80.0 && state.left_hand {
+                    if state.controlt != 1 || (!state.stouch && eng.control.touch){
+                        state.controlt = 1;
+                        state.joy_origin.x = eng.control.xpos[0] as f32;
+                        state.joy_origin.y = eng.control.ypos[0] as f32;
+                        state.stouch = true;
+                    }
+                    let dx = eng.control.xpos[0] as f32 - state.joy_origin.x;
+                    let dy = eng.control.ypos[0] as f32 - state.joy_origin.y;
+                    if dx != 0.0 || dy != 0.0 {
+                        let ang = dx.atan2(dy)+PI/4.0;
+                        state.pivotr = ang;
+                        let a = SPEED * eng.times_to_calculate_physics as f32;
+                        state.scn.objects[state.pu].physic_object.acceleration.x += -a * state.pivotr.sin();
+                        state.scn.objects[state.pu].physic_object.acceleration.z += -a * state.pivotr.cos();
+                        state.sfx[0].play = true;
+                    }
                 }
-                let dx = eng.control.xpos[0] as f32 - state.joy_origin.x;
-                let dy = eng.control.ypos[0] as f32 - state.joy_origin.y;
-                if dx != 0.0 || dy != 0.0 {
-                    let ang = dx.atan2(dy)+PI/4.0;
-                    state.pivotr = ang;
-                    let a = SPEED * eng.times_to_calculate_physics as f32;
-                    state.scn.objects[state.pu].physic_object.acceleration.x += -a * state.pivotr.sin();
-                    state.scn.objects[state.pu].physic_object.acceleration.z += -a * state.pivotr.cos();
-                    state.sfx[0].play = true;
+            }else{
+                let resy_half = (eng.render.resolution_y as f32) / 2.0;
+                if eng.control.ypos[0] > resy_half{
+                    if state.controlt != 1 || (!state.stouch && eng.control.touch){
+                        state.controlt = 1;
+                        state.joy_origin.x = eng.control.xpos[0] as f32;
+                        state.joy_origin.y = eng.control.ypos[0] as f32;
+                        state.stouch = true;
+                    }
+                    let dx = eng.control.xpos[0] as f32 - state.joy_origin.x;
+                    let dy = eng.control.ypos[0] as f32 - state.joy_origin.y;
+                    if dx != 0.0 || dy != 0.0 {
+                        let ang = dx.atan2(dy)+PI/4.0;
+                        state.pivotr = ang;
+                        let a = SPEED * eng.times_to_calculate_physics as f32;
+                        state.scn.objects[state.pu].physic_object.acceleration.x += -a * state.pivotr.sin();
+                        state.scn.objects[state.pu].physic_object.acceleration.z += -a * state.pivotr.cos();
+                        state.sfx[0].play = true;
+                    }
                 }
             }
         }
