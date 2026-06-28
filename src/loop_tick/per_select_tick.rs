@@ -36,13 +36,13 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.reccbtn.object.draw = false;
 
             if state.cme && !state.intram && !state.pausemn{
-                state.cambtn.object.physic_object.scale.x = 80.0;
-                state.cambtn.object.physic_object.scale.y = 80.0;
+                state.cambtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+                state.cambtn.object.physic_object.scale.y = state.ui_scaling*80.0;
                 state.cambtn.object.physic_object.pos.x =
                     eng.render.resolution_x as f32 / 2.0 - state.cambtn.object.physic_object.scale.x;
                 state.cambtn.object.physic_object.pos.y =
                     eng.render.resolution_y as f32 - state.cambtn.object.physic_object.scale.y;
-                state.cambtn.object.draw = true;
+               state.cambtn.object.draw = true;
                 if state.cambtn.exec(eng) && state.tm <= 0 && eng.control.mousebtn[2] {
                     state.selp = 1;
                     state.tm = 50;
@@ -59,12 +59,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 if state.cstop < state.stops.len() as u32 && ((state.cstop == 1 && state.switched_1_4 && state.switched_5_6) || state.cstop != 1){
                     state.bluepan.object.draw = false;
 
-                    state.trambtn.object.physic_object.scale.x = 80.0;
-                    state.trambtn.object.physic_object.scale.y = 80.0;
+                    state.trambtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+                    state.trambtn.object.physic_object.scale.y = state.ui_scaling*80.0;
                     state.trambtn.object.physic_object.pos.x =
                         eng.render.resolution_x as f32 / 2.0 - state.trambtn.object.physic_object.scale.x / 2.0;
                     state.trambtn.object.physic_object.pos.y =
-                        eng.render.resolution_y as f32 - state.trambtn.object.physic_object.scale.y * 2.0 - 20.0;
+                        eng.render.resolution_y as f32 - state.trambtn.object.physic_object.scale.y * 2.0 - state.ui_scaling*20.0;
                     state.trambtn.object.draw = true;
                     let tram_pressed = state.trambtn.exec(eng) && eng.control.mousebtn[2];
 
@@ -83,12 +83,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                         state.cstop += 1;
                     }
                 } else if state.cstop == 1 && !(state.switched_1_4 && state.switched_5_6){
-                    state.nebtn.object.physic_object.scale.x = 80.0;
-                    state.nebtn.object.physic_object.scale.y = 80.0;
+                    state.nebtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+                    state.nebtn.object.physic_object.scale.y = state.ui_scaling*80.0;
                     state.nebtn.object.physic_object.pos.x =
                         eng.render.resolution_x as f32 / 2.0 - state.nebtn.object.physic_object.scale.x / 2.0;
                     state.nebtn.object.physic_object.pos.y =
-                        eng.render.resolution_y as f32 - state.nebtn.object.physic_object.scale.y * 2.0 - 20.0;
+                        eng.render.resolution_y as f32 - state.nebtn.object.physic_object.scale.y * 2.0 - state.ui_scaling*20.0;
                     state.nebtn.object.draw = true;
                     state.nebtn.exec(eng);
                 }else {
@@ -114,12 +114,12 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             for i in 0..state.ists.len() {
                 if distance(state.scn.objects[state.pu].physic_object.pos, state.scn.objects[state.ists[i].index].physic_object.pos,) < 1.5 && !state.pausemn{
-                    state.lettbtn.object.physic_object.scale.x = 80.0;
-                    state.lettbtn.object.physic_object.scale.y = 80.0;
+                    state.lettbtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+                    state.lettbtn.object.physic_object.scale.y = state.ui_scaling*80.0;
                     state.lettbtn.object.physic_object.pos.x =
                         eng.render.resolution_x as f32 / 2.0 - state.lettbtn.object.physic_object.scale.x / 2.0;
                     state.lettbtn.object.physic_object.pos.y =
-                        eng.render.resolution_y as f32 - state.lettbtn.object.physic_object.scale.y * 2.0 - 20.0;
+                        eng.render.resolution_y as f32 - state.lettbtn.object.physic_object.scale.y * 2.0 - state.ui_scaling * 20.0;
                     state.lettbtn.object.draw = true;
                     if ((state.lettbtn.exec(eng) && eng.control.mousebtn[2]) || eng.control.get_key_state(state.keycodes[0]) || (eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]))) && state.tm <= 0 {
                         //state.selp = 2;
@@ -169,8 +169,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 };
                 let center_y = eng.render.resolution_y as f32 / 2.0;
 
-                state.shbtn.object.physic_object.scale.x = button_size;
-                state.shbtn.object.physic_object.scale.y = button_size;
+                state.shbtn.object.physic_object.scale.x = state.ui_scaling*button_size;
+                state.shbtn.object.physic_object.scale.y = state.ui_scaling*button_size;
                 state.shbtn.object.physic_object.pos.x = button_x + sign*button_size;
                 state.shbtn.object.physic_object.pos.y = center_y + button_size * 1.5;
                 state.shbtn.object.draw = true;
@@ -222,8 +222,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             let tx = &format!("{}", state.bwfilm);
             state.phcnt[state.abc].draw = true;
-            state.phcnt[state.abc].size.x = 15_f32;
-            state.phcnt[state.abc].size.y = 30_f32;
+            state.phcnt[state.abc].size.x = state.ui_scaling*15_f32;
+            state.phcnt[state.abc].size.y = state.ui_scaling*30_f32;
             state.phcnt[state.abc].pos.z = 0.1;
             state.phcnt[state.abc].pos.x =
                 eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt[state.abc].size.x) / 2.0);
@@ -239,8 +239,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             state.bluepan.object.mesh.ubo[50] = 0.0;
             state.bluepan.exec(eng);
 
-            state.bwbtn.object.physic_object.scale.x = 80.0;
-            state.bwbtn.object.physic_object.scale.y = 80.0;
+            state.bwbtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+            state.bwbtn.object.physic_object.scale.y = state.ui_scaling*80.0;
             state.bwbtn.object.physic_object.pos.x =
                 eng.render.resolution_x as f32 / 2.0 - state.bwbtn.object.physic_object.scale.x;
             state.bwbtn.object.physic_object.pos.y =
@@ -280,8 +280,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             };
             let tx = &format!("{}", state.clfilm);
             state.phcnt[state.abc].draw = true;
-            state.phcnt[state.abc].size.x = 15_f32;
-            state.phcnt[state.abc].size.y = 30_f32;
+            state.phcnt[state.abc].size.x = state.ui_scaling*15_f32;
+            state.phcnt[state.abc].size.y = state.ui_scaling*30_f32;
             state.phcnt[state.abc].pos.z = 0.1;
             state.phcnt[state.abc].pos.x =
                 eng.render.resolution_x as f32 / 2.0 - ((tx.len() as f32 * state.phcnt[state.abc].size.x) / 2.0);
@@ -323,18 +323,18 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 };
                 let center_y = eng.render.resolution_y as f32 / 2.0;
 
-                state.shbtn.object.physic_object.scale.x = button_size;
-                state.shbtn.object.physic_object.scale.y = button_size;
-                state.reccbtn.object.physic_object.scale.x = button_size;
-                state.reccbtn.object.physic_object.scale.y = button_size;
+                state.shbtn.object.physic_object.scale.x = state.ui_scaling*button_size;
+                state.shbtn.object.physic_object.scale.y = state.ui_scaling*button_size;
+                state.reccbtn.object.physic_object.scale.x = state.ui_scaling*button_size;
+                state.reccbtn.object.physic_object.scale.y = state.ui_scaling*button_size;
 
                 state.shbtn.object.physic_object.pos.x = button_x + sign * button_size;
-                state.shbtn.object.physic_object.pos.y = center_y + button_size * 2.0;
+                state.shbtn.object.physic_object.pos.y = center_y + button_size * 1.5;
                 state.shbtn.object.draw = true;
                 touch_shutter = state.shbtn.exec(eng) && eng.control.mousebtn[2];
 
                 state.reccbtn.object.physic_object.pos.x = button_x + sign * button_size;
-                state.reccbtn.object.physic_object.pos.y = center_y;
+                state.reccbtn.object.physic_object.pos.y = center_y-20f32;
                 state.reccbtn.object.draw = true;
                 touch_recc = state.reccbtn.exec(eng) && eng.control.mousebtn[2];
             }
@@ -357,8 +357,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
                 state.sfx[1].play = true;
             }
 
-            state.colbtn.object.physic_object.scale.x = 80.0;
-            state.colbtn.object.physic_object.scale.y = 80.0;
+            state.colbtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+            state.colbtn.object.physic_object.scale.y = state.ui_scaling*80.0;
             state.colbtn.object.physic_object.pos.x =
                 eng.render.resolution_x as f32 / 2.0 - state.colbtn.object.physic_object.scale.x;
             state.colbtn.object.physic_object.pos.y =
@@ -388,17 +388,18 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
             //state.phcnt[state.abc].exec(eng, " ");
 
             state.bluepan.object.draw = true;
-            state.bluepan.object.physic_object.scale.y = eng.render.resolution_y as f32 - 100.0;
-            state.bluepan.object.physic_object.scale.x = 300.0;
+            state.bluepan.object.physic_object.scale.y = eng.render.resolution_y as f32;
+            state.bluepan.object.physic_object.scale.x = state.ui_scaling*300.0;
             state.bluepan.object.physic_object.pos.x =
                 eng.render.resolution_x as f32 / 2.0 - state.bluepan.object.physic_object.scale.x / 2.0;
-            state.bluepan.object.physic_object.pos.y = 15.0;
+            state.bluepan.object.physic_object.pos.y = 0.0;
+            state.bluepan.object.physic_object.pos.y = 0.8;
             state.bluepan.object.mesh.ubo[50] = 0.0;
             state.bluepan.exec(eng);
 
             state.phcnt[state.abc].draw = true;
-            state.phcnt[state.abc].size.x = 10_f32;
-            state.phcnt[state.abc].size.y = 20_f32;    
+            state.phcnt[state.abc].size.x = state.ui_scaling*10_f32;
+            state.phcnt[state.abc].size.y = state.ui_scaling*20_f32;    
             state.phcnt[state.abc].max_text_width = 16;
             state.phcnt[state.abc].pos.y = 25.0;
             state.phcnt[state.abc].pos.x =state.bluepan.object.physic_object.pos.x + state.phcnt[state.abc].size.x;
@@ -412,8 +413,8 @@ pub fn per_select_tick(eng: &mut Engine, state: &mut AppState) {
 
             let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
             state.ruitxt[state.abc][0].draw = true;
-            state.ruitxt[state.abc][0].size.x = 15_f32;
-            state.ruitxt[state.abc][0].size.y = 30_f32;
+            state.ruitxt[state.abc][0].size.x = state.ui_scaling*15_f32;
+            state.ruitxt[state.abc][0].size.y = state.ui_scaling*30_f32;
             state.ruitxt[state.abc][0].pos.z = state.phcnt[state.abc].pos.z;
             state.ruitxt[state.abc][0].pos.x = eng.render.resolution_x as f32 / 2.0 + state.bluepan.object.physic_object.scale.x / 2.0 - state.ruitxt[state.abc][0].size.x*(txt.len() as f32) - 10.0;
             state.ruitxt[state.abc][0].pos.y = eng.render.resolution_y as f32 - 70.0 - state.ruitxt[state.abc][0].size.y*2.0;

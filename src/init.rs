@@ -584,6 +584,7 @@ pub async fn create_app(show_dbg_info: bool, skipl2: bool) -> (Engine, AppState)
         current_lang: 0,
         max_lang_nm: mln,
         stouch: false,
+        ui_scaling: 0.8f32,
     };
 
     (eng, state)

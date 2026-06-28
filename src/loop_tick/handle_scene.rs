@@ -74,11 +74,11 @@ fn handle_end(eng: &mut Engine, state: &mut AppState){
 
     if state.pkbf >= 11.0{
         state.blacktxt[state.abc].draw = true;
-        state.blacktxt[state.abc].size.x = 10_f32;
-        state.blacktxt[state.abc].size.y = 20_f32;    
+        state.blacktxt[state.abc].size.x = state.ui_scaling*10_f32;
+        state.blacktxt[state.abc].size.y = state.ui_scaling*20_f32;    
         state.blacktxt[state.abc].max_text_width = 16;
-        state.blacktxt[state.abc].pos.y = 25.0;
-        state.blacktxt[state.abc].pos.x = eng.render.resolution_x as f32 / 2.0 - 150.0;
+        state.blacktxt[state.abc].pos.y = state.ui_scaling*25.0;
+        state.blacktxt[state.abc].pos.x = eng.render.resolution_x as f32 / 2.0 - state.ui_scaling*150.0;
         state.blacktxt[state.abc].next_line_on_whitespace = true;
         state.blacktxt[state.abc].new_line_symbol = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[1].strval.bytes().nth(0).unwrap_or(0);
         let ort = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[2].other_nodes[3].strval.clone();
@@ -124,8 +124,8 @@ fn handle_final_door_interaction(eng: &mut Engine, state: &mut AppState) {
         } else { 
             &mut state.nkbtn 
         };
-        icon.object.physic_object.scale.x = 80.0;
-        icon.object.physic_object.scale.y = 80.0;
+        icon.object.physic_object.scale.x = state.ui_scaling*80.0;
+        icon.object.physic_object.scale.y = state.ui_scaling*80.0;
         icon.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0 - icon.object.physic_object.scale.x / 2.0;
         icon.object.physic_object.pos.y = eng.render.resolution_y as f32 - icon.object.physic_object.scale.y * 2.0 - 20.0;
         icon.object.draw = true;
@@ -397,10 +397,10 @@ fn process_button_interactions(eng: &mut Engine, state: &mut AppState) {
             let show_nk = dist <= 1.0 && button.scene_index == 3 && state.ekey != usize::MAX;
             if (can_use || show_nk) && state.selp == 0 {
                 let icon = if show_nk { &mut state.nkbtn } else { &mut state.btnbtn };
-                icon.object.physic_object.scale.x = 80.0;
-                icon.object.physic_object.scale.y = 80.0;
+                icon.object.physic_object.scale.x = state.ui_scaling*80.0;
+                icon.object.physic_object.scale.y = state.ui_scaling*80.0;
                 icon.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0 - icon.object.physic_object.scale.x / 2.0;
-                icon.object.physic_object.pos.y = eng.render.resolution_y as f32 - icon.object.physic_object.scale.y * 2.0 - 20.0;
+                icon.object.physic_object.pos.y = eng.render.resolution_y as f32 - icon.object.physic_object.scale.y * 2.0 - state.ui_scaling*20.0;
                 icon.object.draw = true;
                 let icon_pressed = icon.exec(eng) && !show_nk && eng.control.mousebtn[2];
                 let abtn_pressed = eng.control.gamepad_button_count > 0 && eng.control.get_gamepad_button_state(state.gamepad_buttons[0]) && !show_nk;

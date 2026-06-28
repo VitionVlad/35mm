@@ -12,10 +12,10 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
             0 => {
                 state.menumasel = 6;
 
-                state.logo.object.physic_object.scale.x = 200f32;
-                state.logo.object.physic_object.scale.y = 200f32;
+                state.logo.object.physic_object.scale.x = state.ui_scaling*200f32;
+                state.logo.object.physic_object.scale.y = state.ui_scaling*200f32;
                 state.logo.object.physic_object.pos.x = 0.0;
-                state.logo.object.physic_object.pos.y = eng.render.resolution_y as f32/2.0 - 241.0;
+                state.logo.object.physic_object.pos.y = eng.render.resolution_y as f32/2.0 - state.ui_scaling*241.0;
                 state.logo.object.draw = true;
                 state.logo.signal = false;
                 state.logo.exec(eng);
@@ -26,7 +26,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     state.ruitxt[state.abc][i].signal = true;
                     state.ruitxt[state.abc][i].per_symbol = false;
                     state.ruitxt[state.abc][i].draw = true;
-                    state.ruitxt[state.abc][i].size = Vec2{ x: 20f32, y: 40f32};
+                    state.ruitxt[state.abc][i].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                     state.ruitxt[state.abc][i].pos = Vec3{ x: 0f32, y: state.logo.object.physic_object.pos.y+state.logo.object.physic_object.scale.y+6.0+i as f32*(state.ruitxt[state.abc][i].size.y+6.0), z: 0.1};
                     let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[i+1].strval.clone();
                     if txt.len() as f32 * state.ruitxt[state.abc][i].size.x > lg{
@@ -113,8 +113,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[state.abc][0].signal = false;
                 state.ruitxt[state.abc][0].per_symbol = false;
                 state.ruitxt[state.abc][0].draw = true;
-                state.ruitxt[state.abc][0].size = Vec2{ x: 30f32, y: 60f32};
-                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - 148.0, z: 0.1};
+                state.ruitxt[state.abc][0].size = Vec2{ x: state.ui_scaling*30f32, y: state.ui_scaling*60f32};
+                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - state.ui_scaling*148.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[5].strval.clone();
                 state.ruitxt[state.abc][0].exec(eng, &txt);
 
@@ -134,7 +134,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     }
                     state.ruitxt[state.abc][i].per_symbol = false;
                     state.ruitxt[state.abc][i].draw = true;
-                    state.ruitxt[state.abc][i].size = Vec2{ x: 20f32, y: 40f32};
+                    state.ruitxt[state.abc][i].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                     state.ruitxt[state.abc][i].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+(i-1) as f32*(state.ruitxt[state.abc][i].size.y+6.0), z: 0.1};
                     let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[newind].strval.clone();
                     if txt.len() as f32 * state.ruitxt[state.abc][i].size.x > lg{
@@ -179,7 +179,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][5].per_symbol = false;
                 state.ruitxt[state.abc][5].draw = true;
-                state.ruitxt[state.abc][5].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][5].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][5].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+4.0*(state.ruitxt[state.abc][5].size.y+6.0), z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
                 if txt.len() as f32 * state.ruitxt[state.abc][5].size.x > lg{
@@ -207,8 +207,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[state.abc][0].signal = false;
                 state.ruitxt[state.abc][0].per_symbol = false;
                 state.ruitxt[state.abc][0].draw = true;
-                state.ruitxt[state.abc][0].size = Vec2{ x: 30f32, y: 60f32};
-                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - 148.0, z: 0.1};
+                state.ruitxt[state.abc][0].size = Vec2{ x: state.ui_scaling*30f32, y: state.ui_scaling*60f32};
+                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - state.ui_scaling*148.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[7].strval.clone();
                 state.ruitxt[state.abc][0].exec(eng, &txt);
 
@@ -228,7 +228,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     }
                     state.ruitxt[state.abc][i].per_symbol = false;
                     state.ruitxt[state.abc][i].draw = true;
-                    state.ruitxt[state.abc][i].size = Vec2{ x: 20f32, y: 40f32};
+                    state.ruitxt[state.abc][i].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                     state.ruitxt[state.abc][i].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+(i-1) as f32*(state.ruitxt[state.abc][i].size.y+6.0), z: 0.1};
                     let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[newind].strval.clone();
                     if (txt.len() + 5) as f32 * state.ruitxt[state.abc][i].size.x > lg{
@@ -293,7 +293,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][5].per_symbol = false;
                 state.ruitxt[state.abc][5].draw = true;
-                state.ruitxt[state.abc][5].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][5].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][5].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+4.0*(state.ruitxt[state.abc][5].size.y+6.0), z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
                 if txt.len() as f32 * state.ruitxt[state.abc][5].size.x > lg{
@@ -321,8 +321,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[state.abc][0].signal = false;
                 state.ruitxt[state.abc][0].per_symbol = false;
                 state.ruitxt[state.abc][0].draw = true;
-                state.ruitxt[state.abc][0].size = Vec2{ x: 30f32, y: 60f32};
-                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - 79.0, z: 0.1};
+                state.ruitxt[state.abc][0].size = Vec2{ x: state.ui_scaling*30f32, y: state.ui_scaling*60f32};
+                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - state.ui_scaling*79.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[8].strval.clone();
                 state.ruitxt[state.abc][0].exec(eng, &txt);
 
@@ -340,7 +340,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][1].per_symbol = false;
                 state.ruitxt[state.abc][1].draw = true;
-                state.ruitxt[state.abc][1].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][1].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][1].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[15].strval.clone();
                 if (txt.len()+3) as f32 * state.ruitxt[state.abc][1].size.x > lg{
@@ -367,7 +367,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][2].per_symbol = false;
                 state.ruitxt[state.abc][2].draw = true;
-                state.ruitxt[state.abc][2].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][2].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][2].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+(state.ruitxt[state.abc][2].size.y+6.0), z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
                 if txt.len() as f32 * state.ruitxt[state.abc][2].size.x > lg{
@@ -400,8 +400,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[state.abc][0].signal = false;
                 state.ruitxt[state.abc][0].per_symbol = false;
                 state.ruitxt[state.abc][0].draw = true;
-                state.ruitxt[state.abc][0].size = Vec2{ x: 30f32, y: 60f32};
-                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - 79.0, z: 0.1};
+                state.ruitxt[state.abc][0].size = Vec2{ x: state.ui_scaling*30f32, y: state.ui_scaling*60f32};
+                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - state.ui_scaling*79.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[9].strval.clone();
                 state.ruitxt[state.abc][0].exec(eng, &txt);
 
@@ -419,7 +419,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][1].per_symbol = false;
                 state.ruitxt[state.abc][1].draw = true;
-                state.ruitxt[state.abc][1].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][1].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][1].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[16].strval.clone();
                 if (txt.len() + 5) as f32 * state.ruitxt[state.abc][1].size.x > lg{
@@ -443,7 +443,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][2].per_symbol = false;
                 state.ruitxt[state.abc][2].draw = true;
-                state.ruitxt[state.abc][2].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][2].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][2].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+(state.ruitxt[state.abc][2].size.y+6.0), z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
                 if txt.len() as f32 * state.ruitxt[state.abc][2].size.x > lg{
@@ -476,8 +476,8 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 state.ruitxt[state.abc][0].signal = false;
                 state.ruitxt[state.abc][0].per_symbol = false;
                 state.ruitxt[state.abc][0].draw = true;
-                state.ruitxt[state.abc][0].size = Vec2{ x: 30f32, y: 60f32};
-                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - 102.0, z: 0.1};
+                state.ruitxt[state.abc][0].size = Vec2{ x: state.ui_scaling*30f32, y: state.ui_scaling*60f32};
+                state.ruitxt[state.abc][0].pos = Vec3{ x: 0f32, y: eng.render.resolution_y as f32/2.0 - state.ui_scaling*102.0, z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[9].strval.clone();
                 state.ruitxt[state.abc][0].exec(eng, &txt);
 
@@ -497,7 +497,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                     }
                     state.ruitxt[state.abc][i].per_symbol = false;
                     state.ruitxt[state.abc][i].draw = true;
-                    state.ruitxt[state.abc][i].size = Vec2{ x: 20f32, y: 40f32};
+                    state.ruitxt[state.abc][i].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                     state.ruitxt[state.abc][i].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+(i-1) as f32*(state.ruitxt[state.abc][i].size.y+6.0), z: 0.1};
                     match i {
                         1 => {
@@ -546,7 +546,7 @@ pub fn menu_handle(eng: &mut Engine, state: &mut AppState) {
                 }
                 state.ruitxt[state.abc][3].per_symbol = false;
                 state.ruitxt[state.abc][3].draw = true;
-                state.ruitxt[state.abc][3].size = Vec2{ x: 20f32, y: 40f32};
+                state.ruitxt[state.abc][3].size = Vec2{ x: state.ui_scaling*20f32, y: state.ui_scaling*40f32};
                 state.ruitxt[state.abc][3].pos = Vec3{ x: 0f32, y: state.ruitxt[state.abc][0].pos.y+state.ruitxt[state.abc][0].size.y+6.0+2.0*(state.ruitxt[state.abc][3].size.y+6.0), z: 0.1};
                 let txt = state.jsontext.other_nodes[0].other_nodes[state.current_lang].other_nodes[3].other_nodes[0].strval.clone();
                 if txt.len() as f32 * state.ruitxt[state.abc][3].size.x > lg{

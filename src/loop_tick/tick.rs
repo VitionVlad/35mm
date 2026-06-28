@@ -3,7 +3,17 @@ use crate::{
     engine::{engine::Engine, math::vec3::Vec3},
 };
 
+fn compute_ui_scale(screen_w: f32, screen_h: f32) -> f32 {
+    let (design_w, design_h) = if screen_h > screen_w {
+        (720.0, 1280.0)
+    } else {
+        (1280.0, 720.0)
+    };
+    (screen_w / design_w).min(screen_h / design_h)
+}
+
 pub fn tick(eng: &mut Engine, state: &mut AppState) {
+    state.ui_scaling = compute_ui_scale(eng.render.resolution_x as f32, eng.render.resolution_y as f32);
     if state.tm > 0 {
         state.tm -= eng.times_to_calculate_physics as i32;
     }
@@ -117,8 +127,8 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
 
     if state.showfps{
         let fpstxt = format!("fps:{}", eng.fps);
-        state.fpscnt.size.x = 15_f32;
-        state.fpscnt.size.y = 30_f32;
+        state.fpscnt.size.x = state.ui_scaling*15_f32;
+        state.fpscnt.size.y = state.ui_scaling*30_f32;
         state.fpscnt.pos.x = eng.render.resolution_x as f32 - fpstxt.len() as f32*state.fpscnt.size.x;
         state.fpscnt.pos.y = 0.0;
         state.fpscnt.draw = true;
@@ -129,8 +139,8 @@ pub fn tick(eng: &mut Engine, state: &mut AppState) {
     }
 
     if !state.pausemn{
-        state.psbtn.object.physic_object.scale.x = 80.0;
-        state.psbtn.object.physic_object.scale.y = 80.0;
+        state.psbtn.object.physic_object.scale.x = state.ui_scaling*80.0;
+        state.psbtn.object.physic_object.scale.y = state.ui_scaling*80.0;
         state.psbtn.object.physic_object.pos.x = eng.render.resolution_x as f32 / 2.0;
         state.psbtn.object.physic_object.pos.y = eng.render.resolution_y as f32 - state.psbtn.object.physic_object.scale.y;
         if !state.cme || state.intram || state.selp == 3 {
