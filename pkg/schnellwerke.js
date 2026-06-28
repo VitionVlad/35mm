@@ -3,14 +3,15 @@ import { cend, mozartsetvolume, newsound, soundplay, soundsetloop, soundsetpos, 
 import { openfs } from './snippets/schnellwerke-30ed2f676ded1e7a/src/engine/loader/loader.js';
 import { gamepad_axisnm, gamepad_buttonnm, getKeyPressed, get_axis, get_button, get_frametime, get_mouse_posx, get_mouse_posy, get_resx, get_resy, modifydeffereddata, modifydeffereduniform, modifyshadowdata, modifyshadowuniform, neweng, newmaterial, newmesh, newtexture, quitfullscreen, req_mouse_lock, req_mouse_unlock, rn, setdrawable, setfullscreen, setmeshbuf, setrendercamera, settitle } from './snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js';
 import { get_val, set_val } from './snippets/schnellwerke-30ed2f676ded1e7a/src/loop_tick/sav.js';
-import * as import1 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
+import * as import1 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/loop_tick/ppi.js"
 import * as import2 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
 import * as import3 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
 import * as import4 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
 import * as import5 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
 import * as import6 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
 import * as import7 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
-import * as import8 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/audio/audio.js"
+import * as import8 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js"
+import * as import9 from "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/audio/audio.js"
 
 
 export function main() {
@@ -258,14 +259,15 @@ function __wbg_get_imports() {
     return {
         __proto__: null,
         "./schnellwerke_bg.js": import0,
-        "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import1,
+        "./snippets/schnellwerke-30ed2f676ded1e7a/src/loop_tick/ppi.js": import1,
         "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import2,
         "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import3,
         "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import4,
         "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import5,
         "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import6,
         "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import7,
-        "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/audio/audio.js": import8,
+        "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/render/gauss.js": import8,
+        "./snippets/schnellwerke-30ed2f676ded1e7a/src/engine/audio/audio.js": import9,
     };
 }
 
