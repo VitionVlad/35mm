@@ -23,7 +23,7 @@ pub fn compute_ui_scale(raw_px_w: f32, raw_px_h: f32, device_ppi: f32) -> f32 {
     //raw_fit * correction
     let is_portrait = raw_px_h > raw_px_w;
     if is_portrait {
-        return get_ppi();
+        return get_ppi().min(1.75);
     } 
     (1.0 / get_ppi()).clamp(0.6, 1.0)
 }
