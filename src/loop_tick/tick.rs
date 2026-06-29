@@ -11,23 +11,21 @@ unsafe extern "C"{
 }
 
 pub fn compute_ui_scale(raw_px_w: f32, raw_px_h: f32, device_ppi: f32) -> f32 {
+    //let is_portrait = raw_px_h > raw_px_w;
+    //let (design_w, design_h) = if is_portrait {
+    //    (720.0, 1280.0)
+    //} else {
+    //    (1280.0, 720.0)
+    //};
+    //let raw_fit = (raw_px_w / design_w).min(raw_px_h / design_h);
+    //let density_correction = 1.0 / device_ppi;
+    //let correction = 1.0 + (density_correction - 1.0);
+    //raw_fit * correction
     let is_portrait = raw_px_h > raw_px_w;
-    let (design_w, design_h) = if is_portrait {
-        (720.0, 1280.0)
-    } else {
-        (1280.0, 720.0)
-    };
-
-    let raw_fit = (raw_px_w / design_w).min(raw_px_h / design_h);
-
-    // full physical-size correction
-    let density_correction = 88.0 / device_ppi;
-
-    // blend between "same screen proportion as PC" (1.0) and
-    // "same physical size as PC" (density_correction) — see note below
-    let correction = 1.0 + (density_correction - 1.0);
-
-    raw_fit * correction
+    if is_portrait {
+        return get_ppi();
+    } 
+    (1.0 / get_ppi()).clamp(0.6, 1.0)
 }
 
 pub fn tick(eng: &mut Engine, state: &mut AppState) {

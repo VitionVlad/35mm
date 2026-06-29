@@ -26,8 +26,9 @@ pub struct UIplane{
     pub signal: bool,
     pub allow_when_mouse_locked: bool,
     pub ubo_index: usize,
-    pub signal_on_value: f32,
+    pub signal_on_value: f32, 
     pub signal_off_value: f32,
+    pub max_touch_number: usize,
 }
 
 impl UIplane {
@@ -41,6 +42,7 @@ impl UIplane {
             ubo_index: 50,
             signal_on_value: 1.0f32,
             signal_off_value: 0.0f32,
+            max_touch_number: 1,
         }
     }
     pub fn new_blank() -> UIplane{
@@ -52,6 +54,7 @@ impl UIplane {
             ubo_index: 50,
             signal_on_value: 1.0f32,
             signal_off_value: 0.0f32,
+            max_touch_number: 0,
         }
     }
     pub async fn new_from_file(eng: &mut Engine, mat: Material, paths: Vec<String>) -> UIplane{
@@ -65,6 +68,7 @@ impl UIplane {
             ubo_index: 50,
             signal_on_value: 1.0f32,
             signal_off_value: 0.0f32,
+            max_touch_number: 1,
         }
     }
     pub fn exec(&mut self, eng: &mut Engine) -> bool{
@@ -73,7 +77,7 @@ impl UIplane {
         self.clickzone.pos2.x = self.object.physic_object.pos.x + self.object.physic_object.scale.x;
         self.clickzone.pos2.y = self.object.physic_object.pos.y + self.object.physic_object.scale.y;
         let mut btst = false;
-        for i in 0..10{
+        for i in 0..self.max_touch_number{
             if self.clickzone.check(Vec2{ x: eng.control.xpos[i] as f32, y: eng.control.ypos[i] as f32}){
                 btst = true;
                 break;
@@ -114,6 +118,7 @@ pub struct UItext{
     pub new_line_symbol: u8,
     pub max_text_width: u32,
     pub next_line_on_whitespace: bool,
+    pub max_touch_number: usize,
     blank: bool,
 }
 
@@ -142,6 +147,7 @@ impl UItext {
             max_text_width: 0,
             next_line_on_whitespace: false,
             draw: true,
+            max_touch_number: 1,
         }
     }
     pub fn new_blank() -> UItext{
@@ -167,6 +173,7 @@ impl UItext {
             new_line_symbol: b'\n',
             max_text_width: 0,
             next_line_on_whitespace: false,
+            max_touch_number: 0,
             draw: false,
         }
     }
@@ -194,6 +201,7 @@ impl UItext {
             new_line_symbol: b'\n',
             max_text_width: 0,
             next_line_on_whitespace: false,
+            max_touch_number: 1,
             draw: true,
         }
     }
@@ -221,7 +229,7 @@ impl UItext {
             self.clickzone.pos2.x = self.pos.x + self.size.x*(mx as f32 + 1.0);
             self.clickzone.pos2.y = self.pos.y + self.size.y*(my as f32);
             let mut btst = false;
-            for i in 0..10{
+            for i in 0..self.max_touch_number{
                 if self.clickzone.check(Vec2{ x: eng.control.xpos[i] as f32, y: eng.control.ypos[i] as f32}){
                     btst = true;
                     break;
